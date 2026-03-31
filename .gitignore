@@ -1,0 +1,9 @@
+target/
+node_modules/
+*.node
+*.sqlite
+*.bin
+*.pyc
+__pycache__/
+.env
+.DS_Store

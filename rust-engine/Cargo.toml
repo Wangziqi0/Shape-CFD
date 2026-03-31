@@ -1,0 +1,57 @@
+[package]
+name = "law-vexus"
+version = "0.1.0"
+edition = "2021"
+description = "法律向量检索引擎 — Rust HNSW 核心 + NAPI-RS 桥接"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# NAPI-RS 核心依赖
+napi = { version = "2", features = ["async", "napi8"] }
+napi-derive = "2"
+
+# HNSW 向量索引
+usearch = "2"
+
+# 线性代数 (SVD / 正交投影)
+nalgebra = "0.33"
+
+# SQLite 数据库 (绑定级联检索锚点查询)
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+# 序列化
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# 错误处理
+anyhow = "1"
+
+# HTTP 客户端 (extract_tokens 二进制工具使用)
+ureq = { version = "3", features = ["json"] }
+
+# 命令行参数解析
+clap = { version = "4", features = ["derive"] }
+
+# Token 级点云：mmap 大文件 + FP16 转换
+memmap2 = "0.9"
+half = "2"
+
+# 并行计算 (VT-Aligned 距离矩阵 + cosine top-N)
+rayon = "1"
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+strip = true
+
+[profile.dev]
+opt-level = 1
+
+[[bin]]
+name = "extract_tokens"
+path = "src/bin/extract_tokens.rs"
