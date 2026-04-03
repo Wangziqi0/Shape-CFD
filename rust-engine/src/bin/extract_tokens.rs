@@ -1,61 +1,53 @@
-// extract_tokens.rs
-// 独立二进制工具：调用 llama.cpp /embedding API (--pooling none) 提取 token-level embeddings
-// 并存入 SQLite，schema 与 clouds.sqlite 完全兼容（chunks 表，vector BLOB = f32 native endian）
+// extract_tokens.rs — 高性能 token-level embedding 提取工具 v2
 //
-// 用法示例：
-//   cargo run --release --bin extract_tokens -- \
-//     --mode corpus \
-//     --input /path/to/corpus.jsonl \
-//     --id-map /path/to/id_map.json \
-//     --output token_clouds.sqlite
-//
-//   cargo run --release --bin extract_tokens -- \
-//     --mode query \
-//     --input /path/to/query_vectors.jsonl \
-//     --output query_token_clouds.sqlite
+// 优化点：
+// 1. rayon work-stealing 并发（无气泡，GPU 始终满载）
+// 2. channel 异步写入（提取和写入流水线化）
+// 3. 断点续传（跳过已完成的 file_id）
+// 4. 批量事务写入（每 N 个文档一个事务）
 
 use anyhow::{Context, Result, bail};
 use clap::Parser;
 use rusqlite::Connection;
 use serde::Deserialize;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::path::PathBuf;
-
-// ─── 命令行参数 ───────────────────────────────────────────────────────────
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::mpsc;
+use std::time::Instant;
 
 #[derive(Parser)]
-#[command(name = "extract_tokens", about = "从 llama.cpp 提取 token-level embeddings 存入 SQLite")]
+#[command(name = "extract_tokens", about = "高性能 token-level embedding 提取 v2")]
 struct Args {
-    /// 模式: corpus 或 query
     #[arg(long, default_value = "corpus")]
     mode: String,
 
-    /// llama.cpp embedding API 地址
-    #[arg(long, default_value = "http://localhost:8081/embedding")]
+    #[arg(long, default_value = "http://192.168.31.22:8081/embedding")]
     api_url: String,
 
-    /// 输入 JSONL 文件路径（corpus.jsonl 或 query_vectors.jsonl）
     #[arg(long)]
     input: PathBuf,
 
-    /// id_map.json 路径（corpus 模式必须提供）
     #[arg(long)]
     id_map: Option<PathBuf>,
 
-    /// 输出 SQLite 数据库路径
     #[arg(long)]
     output: PathBuf,
 
-    /// 文本最大字符数截断，防止超出 llama.cpp context 上限
     #[arg(long, default_value = "6000")]
     max_chars: usize,
+
+    /// rayon 线程池大小（= 并发请求数）
+    #[arg(long, default_value = "16")]
+    concurrency: usize,
+
+    /// 每多少个文档提交一次 SQLite 事务
+    #[arg(long, default_value = "50")]
+    tx_batch: usize,
 }
 
-// ─── JSONL 行结构 ────────────────────────────────────────────────────────
-
-/// corpus.jsonl 和 query_vectors.jsonl 共用结构
 #[derive(Deserialize)]
 struct DocRecord {
     _id: String,
@@ -64,19 +56,15 @@ struct DocRecord {
     text: String,
 }
 
-// ─── SQLite 初始化 ───────────────────────────────────────────────────────
-
-/// 创建数据库，schema 与 clouds.sqlite 完全一致
-fn create_db(path: &std::path::Path) -> Result<Connection> {
-    // 如果输出文件已存在则删除，保证幂等
-    if path.exists() {
+fn open_db(path: &std::path::Path, resume: bool) -> Result<Connection> {
+    if !resume && path.exists() {
         std::fs::remove_file(path)?;
     }
     let conn = Connection::open(path)?;
     conn.execute_batch(
         "PRAGMA journal_mode=WAL;
          PRAGMA synchronous=NORMAL;
-         PRAGMA cache_size=-64000;
+         PRAGMA cache_size=-128000;
          CREATE TABLE IF NOT EXISTS chunks (
              id INTEGER PRIMARY KEY,
              file_id INTEGER NOT NULL,
@@ -88,213 +76,211 @@ fn create_db(path: &std::path::Path) -> Result<Connection> {
     Ok(conn)
 }
 
-// ─── 调用 llama.cpp API ─────────────────────────────────────────────────
+fn get_done_file_ids(conn: &Connection) -> Result<HashSet<i64>> {
+    let mut stmt = conn.prepare("SELECT DISTINCT file_id FROM chunks")?;
+    let ids: Vec<i64> = stmt.query_map([], |row| row.get(0))?.filter_map(|r| r.ok()).collect();
+    Ok(ids.into_iter().collect())
+}
 
-/// 向 llama.cpp /embedding 端点发送文本，返回 per-token 的 f32 向量列表
-/// llama.cpp --pooling none 返回格式：
-///   [{"embedding": [[f64; 4096]; n_tokens], "index": 0}]
-/// 当只有 1 个 token 时可能返回 flat [f64; 4096]，需兼容处理
-fn extract_tokens(api_url: &str, text: &str) -> Result<Vec<Vec<f32>>> {
-    // 如果文本太长，截断到约 1500 token（按字符估算：英文 ~4 chars/token，中文 ~1.5 chars/token）
-    let text = if text.len() > 4000 {
-        &text[..4000]
-    } else {
-        text
-    };
+fn get_max_chunk_id(conn: &Connection) -> Result<i64> {
+    Ok(conn.query_row("SELECT COALESCE(MAX(id), -1) FROM chunks", [], |row| row.get(0))?)
+}
+
+fn extract_single(api_url: &str, text: &str) -> Result<Vec<Vec<f32>>> {
     let body = serde_json::json!({"content": text});
-
-    let response = match ureq::post(api_url)
+    let response = ureq::post(api_url)
         .header("Content-Type", "application/json")
         .send_json(&body)
-    {
-        Ok(r) => r,
-        Err(e) => bail!("HTTP 请求失败: {}", e),
-    };
+        .map_err(|e| anyhow::anyhow!("HTTP: {}", e))?;
 
     let body_str = response
         .into_body()
         .with_config()
-        .limit(200 * 1024 * 1024)  // 200MB limit（token级响应可达数十MB）
+        .limit(200 * 1024 * 1024)
         .read_to_string()
-        .context("读取响应 body 失败")?;
+        .context("read body")?;
 
     let resp: serde_json::Value = serde_json::from_str(&body_str)
-        .with_context(|| format!("JSON 解析失败, body 前200字符: {}", &body_str[..body_str.len().min(200)]))?;
+        .with_context(|| format!("JSON: {}", &body_str[..body_str.len().min(100)]))?;
 
-    // 取出 embedding 字段
-    let embedding_val = &resp[0]["embedding"];
-
-    let token_vectors: Vec<Vec<f32>> = if let Some(outer) = embedding_val.as_array() {
-        if outer.is_empty() {
-            bail!("embedding 返回空数组");
-        }
-        // 判断第一个元素是数组（嵌套情况）还是数字（flat 情况）
+    let emb = &resp[0]["embedding"];
+    if let Some(outer) = emb.as_array() {
+        if outer.is_empty() { bail!("empty"); }
         if outer[0].is_array() {
-            // 嵌套 [[f64; dim]; n_tokens]
-            outer
-                .iter()
-                .map(|tok_vec| {
-                    tok_vec
-                        .as_array()
-                        .unwrap_or(&vec![])
-                        .iter()
-                        .map(|v| v.as_f64().unwrap_or(0.0) as f32)
-                        .collect()
-                })
-                .collect()
+            Ok(outer.iter().map(|t| {
+                t.as_array().unwrap_or(&vec![]).iter()
+                    .map(|v| v.as_f64().unwrap_or(0.0) as f32).collect()
+            }).collect())
         } else {
-            // flat [f64; dim] — 只有 1 个 token
-            let single: Vec<f32> = outer
-                .iter()
-                .map(|v| v.as_f64().unwrap_or(0.0) as f32)
-                .collect();
-            vec![single]
+            Ok(vec![outer.iter().map(|v| v.as_f64().unwrap_or(0.0) as f32).collect()])
         }
     } else {
-        bail!("embedding 字段格式异常: {:?}", embedding_val);
-    };
-
-    Ok(token_vectors)
+        bail!("bad format");
+    }
 }
 
-/// 将 f32 向量转为 native endian 字节（与 clouds.sqlite 格式一致）
 fn vec_to_blob(v: &[f32]) -> Vec<u8> {
     let mut buf = Vec::with_capacity(v.len() * 4);
-    for &val in v {
-        buf.extend_from_slice(&val.to_ne_bytes());
-    }
+    for &val in v { buf.extend_from_slice(&val.to_ne_bytes()); }
     buf
 }
 
-// ─── 主流程 ──────────────────────────────────────────────────────────────
+struct DocResult {
+    file_id: i64,
+    token_vecs: Vec<Vec<f32>>,
+}
 
 fn main() -> Result<()> {
     let args = Args::parse();
 
-    // 验证模式参数
     if args.mode != "corpus" && args.mode != "query" {
-        bail!("--mode 必须是 corpus 或 query");
+        bail!("--mode must be corpus or query");
     }
-
-    // corpus 模式必须有 id_map
     if args.mode == "corpus" && args.id_map.is_none() {
-        bail!("corpus 模式必须提供 --id-map 参数");
+        bail!("corpus mode requires --id-map");
     }
 
-    // 加载 id_map（corpus 模式）
-    let id_map: HashMap<String, i64> = if let Some(ref map_path) = args.id_map {
-        let f = File::open(map_path).context("打开 id_map.json 失败")?;
-        serde_json::from_reader(BufReader::new(f)).context("解析 id_map.json 失败")?
+    let id_map: HashMap<String, i64> = if let Some(ref p) = args.id_map {
+        serde_json::from_reader(BufReader::new(File::open(p)?))?
     } else {
         HashMap::new()
     };
 
-    // 读取 JSONL 文件
-    let input_file = File::open(&args.input)
-        .with_context(|| format!("打开输入文件失败: {:?}", args.input))?;
-    let reader = BufReader::new(input_file);
     let mut records: Vec<DocRecord> = Vec::new();
-
-    for (line_num, line) in reader.lines().enumerate() {
-        let line = line.with_context(|| format!("读取第 {} 行失败", line_num + 1))?;
-        let line = line.trim().to_string();
-        if line.is_empty() {
-            continue;
-        }
-        match serde_json::from_str::<DocRecord>(&line) {
-            Ok(rec) => records.push(rec),
-            Err(e) => {
-                eprintln!("[WARN] 跳过第 {} 行，JSON 解析错误: {}", line_num + 1, e);
-            }
+    for line in BufReader::new(File::open(&args.input)?).lines() {
+        let line = line?;
+        if line.trim().is_empty() { continue; }
+        if let Ok(rec) = serde_json::from_str::<DocRecord>(line.trim()) {
+            records.push(rec);
         }
     }
+    eprintln!("[INFO] {} records, mode={}", records.len(), args.mode);
 
-    let total = records.len();
-    eprintln!("[INFO] 共加载 {} 条记录，模式: {}", total, args.mode);
+    let resume = args.output.exists();
+    let mut conn = open_db(&args.output, resume)?;
+    let done_ids = if resume {
+        let ids = get_done_file_ids(&conn)?;
+        eprintln!("[INFO] resume: {} done", ids.len());
+        ids
+    } else {
+        HashSet::new()
+    };
+    let mut global_id = if resume { get_max_chunk_id(&conn)? + 1 } else { 0 };
 
-    // 创建输出数据库
-    let mut conn = create_db(&args.output)?;
-    let mut global_id: i64 = 0;
-    let mut success_count = 0usize;
-    let mut skip_count = 0usize;
-
+    // 构建任务
+    let mut tasks: Vec<(i64, String)> = Vec::new();
     for (idx, rec) in records.iter().enumerate() {
-        // 确定 file_id
         let file_id: i64 = if args.mode == "corpus" {
-            match id_map.get(&rec._id) {
-                Some(&fid) => fid,
-                None => {
-                    eprintln!("[WARN] 文档 {} 不在 id_map 中，跳过", rec._id);
-                    skip_count += 1;
-                    continue;
-                }
-            }
+            match id_map.get(&rec._id) { Some(&fid) => fid, None => continue }
         } else {
-            // query 模式：直接用顺序索引作为 file_id
             idx as i64
         };
-
-        // 拼接文本（corpus 模式包含 title）
+        if done_ids.contains(&file_id) { continue; }
         let text = if args.mode == "corpus" && !rec.title.is_empty() {
             format!("{} {}", rec.title, rec.text)
         } else {
             rec.text.clone()
         };
-
-        // 截断过长文本
         let text = if text.len() > args.max_chars {
-            text[..args.max_chars].to_string()
-        } else {
-            text
-        };
+            // 安全截断：找到最近的 UTF-8 字符边界
+            let mut end = args.max_chars;
+            while end > 0 && !text.is_char_boundary(end) { end -= 1; }
+            text[..end].to_string()
+        } else { text };
+        tasks.push((file_id, text));
+    }
+    let total = tasks.len();
+    eprintln!("[INFO] {} to process (skipped {})", total, done_ids.len());
+    if total == 0 { eprintln!("[DONE]"); return Ok(()); }
 
-        // 调用 API 提取 token embeddings
-        match extract_tokens(&args.api_url, &text) {
-            Ok(token_vecs) => {
-                // 在一个事务内插入该文档的所有 token 向量
-                let tx = conn.transaction()?;
-                {
-                    let mut stmt = tx.prepare(
-                        "INSERT INTO chunks (id, file_id, chunk_text, vector) VALUES (?1, ?2, ?3, ?4)",
-                    )?;
-                    for (tok_idx, vec) in token_vecs.iter().enumerate() {
-                        let blob = vec_to_blob(vec);
-                        let chunk_text = format!("token_{}", tok_idx);
-                        stmt.execute(rusqlite::params![
-                            global_id,
-                            file_id,
-                            chunk_text,
-                            blob,
-                        ])?;
-                        global_id += 1;
+    // 设置 rayon 线程池
+    rayon::ThreadPoolBuilder::new()
+        .num_threads(args.concurrency)
+        .build_global()
+        .ok(); // 可能已经初始化过
+
+    // channel: 提取线程 → 写入线程
+    let (tx, rx) = mpsc::sync_channel::<DocResult>(args.concurrency * 4);
+
+    let success = AtomicUsize::new(0);
+    let fail = AtomicUsize::new(0);
+    let tok_count = AtomicUsize::new(0);
+    let start = Instant::now();
+    let api_url = args.api_url.clone();
+    let tx_batch = args.tx_batch;
+
+    // 写入线程（单线程，顺序写 SQLite）
+    let writer = std::thread::spawn(move || -> Result<()> {
+        let mut buf: Vec<DocResult> = Vec::with_capacity(tx_batch);
+
+        let flush = |conn: &mut Connection, buf: &mut Vec<DocResult>, gid: &mut i64| -> Result<()> {
+            if buf.is_empty() { return Ok(()); }
+            let tx = conn.transaction()?;
+            {
+                let mut stmt = tx.prepare(
+                    "INSERT INTO chunks (id, file_id, chunk_text, vector) VALUES (?1, ?2, ?3, ?4)"
+                )?;
+                for doc in buf.iter() {
+                    for (i, vec) in doc.token_vecs.iter().enumerate() {
+                        stmt.execute(rusqlite::params![*gid, doc.file_id, format!("t{}", i), vec_to_blob(vec)])?;
+                        *gid += 1;
                     }
                 }
-                tx.commit()?;
-                success_count += 1;
+            }
+            tx.commit()?;
+            buf.clear();
+            Ok(())
+        };
+
+        for doc in rx {
+            buf.push(doc);
+            if buf.len() >= tx_batch {
+                flush(&mut conn, &mut buf, &mut global_id)?;
+            }
+        }
+        flush(&mut conn, &mut buf, &mut global_id)?;
+        Ok(())
+    });
+
+    // rayon 并行提取（work-stealing，无气泡）
+    use rayon::prelude::*;
+    tasks.par_iter().for_each(|(file_id, text)| {
+        match extract_single(&api_url, text) {
+            Ok(vecs) => {
+                let n = vecs.len();
+                let _ = tx.send(DocResult { file_id: *file_id, token_vecs: vecs });
+                success.fetch_add(1, Ordering::Relaxed);
+                tok_count.fetch_add(n, Ordering::Relaxed);
             }
             Err(e) => {
-                eprintln!("[ERROR] 文档 {} (file_id={}) 提取失败: {}", rec._id, file_id, e);
-                skip_count += 1;
+                eprintln!("[ERR] fid={}: {}", file_id, e);
+                fail.fetch_add(1, Ordering::Relaxed);
             }
         }
 
-        // 每 50 条打印进度
-        if (idx + 1) % 50 == 0 || idx + 1 == total {
-            eprintln!(
-                "[PROGRESS] {}/{} (成功={}, 跳过={}), 当前总 token 行数={}",
-                idx + 1,
-                total,
-                success_count,
-                skip_count,
-                global_id
-            );
+        let s = success.load(Ordering::Relaxed) + fail.load(Ordering::Relaxed);
+        if s % 100 == 0 {
+            let el = start.elapsed().as_secs_f64();
+            let rate = s as f64 / el;
+            let eta = if rate > 0.0 { (total - s) as f64 / rate / 60.0 } else { 0.0 };
+            let tc = tok_count.load(Ordering::Relaxed);
+            eprintln!("[PROG] {}/{} ({:.1}/s ETA {:.0}m) ok={} fail={} toks={}",
+                s, total, rate, eta,
+                success.load(Ordering::Relaxed),
+                fail.load(Ordering::Relaxed), tc);
         }
-    }
+    });
 
-    eprintln!(
-        "[DONE] 完成! 成功 {} 文档, 跳过 {} 文档, 共 {} 条 token 向量 => {:?}",
-        success_count, skip_count, global_id, args.output
-    );
+    // 关闭 channel，等写入完成
+    drop(tx);
+    writer.join().unwrap()?;
+
+    let el = start.elapsed().as_secs_f64();
+    let sc = success.load(Ordering::Relaxed);
+    let fc = fail.load(Ordering::Relaxed);
+    let tc = tok_count.load(Ordering::Relaxed);
+    eprintln!("[DONE] ok={} fail={} toks={} {:.1}s ({:.1}/s) => {:?}",
+        sc, fc, tc, el, sc as f64 / el, args.output);
 
     Ok(())
 }

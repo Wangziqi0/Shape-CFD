@@ -1,162 +1,89 @@
-# Shape-CFD: Physics-Inspired Reranking via Token-Level Point Clouds
+# Shape-CFD: Point Cloud Retrieval with PQ-Chamfer Distance and Graph Smoothing
 
-> **+47.2% NDCG@10 on NFCorpus. Zero training. Zero GPU reranking. 26ms CPU latency.**
+**Documents Are Shapes, Not Points.**
 
-Shape-CFD is a physics-inspired post-retrieval reranking framework that replaces the entire cosine-based dense retrieval paradigm with token-level point cloud matching and PDE-based score fusion.
+A training-free geometric post-processing pipeline that improves dense retrieval by treating LLM hidden states as point clouds.
 
-## Key Results
+## Results
 
-| Method | NFCorpus NDCG@10 | vs Cosine | Latency |
-|:-------|:----------------:|:---------:|:-------:|
-| Cosine baseline | 0.2195 | — | 20ms |
-| BM25 | 0.2573 | +17.2% | — |
-| Shape-CFD v10 (sentence PDE) | 0.2852 | +29.9% | 26ms |
-| Token Chamfer (full scan) | 0.3214 | +46.4% | 305ms |
-| Token 2-Stage (centroid coarse) | 0.3220 | +46.7% | 23ms |
-| **Fusion (token + PDE, lambda=0.7)** | **0.3232** | **+47.2%** | **26ms** |
+| Dataset | #Docs | Cosine | Ours Best | Gain |
+|---------|-------|--------|-----------|------|
+| NFCorpus | 2,473 | 0.2195 | **0.3271** | +49.0% |
+| SciFact | 3,752 | 0.4483 | **0.4827** | +7.7% |
+| ArguAna | 8,674 | 0.3047 | **0.4417** | +45.0% |
+| SCIDOCS | 25,337 | 0.1110 | **0.2147** | +93.5% |
+| FiQA | 56,391 | 0.1683 | **0.3977** | +136.2% |
+| Quora | 522,931 | 0.6370 | **0.6749** | +6.0% |
 
-Complete 10-method ablation in the [paper](paper/Shape-CFD_v5_Chen_Yifan.pdf).
+Surpasses BGE-large-en-v1.5 on FiQA and SCIDOCS without any retrieval-specific training.
 
-## What's New
-
-- **Documents are point clouds, not vectors.** Each document is represented as ~356 token-level 4096d points extracted from the embedding model's hidden states. Queries are also expanded to ~6 token points.
-
-- **Chamfer distance replaces cosine everywhere.** PQ-Chamfer computes symmetric nearest-neighbor matching across 64 independent subspaces — equivalent to zero-parameter hard cross-attention under the Unbalanced Optimal Transport (UOT) framework.
-
-- **PDE convection-diffusion as orthogonal signal fusion.** The sentence-level PDE captures global semantic propagation structure on the document graph, while token Chamfer captures local matching quality. Two orthogonal views combined via score interpolation.
-
-- **Zero cosine, zero cross-encoder, zero training.** The entire pipeline from coarse retrieval to final ranking uses no cosine similarity, no GPU-based reranker, and no task-specific training.
-
-## Architecture
+## Pipeline
 
 ```
-                    Offline (one-time)
-    ┌─────────────────────────────────────────────┐
-    │  Documents → Embedding Model (pooling=none)  │
-    │  → per-token hidden states (4096d)           │
-    │  → SQLite storage (f32 BLOB, 14GB)           │
-    └─────────────────────────────────────────────┘
-
-                    Online (per query)
-    ┌─────────────────────────────────────────────┐
-    │  Query → token point cloud (~6 points)       │
-    │                                              │
-    │  Stage 1: Token centroid coarse filter        │
-    │           (top-100, <1ms)                    │
-    │                                              │
-    │  Stage 2: Full Token PQ-Chamfer re-ranking   │
-    │           (top-100 → top-55, ~22ms)          │
-    │                                              │
-    │  Fusion: 0.7 × token_score + 0.3 × PDE_score│
-    │          (26ms total, parallel execution)    │
-    └─────────────────────────────────────────────┘
+Query tokens -> Centroid Coarse Filter -> PQ-Chamfer Rerank -> Graph Laplacian Smoothing -> Score Fusion -> Top-10
 ```
 
-## Core Innovations
+## Key Ideas
 
-| Innovation | Description | Impact |
-|:-----------|:------------|:-------|
-| V1: Document = Point Cloud | Multi-sentence vectors form a "shape" | Framework foundation |
-| V2: PDE Convection-Diffusion | Conservative upwind scheme on KNN graph | Core reranking |
-| V4: Chamfer Distance | Symmetric point cloud matching | +14.3% vs cosine |
-| V8: PQ-Chamfer 64x64 | Subspace decomposition breaks concentration | +24.3% |
-| V11: Token-Level Point Clouds | Per-token hidden states as dense clouds | **+46.4%** |
-| V13: VT-Aligned Virtual Tokens | PQ subspaces as semantic dimensions | +27.4% |
-| Fusion: PDE as Orthogonal Signal | Token Chamfer + sentence PDE integration | **+47.2%** |
+1. **PQ-Chamfer Distance**: Split 4096d vectors into 64x64d subspaces, compute cosine independently, aggregate via Chamfer matching
+2. **Graph Laplacian Smoothing**: Build KNN graph on candidates, propagate scores through neighborhood
+3. **Training-Free**: Works on any LLM's hidden states (verified on Qwen3-8B, BGE-M3, BGE-large)
+
+## Repository Structure
+
+```
+rust-engine/          -- Rust core (NAPI bindings for Node.js)
+  src/
+    lib.rs            -- NAPI exports
+    pq_chamfer.rs     -- PQ subspace distance
+    token_chamfer.rs  -- Token-level two-stage retrieval
+    cloud_store.rs    -- Point cloud SQLite storage
+    vt_distance.rs    -- VT-Aligned distance + cosine ranking
+    pde.rs            -- Graph Laplacian smoothing (+ legacy PDE)
+    bin/extract_tokens.rs -- High-performance token extraction tool
+benchmark/            -- BEIR benchmark scripts (Node.js + Python)
+paper/                -- LaTeX source + PDF
+```
 
 ## Quick Start
 
 ### Prerequisites
-
-- Rust (nightly or stable 1.75+)
+- Rust 1.75+ with NAPI-RS
 - Node.js 18+
-- An embedding model server with `--pooling none` support (e.g., llama.cpp)
+- An embedding model (llama.cpp recommended)
 
 ### Build
-
 ```bash
 cd rust-engine
-cargo build --release
+npm install
+npm run build
 ```
 
-### Extract Token Embeddings
-
+### Run Benchmark
 ```bash
-# Start embedding server with per-token output
-llama-server --model your-model.gguf --embedding --pooling none --port 8081
+# Prepare data (requires embedding server)
+python3 benchmark/beir_encode_turbo.py scifact
 
-# Extract token embeddings for your corpus
-cargo run --release --bin extract_tokens -- \
-  --mode corpus \
-  --input corpus.jsonl \
-  --id-map id_map.json \
-  --output token_clouds.sqlite \
-  --api-url http://localhost:8081/embedding
+# Build point clouds
+node benchmark/build_clouds.js beir_data/scifact
+
+# Run benchmark
+node benchmark/beir_multi_bench.js scifact 55,100,200
 ```
-
-### Run Benchmark (NFCorpus)
-
-```bash
-cd benchmark
-node beir_token_bench.js
-```
-
-## Project Structure
-
-```
-shape-cfd/
-├── paper/                          # Paper PDF, DOCX, source
-│   ├── Shape-CFD_v5_Chen_Yifan.pdf
-│   ├── Shape-CFD_v5_Chen_Yifan.docx
-│   └── paper.md                    # Paper source (Markdown + LaTeX math)
-├── rust-engine/                    # Core Rust engine
-│   ├── src/
-│   │   ├── lib.rs                  # NAPI entry point + pipeline orchestration
-│   │   ├── token_chamfer.rs        # Token-level PQ-Chamfer distance
-│   │   ├── cloud_store.rs          # Document point cloud storage (SQLite)
-│   │   ├── vt_distance.rs          # VT-Aligned distance computation
-│   │   ├── pde.rs                  # PDE solver (KNN graph + advection-diffusion)
-│   │   ├── pq_chamfer.rs           # PQ-Chamfer subspace distance
-│   │   └── bin/
-│   │       └── extract_tokens.rs   # Token embedding extraction tool
-│   └── Cargo.toml
-├── benchmark/                      # BEIR benchmark scripts
-│   ├── beir_token_bench.js         # V11 token-level benchmark
-│   └── beir_rust_parallel.js       # Sentence-level parallel benchmark
-├── LICENSE                         # BSL 1.1 (converts to Apache 2.0 in 2030)
-└── README.md
-```
-
-## Paper
-
-**AD-Rank & Shape-CFD: Physics-Inspired Reranking via Conservative Advection-Diffusion on Token-Level Point Clouds for Dense Retrieval**
-
-Chen, Yifan. March 2026. v5: Token-Level Point Clouds & PDE Orthogonal Fusion.
-
-- [PDF](paper/Shape-CFD_v5_Chen_Yifan.pdf)
-- [Zenodo DOI: 10.5281/zenodo.19347363](https://doi.org/10.5281/zenodo.19347363)
 
 ## Citation
 
 ```bibtex
-@misc{chen2026shapecfd,
-  title   = {AD-Rank \& Shape-CFD: Physics-Inspired Reranking via Conservative
-             Advection-Diffusion on Token-Level Point Clouds for Dense Retrieval},
-  author  = {Chen, Yifan},
-  year    = {2026},
-  doi     = {10.5281/zenodo.19347363},
-  url     = {https://doi.org/10.5281/zenodo.19347363}
+@article{chen2026shapes,
+  title={Documents Are Shapes, Not Points: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing},
+  author={Chen, Yifan},
+  year={2026},
+  note={Preprint available on Zenodo}
 }
 ```
 
 ## License
 
-[Business Source License 1.1](LICENSE) — free for non-production use. Converts to Apache 2.0 on 2030-03-31.
+[Business Source License 1.1](LICENSE) -- free for non-production use. Converts to Apache 2.0 on 2030-03-31.
 
 For commercial licensing inquiries, please open an issue.
-
-## Author
-
-**Chen, Yifan** — Independent researcher. This work was conducted entirely independently without institutional affiliation.
-
-Contact: Open an issue on this repository.

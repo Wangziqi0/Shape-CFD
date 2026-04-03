@@ -17,7 +17,9 @@
 //! - 两阶段检索：质心粗筛 + 精排
 
 use crate::cloud_store::{CloudStore, DocumentCloud};
+use crate::inverted_index::{l2_sq_64d, NUM_CENTROIDS};
 use crate::pq_chamfer::{NUM_SUBSPACES, SUB_DIM, FULL_DIM};
+use crate::pq_store::PqCodebook;
 use rayon::prelude::*;
 
 // ============================================================================
@@ -230,6 +232,174 @@ pub fn token_pq_chamfer(query_cloud: &DocumentCloud, doc_cloud: &DocumentCloud) 
 
     // 3. 64 个子空间取平均
     (total / NUM_SUBSPACES as f32) as f64
+}
+
+// ============================================================================
+// PQ 重建向量的 Token PQ-Chamfer（消融实验用）
+// ============================================================================
+
+/// 将一个 4096d token 向量用 PQ 码本重建：
+/// 对每个子空间 s，找最近质心，替换原始 64d 子向量。
+/// 返回重建后的 4096d 向量。
+fn reconstruct_token(token_vec: &[f32], codebook: &PqCodebook) -> Vec<f32> {
+    debug_assert!(token_vec.len() >= FULL_DIM);
+    let mut recon = vec![0.0f32; FULL_DIM];
+    for s in 0..NUM_SUBSPACES {
+        let off = s * SUB_DIM;
+        let tok_sub = &token_vec[off..off + SUB_DIM];
+        // 找最近码本中心
+        let mut best_c = 0usize;
+        let mut best_d = f32::MAX;
+        for c in 0..NUM_CENTROIDS {
+            let cent = codebook.centroid(s, c);
+            let d = l2_sq_64d(tok_sub, cent);
+            if d < best_d {
+                best_d = d;
+                best_c = c;
+            }
+        }
+        // 用质心替换
+        let cent = codebook.centroid(s, best_c);
+        recon[off..off + SUB_DIM].copy_from_slice(cent);
+    }
+    recon
+}
+
+/// Token-level PQ-Chamfer 距离，但 doc 端使用 PQ 重建向量（消融实验）
+///
+/// Query 保持原始 f32 向量（因为 query 不存 PQ 码），
+/// Doc 的每个 token 先用 PQ 码本重建，然后计算 Chamfer。
+///
+/// 这个函数用于验证 PQ 重建的信息损失对精排质量的影响。
+pub fn token_pq_chamfer_reconstructed(
+    query_cloud: &DocumentCloud,
+    doc_cloud: &DocumentCloud,
+    codebook: &PqCodebook,
+) -> f64 {
+    debug_assert!(query_cloud.n_sentences > 0);
+    debug_assert!(doc_cloud.n_sentences > 0);
+
+    let nq = query_cloud.n_sentences;
+    let nd = doc_cloud.n_sentences;
+    let nq_f = nq as f32;
+    let nd_f = nd as f32;
+
+    // 重建 doc 端所有 token 向量
+    let recon_vecs: Vec<Vec<f32>> = (0..nd)
+        .map(|i| reconstruct_token(doc_cloud.sentence(i), codebook))
+        .collect();
+
+    // 预计算重建向量的子空间范数
+    let recon_norms: Vec<[f32; NUM_SUBSPACES]> = recon_vecs
+        .iter()
+        .map(|v| {
+            let mut norms = [0.0f32; NUM_SUBSPACES];
+            for s in 0..NUM_SUBSPACES {
+                let off = s * SUB_DIM;
+                let sub = &v[off..off + SUB_DIM];
+                let mut sum_sq = 0.0f32;
+                for chunk in sub.chunks_exact(4) {
+                    sum_sq += chunk[0] * chunk[0]
+                        + chunk[1] * chunk[1]
+                        + chunk[2] * chunk[2]
+                        + chunk[3] * chunk[3];
+                }
+                norms[s] = sum_sq.sqrt();
+            }
+            norms
+        })
+        .collect();
+
+    // query 使用原始范数
+    let q_norms: Vec<&[f32; NUM_SUBSPACES]> = (0..nq)
+        .map(|i| &query_cloud.norm_caches[i].norms)
+        .collect();
+
+    let mut dist_matrix = vec![0.0f32; nq * nd];
+    let mut total = 0.0f32;
+
+    for s in 0..NUM_SUBSPACES {
+        let off = s * SUB_DIM;
+
+        // 距离矩阵：query(原始) vs doc(PQ重建)
+        for qi in 0..nq {
+            let q_sub = &query_cloud.sentence(qi)[off..off + SUB_DIM];
+            let q_norm = q_norms[qi][s];
+            let row_off = qi * nd;
+            for di in 0..nd {
+                let d_sub = &recon_vecs[di][off..off + SUB_DIM];
+                let d_norm = recon_norms[di][s];
+                dist_matrix[row_off + di] =
+                    cosine_distance_64d_prenorm(q_sub, d_sub, q_norm, d_norm);
+            }
+        }
+
+        // Q->D 方向
+        let mut sum_qd = 0.0f32;
+        for qi in 0..nq {
+            let row_off = qi * nd;
+            let mut min_d = f32::MAX;
+            for di in 0..nd {
+                let d = dist_matrix[row_off + di];
+                if d < min_d { min_d = d; }
+            }
+            sum_qd += min_d;
+        }
+
+        // D->Q 方向
+        let mut sum_dq = 0.0f32;
+        for di in 0..nd {
+            let mut min_d = f32::MAX;
+            for qi in 0..nq {
+                let d = dist_matrix[qi * nd + di];
+                if d < min_d { min_d = d; }
+            }
+            sum_dq += min_d;
+        }
+
+        total += sum_qd / nq_f + sum_dq / nd_f;
+    }
+
+    (total / NUM_SUBSPACES as f32) as f64
+}
+
+/// 两阶段检索（PQ 重建版）：质心粗筛 + PQ 重建精排
+///
+/// 粗筛阶段与原始版相同（用质心），精排阶段用 PQ 重建向量。
+pub fn token_chamfer_two_stage_pq_recon(
+    query_cloud: &DocumentCloud,
+    token_store: &CloudStore,
+    centroids: &[Vec<f32>],
+    codebook: &PqCodebook,
+    coarse_top: usize,
+    top_n: usize,
+) -> Vec<(u32, f64)> {
+    // 1. 粗筛：与原始版相同
+    let mut coarse_scores: Vec<(usize, f64)> = centroids
+        .par_iter()
+        .enumerate()
+        .map(|(idx, centroid)| {
+            let dist = token_centroid_chamfer(query_cloud, centroid);
+            (idx, dist)
+        })
+        .collect();
+
+    coarse_scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+    coarse_scores.truncate(coarse_top);
+
+    // 2. 精排：使用 PQ 重建向量
+    let mut fine_scores: Vec<(u32, f64)> = coarse_scores
+        .par_iter()
+        .map(|&(idx, _)| {
+            let doc = &token_store.documents[idx];
+            let dist = token_pq_chamfer_reconstructed(query_cloud, doc, codebook);
+            (doc.doc_id, dist)
+        })
+        .collect();
+
+    fine_scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+    fine_scores.truncate(top_n);
+    fine_scores
 }
 
 /// 全库 Token Chamfer 扫描，返回 top_n 最近的 (doc_id, distance)
@@ -526,6 +696,239 @@ pub fn token_sampled_distance_matrix(
         }
     }
     matrix
+}
+
+// ============================================================================
+// 密度加权 PQ-Chamfer 距离（消融实验）
+// ============================================================================
+
+/// 计算文档点云中每个 token 的局部密度权重
+///
+/// 对文档的第 i 个 token，计算它与同文档其他 token 的 KNN PQ-cosine 距离（在 64 个子空间平均后），
+/// density_i = 1 / (mean_knn_distance + eps)，然后归一化使权重之和 = 1。
+///
+/// # 参数
+/// - `cloud`: 文档点云
+/// - `k`: KNN 的 K 值（如 3, 5, 7）
+///
+/// # 返回
+/// 长度 = cloud.n_sentences 的权重向量，和为 1.0
+fn compute_density_weights(cloud: &DocumentCloud, k: usize) -> Vec<f32> {
+    let n = cloud.n_sentences;
+    if n <= 1 {
+        return vec![1.0f32];
+    }
+
+    // 有效 K：不超过 n-1（排除自身）
+    let eff_k = k.min(n - 1);
+    let eps = 1e-8f32;
+
+    // 计算所有 token 对之间的 PQ-cosine 距离矩阵
+    // 对称矩阵，只计算上三角
+    let mut dist_matrix = vec![0.0f32; n * n];
+    for i in 0..n {
+        for j in (i + 1)..n {
+            // 计算 token i 和 token j 的平均 PQ-cosine 距离
+            let mut total_dist = 0.0f32;
+            for s in 0..NUM_SUBSPACES {
+                let off = s * SUB_DIM;
+                let sub_i = &cloud.sentence(i)[off..off + SUB_DIM];
+                let sub_j = &cloud.sentence(j)[off..off + SUB_DIM];
+                let norm_i = cloud.norm_caches[i].norms[s];
+                let norm_j = cloud.norm_caches[j].norms[s];
+                total_dist += cosine_distance_64d_prenorm(sub_i, sub_j, norm_i, norm_j);
+            }
+            let avg_dist = total_dist / NUM_SUBSPACES as f32;
+            dist_matrix[i * n + j] = avg_dist;
+            dist_matrix[j * n + i] = avg_dist;
+        }
+    }
+
+    // 对每个 token 找 KNN 距离
+    let mut densities = Vec::with_capacity(n);
+    let mut dists_buf = Vec::with_capacity(n);
+    for i in 0..n {
+        dists_buf.clear();
+        for j in 0..n {
+            if i != j {
+                dists_buf.push(dist_matrix[i * n + j]);
+            }
+        }
+        // 部分排序取前 eff_k 个
+        dists_buf.sort_by(|a, b| a.partial_cmp(b).unwrap_or(std::cmp::Ordering::Equal));
+        let mean_knn: f32 = dists_buf[..eff_k].iter().sum::<f32>() / eff_k as f32;
+        densities.push(1.0 / (mean_knn + eps));
+    }
+
+    // 归一化
+    let sum: f32 = densities.iter().sum();
+    if sum > eps {
+        densities.iter_mut().for_each(|w| *w /= sum);
+    }
+    densities
+}
+
+/// 密度加权 Token PQ-Chamfer 距离
+///
+/// 与 token_pq_chamfer 的区别：
+/// - Q->D 方向保持均匀加权 (1/|Q|)
+/// - D->Q 方向使用密度权重：Sigma_d w_d * min_q dist(d, q)
+///
+/// # 参数
+/// - `query_cloud`: query token 点云
+/// - `doc_cloud`: 文档 token 点云
+/// - `doc_weights`: 文档端密度权重（长度 = doc_cloud.n_sentences，和为 1.0）
+/// - `weight_query`: 是否也对 query 端加权（v2 变体）
+/// - `query_weights`: query 端密度权重（仅 weight_query=true 时使用）
+pub fn token_pq_chamfer_density(
+    query_cloud: &DocumentCloud,
+    doc_cloud: &DocumentCloud,
+    doc_weights: &[f32],
+    weight_query: bool,
+    query_weights: Option<&[f32]>,
+) -> f64 {
+    debug_assert!(query_cloud.n_sentences > 0);
+    debug_assert!(doc_cloud.n_sentences > 0);
+    debug_assert_eq!(doc_weights.len(), doc_cloud.n_sentences);
+
+    let nq = query_cloud.n_sentences;
+    let nd = doc_cloud.n_sentences;
+    let nq_f = nq as f32;
+
+    let q_norms: Vec<&[f32; NUM_SUBSPACES]> = (0..nq)
+        .map(|i| &query_cloud.norm_caches[i].norms)
+        .collect();
+    let d_norms: Vec<&[f32; NUM_SUBSPACES]> = (0..nd)
+        .map(|i| &doc_cloud.norm_caches[i].norms)
+        .collect();
+
+    let mut dist_matrix = vec![0.0f32; nq * nd];
+    let mut total = 0.0f32;
+
+    for s in 0..NUM_SUBSPACES {
+        let off = s * SUB_DIM;
+
+        // 计算 nq x nd 距离矩阵
+        for qi in 0..nq {
+            let q_sub = &query_cloud.sentence(qi)[off..off + SUB_DIM];
+            let q_norm = q_norms[qi][s];
+            let row_off = qi * nd;
+            for di in 0..nd {
+                let d_sub = &doc_cloud.sentence(di)[off..off + SUB_DIM];
+                let d_norm = d_norms[di][s];
+                dist_matrix[row_off + di] =
+                    cosine_distance_64d_prenorm(q_sub, d_sub, q_norm, d_norm);
+            }
+        }
+
+        // Q->D 方向：对每行取 min
+        let mut sum_qd = 0.0f32;
+        if weight_query {
+            // v2 变体：query 也加权
+            let qw = query_weights.unwrap();
+            for qi in 0..nq {
+                let row_off = qi * nd;
+                let mut min_d = f32::MAX;
+                for di in 0..nd {
+                    let d = dist_matrix[row_off + di];
+                    if d < min_d { min_d = d; }
+                }
+                sum_qd += qw[qi] * min_d;
+            }
+        } else {
+            // v1 标准：query 均匀加权
+            for qi in 0..nq {
+                let row_off = qi * nd;
+                let mut min_d = f32::MAX;
+                for di in 0..nd {
+                    let d = dist_matrix[row_off + di];
+                    if d < min_d { min_d = d; }
+                }
+                sum_qd += min_d;
+            }
+            sum_qd /= nq_f;
+        }
+
+        // D->Q 方向：密度加权
+        let mut sum_dq = 0.0f32;
+        for di in 0..nd {
+            let mut min_d = f32::MAX;
+            for qi in 0..nq {
+                let d = dist_matrix[qi * nd + di];
+                if d < min_d { min_d = d; }
+            }
+            sum_dq += doc_weights[di] * min_d;
+        }
+
+        total += sum_qd + sum_dq;
+    }
+
+    (total / NUM_SUBSPACES as f32) as f64
+}
+
+/// 密度加权两阶段检索
+///
+/// 粗筛阶段与标准版相同（质心 Chamfer），
+/// 精排阶段使用密度加权 PQ-Chamfer。
+///
+/// # 参数
+/// - `query_cloud`: query token 点云
+/// - `token_store`: 全库 token 点云存储
+/// - `centroids`: 预计算质心
+/// - `coarse_top`: 粗筛候选数
+/// - `top_n`: 精排返回数
+/// - `density_k`: 密度计算的 KNN K 值
+/// - `weight_query`: 是否也对 query 加权
+pub fn token_chamfer_two_stage_density(
+    query_cloud: &DocumentCloud,
+    token_store: &CloudStore,
+    centroids: &[Vec<f32>],
+    coarse_top: usize,
+    top_n: usize,
+    density_k: usize,
+    weight_query: bool,
+) -> Vec<(u32, f64)> {
+    // 1. 粗筛（与标准版完全相同）
+    let mut coarse_scores: Vec<(usize, f64)> = centroids
+        .par_iter()
+        .enumerate()
+        .map(|(idx, centroid)| {
+            let dist = token_centroid_chamfer(query_cloud, centroid);
+            (idx, dist)
+        })
+        .collect();
+
+    coarse_scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+    coarse_scores.truncate(coarse_top);
+
+    // 预计算 query 密度权重（如果需要）
+    let query_weights = if weight_query {
+        Some(compute_density_weights(query_cloud, density_k))
+    } else {
+        None
+    };
+
+    // 2. 精排：密度加权 Chamfer
+    let mut fine_scores: Vec<(u32, f64)> = coarse_scores
+        .par_iter()
+        .map(|&(idx, _)| {
+            let doc = &token_store.documents[idx];
+            // 计算文档端密度权重
+            let doc_weights = compute_density_weights(doc, density_k);
+            let dist = token_pq_chamfer_density(
+                query_cloud,
+                doc,
+                &doc_weights,
+                weight_query,
+                query_weights.as_deref(),
+            );
+            (doc.doc_id, dist)
+        })
+        .collect();
+
+    fine_scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+    fine_scores.truncate(top_n);
+    fine_scores
 }
 
 // ============================================================================

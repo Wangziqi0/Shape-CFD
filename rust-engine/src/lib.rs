@@ -27,6 +27,17 @@ pub mod token_cloud_store;
 // V11: Token-level PQ-Chamfer 距离（token 点云粗筛 + 管线）
 pub mod token_chamfer;
 
+// V14: Token 倒排索引粗筛
+pub mod inverted_index;
+
+// V14-PQ: PQ 量化存储 + ADC 近似距离
+pub mod pq_store;
+pub mod adc_chamfer;
+pub mod helmholtz_kalman;
+
+// V15: Multi-Probe Retrieval（多路粗筛探测器）
+pub mod multi_probe;
+
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 
@@ -90,6 +101,15 @@ pub struct FullscanHit {
     pub score: f64, // 1.0 - chamfer_distance（越大越好）
 }
 
+/// Multi-Probe Recall 统计结果
+#[napi(object)]
+pub struct MultiProbeRecallResult {
+    pub probe1_ids: Vec<u32>,
+    pub probe2_ids: Vec<u32>,
+    pub probe3_ids: Vec<u32>,
+    pub merged_ids: Vec<u32>,
+}
+
 // ============================================================================
 // 内部类型 → NAPI 类型转换
 // ============================================================================
@@ -141,6 +161,12 @@ pub struct LawVexus {
     query_token_store: Option<cloud_store::CloudStore>,
     // V11: 预计算的 token 质心（每个文档的 token 均值向量，用于两阶段粗筛）
     token_centroids: Option<Vec<Vec<f32>>>,
+    // V14: Token 倒排索引
+    token_inverted_index: Option<inverted_index::TokenInvertedIndex>,
+    // V14-PQ: PQ 量化存储
+    pq_store: Option<pq_store::PqStore>,
+    // V15: Multi-Probe 最强 token 代表向量
+    max_token_reprs: Option<Vec<multi_probe::MaxTokenRepr>>,
 }
 
 #[napi]
@@ -159,6 +185,9 @@ impl LawVexus {
             token_cloud_store: None,
             query_token_store: None,
             token_centroids: None,
+            token_inverted_index: None,
+            pq_store: None,
+            max_token_reprs: None,
         }
     }
 
@@ -891,6 +920,343 @@ impl LawVexus {
         ranked
     }
 
+    /// 图拉普拉斯平滑管线（PDE baseline）
+    ///
+    /// 与 shape_cfd_pipeline 完全相同的图构建和 C0 逻辑，
+    /// 但用 laplacian_smooth 替代 solve_pde（无对流、无反应项）。
+    /// 用于验证 PDE 对流项的实际增益。
+    ///
+    /// query: 4096d Float32 Buffer
+    /// k: 返回 top-K
+    /// top_n: 初始候选池大小 (cosine top-N)
+    /// alpha: 平滑系数（默认 0.02）
+    /// steps: 平滑步数（默认 20）
+    /// 返回: [{id, score}] 按浓度降序
+    #[napi]
+    pub fn shape_laplacian_pipeline(
+        &self,
+        query: Buffer,
+        k: u32,
+        top_n: u32,
+        alpha: Option<f64>,
+        steps: Option<u32>,
+    ) -> napi::Result<Vec<FullscanHit>> {
+        let _store = self
+            .cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("点云未加载，请先调用 loadClouds".to_string()))?;
+
+        let query_slice: &[f32] = unsafe {
+            std::slice::from_raw_parts(
+                query.as_ptr() as *const f32,
+                query.len() / std::mem::size_of::<f32>(),
+            )
+        };
+
+        if query_slice.len() != pq_chamfer::FULL_DIM {
+            return Err(napi::Error::from_reason(format!(
+                "query 维度不匹配: 期望 {}，实际 {}",
+                pq_chamfer::FULL_DIM,
+                query_slice.len()
+            )));
+        }
+
+        let alpha_val = alpha.unwrap_or(0.02);
+        let steps_val = steps.unwrap_or(20) as usize;
+
+        let ranked = self.shape_laplacian_pipeline_inner(
+            query_slice,
+            k as usize,
+            top_n as usize,
+            alpha_val,
+            steps_val,
+        );
+
+        Ok(ranked
+            .into_iter()
+            .map(|(id, score)| FullscanHit { id, score })
+            .collect())
+    }
+
+    /// Rust 原生 cosine top-K 排序（用于 benchmark baseline）
+    ///
+    /// query: 4096d Float32 Buffer
+    /// k: 返回 top-K
+    /// 返回: [{id, score}] 按 cosine similarity 降序
+    #[napi]
+    pub fn cosine_rank(
+        &self,
+        query: Buffer,
+        k: u32,
+    ) -> napi::Result<Vec<FullscanHit>> {
+        let store = self
+            .cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("点云未加载".to_string()))?;
+
+        let query_slice: &[f32] = unsafe {
+            std::slice::from_raw_parts(
+                query.as_ptr() as *const f32,
+                query.len() / std::mem::size_of::<f32>(),
+            )
+        };
+
+        // cosine_top_n 返回 (doc_id, cosine_distance)，距离升序
+        // 转换为 similarity 降序
+        let candidates = vt_distance::cosine_top_n(query_slice, store, k as usize);
+        Ok(candidates
+            .into_iter()
+            .map(|(id, dist)| FullscanHit {
+                id,
+                score: (1.0 - dist) as f64,
+            })
+            .collect())
+    }
+
+    /// 图拉普拉斯平滑管线内部实现
+    ///
+    /// 复用 shape_cfd_pipeline_inner 的图构建和 C0 逻辑，
+    /// 仅将 PDE 求解替换为 laplacian_smooth。
+    fn shape_laplacian_pipeline_inner(
+        &self,
+        query: &[f32],
+        k: usize,
+        top_n: usize,
+        alpha: f64,
+        steps: usize,
+    ) -> Vec<(u32, f64)> {
+        let store = self.cloud_store.as_ref().unwrap();
+
+        // 1. cosine 全库排序 top-N（与 shape_cfd 完全一致）
+        let candidates = vt_distance::cosine_top_n(query, store, top_n);
+        let n = candidates.len();
+
+        if n == 0 {
+            return Vec::new();
+        }
+
+        // 收集候选文档的点云
+        let clouds: Vec<Vec<&[f32]>> = candidates
+            .iter()
+            .map(|&(id, _)| {
+                store
+                    .get_cloud(id)
+                    .map(|doc| doc.as_slice_refs())
+                    .unwrap_or_default()
+            })
+            .collect();
+
+        // 过滤掉空点云
+        if clouds.iter().any(|c| c.is_empty()) {
+            return candidates
+                .into_iter()
+                .take(k)
+                .map(|(id, dist)| (id, 1.0 - dist as f64))
+                .collect();
+        }
+
+        // 2. vt_aligned 距离矩阵（与 shape_cfd 完全一致）
+        let dist_matrix = vt_distance::compute_vt_distance_matrix(&clouds);
+
+        // 3. KNN 图 (k=3，与 shape_cfd 完全一致)
+        let knn_k = 3.min(n.saturating_sub(1));
+        let adj = vt_distance::build_knn(n, knn_k, &dist_matrix);
+
+        // 4. 初始浓度 = exp(-2 * vt_aligned_query_doc)（与 shape_cfd 完全一致）
+        let c0: Vec<f64> = clouds
+            .iter()
+            .map(|cloud| (-2.0 * vt_distance::vt_aligned_query_doc(query, cloud) as f64).exp())
+            .collect();
+
+        // 5. 图拉普拉斯平滑（替代 PDE 求解，无对流、无反应项）
+        let c_final = pde::laplacian_smooth(&c0, &adj, alpha, steps);
+
+        // 6. 按浓度降序排序，返回 top-k
+        let mut ranked: Vec<(u32, f64)> = candidates
+            .iter()
+            .zip(c_final.iter())
+            .map(|(&(id, _), &score)| (id, score))
+            .collect();
+        ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        ranked.truncate(k);
+        ranked
+    }
+
+    /// 图拉普拉斯 + Allen-Cahn 管线（无对流）
+    /// 扩散做平滑，Allen-Cahn 做极化，对流完全去掉
+    #[napi]
+    pub fn shape_laplacian_ac_pipeline(
+        &self,
+        query: Buffer,
+        k: u32,
+        top_n: u32,
+        alpha: Option<f64>,
+        gamma: Option<f64>,
+        steps: Option<u32>,
+    ) -> napi::Result<Vec<FullscanHit>> {
+        let _store = self.cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("点云未加载".to_string()))?;
+
+        let query_slice: &[f32] = unsafe {
+            std::slice::from_raw_parts(
+                query.as_ptr() as *const f32,
+                query.len() / std::mem::size_of::<f32>(),
+            )
+        };
+        if query_slice.len() != pq_chamfer::FULL_DIM {
+            return Err(napi::Error::from_reason(format!(
+                "query 维度不匹配: 期望 {}, 实际 {}", pq_chamfer::FULL_DIM, query_slice.len()
+            )));
+        }
+
+        let store = self.cloud_store.as_ref().unwrap();
+        let alpha_val = alpha.unwrap_or(0.02);
+        let gamma_val = gamma.unwrap_or(0.5);
+        let steps_val = steps.unwrap_or(30) as usize;
+
+        // 复用 laplacian pipeline 的图构建逻辑
+        let candidates = vt_distance::cosine_top_n(query_slice, store, top_n as usize);
+        let n = candidates.len();
+        if n == 0 { return Ok(Vec::new()); }
+
+        let clouds: Vec<Vec<&[f32]>> = candidates.iter()
+            .map(|&(id, _)| store.get_cloud(id).map(|d| d.as_slice_refs()).unwrap_or_default())
+            .collect();
+
+        if clouds.iter().any(|c| c.is_empty()) {
+            return Ok(candidates.into_iter().take(k as usize)
+                .map(|(id, dist)| FullscanHit { id, score: 1.0 - dist as f64 }).collect());
+        }
+
+        let dist_matrix = vt_distance::compute_vt_distance_matrix(&clouds);
+        let knn_k = 3.min(n.saturating_sub(1));
+        let adj = vt_distance::build_knn(n, knn_k, &dist_matrix);
+        let c0: Vec<f64> = clouds.iter()
+            .map(|cloud| (-2.0 * vt_distance::vt_aligned_query_doc(query_slice, cloud) as f64).exp())
+            .collect();
+
+        // 图拉普拉斯 + Allen-Cahn（无对流）
+        let c_final = pde::laplacian_allen_cahn(&c0, &adj, alpha_val, gamma_val, steps_val, 1e-3);
+
+        let mut ranked: Vec<(u32, f64)> = candidates.iter().zip(c_final.iter())
+            .map(|(&(id, _), &score)| (id, score)).collect();
+        ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        ranked.truncate(k as usize);
+
+        Ok(ranked.into_iter().map(|(id, score)| FullscanHit { id, score }).collect())
+    }
+
+    /// V15: Helmholtz-Kalman 融合管线
+    /// 句子级图平滑 + token 级 Chamfer，通过 Helmholtz 分解提取正交信号，Kalman 自适应融合
+    #[napi]
+    pub fn helmholtz_kalman_pipeline(
+        &self,
+        query_buf: Buffer,
+        query_id: u32,
+        k: u32,
+        top_n: u32,
+        beta: Option<f64>,
+    ) -> napi::Result<Vec<FullscanHit>> {
+        let store = self.cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("句子级点云未加载".to_string()))?;
+        let token_store = self.token_cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_token_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let centroids = self.token_centroids.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("质心未计算".to_string()))?;
+
+        let query_slice: &[f32] = unsafe {
+            std::slice::from_raw_parts(
+                query_buf.as_ptr() as *const f32,
+                query_buf.len() / std::mem::size_of::<f32>(),
+            )
+        };
+        if query_slice.len() != pq_chamfer::FULL_DIM {
+            return Err(napi::Error::from_reason("query 维度不匹配".to_string()));
+        }
+
+        let beta_val = beta.unwrap_or(1.0);
+        let top_n = top_n as usize;
+        let k = k as usize;
+
+        // 1. Token 质心粗筛 top-100 → 精排 top_n（与 token_2stage 相同候选集）
+        let query_cloud = query_token_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let token_candidates = token_chamfer::token_chamfer_two_stage(
+            query_cloud, token_store, centroids, 100, top_n,
+        );
+        let n = token_candidates.len();
+        if n == 0 { return Ok(Vec::new()); }
+
+        let doc_ids: Vec<u32> = token_candidates.iter().map(|&(id, _)| id).collect();
+
+        // s_token 直接来自 token_chamfer 精排分数
+        let s_token: Vec<f64> = token_candidates.iter()
+            .map(|&(_, dist)| (-2.0 * dist).exp())
+            .collect();
+
+        // 2. 对同一候选集做句子级图构建
+        let clouds: Vec<Vec<&[f32]>> = doc_ids.iter()
+            .map(|&id| store.get_cloud(id).map(|d| d.as_slice_refs()).unwrap_or_default())
+            .collect();
+
+        if clouds.iter().any(|c| c.is_empty()) {
+            // 句子级点云缺失，退回 token 排序
+            return Ok(token_candidates.into_iter().take(k)
+                .map(|(id, dist)| FullscanHit { id, score: (-2.0 * dist).exp() }).collect());
+        }
+
+        let dist_matrix = vt_distance::compute_vt_distance_matrix(&clouds);
+        let knn_k = 3.min(n.saturating_sub(1));
+        let adj = vt_distance::build_knn(n, knn_k, &dist_matrix);
+
+        // 3. 句子级 C₀ → 图拉普拉斯平滑 → s_graph
+        let c0: Vec<f64> = clouds.iter()
+            .map(|cloud| (-2.0 * vt_distance::vt_aligned_query_doc(query_slice, cloud) as f64).exp())
+            .collect();
+        let s_graph = pde::laplacian_smooth(&c0, &adj, 0.02, 20);
+
+        // 5. 计算 per-document token 方差
+        let doc_clouds_for_var: Vec<&cloud_store::DocumentCloud> = doc_ids.iter()
+            .filter_map(|&did| token_store.get_cloud(did))
+            .collect();
+
+        let token_variances = if doc_clouds_for_var.len() == n {
+            helmholtz_kalman::compute_token_variances(query_cloud, &doc_clouds_for_var)
+        } else {
+            // fallback: 均匀方差
+            vec![0.1; n]
+        };
+
+        // 6. 归一化分数到 [0, 1]
+        let normalize = |v: &[f64]| -> Vec<f64> {
+            let mn = v.iter().cloned().fold(f64::MAX, f64::min);
+            let mx = v.iter().cloned().fold(f64::MIN, f64::max);
+            let range = mx - mn;
+            if range < 1e-12 { return vec![0.5; v.len()]; }
+            v.iter().map(|&x| (x - mn) / range).collect()
+        };
+
+        let s_token_norm = normalize(&s_token);
+        let s_graph_norm = normalize(&s_graph);
+
+        // 7. Helmholtz-Kalman 融合
+        let s_fused = helmholtz_kalman::helmholtz_kalman_fuse(
+            &s_token_norm, &s_graph_norm, &adj, &token_variances, beta_val,
+        );
+
+        // 8. 排序返回 top-k
+        let mut ranked: Vec<(u32, f64)> = doc_ids.iter().zip(s_fused.iter())
+            .map(|(&id, &score)| (id, score)).collect();
+        ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        ranked.truncate(k);
+
+        Ok(ranked.into_iter().map(|(id, score)| FullscanHit { id, score }).collect())
+    }
+
     /// 探针 PQ-Chamfer 检索（含排除列表，供 Stefan 预取使用）
     #[napi]
     pub fn probe_pq_chamfer(
@@ -991,9 +1357,33 @@ impl LawVexus {
         let centroids = token_chamfer::precompute_token_centroids(&corpus_store);
         eprintln!("[LawVexus] token 质心计算完成: {} 个质心", centroids.len());
 
+        // V14: 构建 token 倒排索引（必须在 corpus_store move 之前）
+        eprintln!("[LawVexus] 构建 token 倒排索引...");
+        let t_idx = std::time::Instant::now();
+        let inv_index = inverted_index::TokenInvertedIndex::build(&corpus_store);
+        eprintln!(
+            "[LawVexus] 倒排索引构建完成 ({:.1}s, {:.1} MB)",
+            t_idx.elapsed().as_secs_f64(),
+            inv_index.memory_usage() as f64 / (1024.0 * 1024.0),
+        );
+
+        // V14-PQ: 提取码本并编码 PQ
+        eprintln!("[LawVexus] PQ 编码...");
+        let t_pq = std::time::Instant::now();
+        let codebook_flat = inv_index.export_codebook_flat();
+        let codebook = pq_store::PqCodebook::from_flat(codebook_flat);
+        let pq = pq_store::PqStore::encode_from_cloud_store(&corpus_store, &codebook);
+        eprintln!(
+            "[LawVexus] PQ 编码完成 ({:.1}s, {:.1} MB)",
+            t_pq.elapsed().as_secs_f64(),
+            pq.memory_usage() as f64 / (1024.0 * 1024.0),
+        );
+
         self.token_cloud_store = Some(corpus_store);
         self.query_token_store = Some(query_store);
         self.token_centroids = Some(centroids);
+        self.token_inverted_index = Some(inv_index);
+        self.pq_store = Some(pq);
 
         let summary = format!(
             "token 点云加载完成: 语料库 {} 文档/{} tokens ({:.2} GB), query {} queries/{} tokens ({:.1} MB), 质心已预计算",
@@ -1176,6 +1566,39 @@ impl LawVexus {
             .collect())
     }
 
+    /// 对指定候选列表做 token Chamfer 重排（multigrid 用）
+    #[napi]
+    pub fn token_chamfer_rerank_list(
+        &self,
+        query_id: u32,
+        doc_ids: Vec<u32>,
+        top_n: u32,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self.token_cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        use rayon::prelude::*;
+        let mut scores: Vec<(u32, f64)> = doc_ids.par_iter().filter_map(|&did| {
+            token_store.get_cloud(did).map(|doc| {
+                let dist = token_chamfer::token_pq_chamfer(query_cloud, doc);
+                (did, dist)
+            })
+        }).collect();
+
+        scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+        scores.truncate(top_n as usize);
+
+        Ok(scores.into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
     /// V11 两阶段检索：token 质心粗筛 + 全 token Chamfer 精排
     ///
     /// 第一阶段：query tokens vs 每个文档质心（快，每文档 1 个 4096d 质心）
@@ -1229,6 +1652,125 @@ impl LawVexus {
         );
 
         // 返回 [[doc_id, score], ...]，score = exp(-2 * distance)
+        Ok(results
+            .into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
+    /// 密度加权 Token Chamfer 两阶段检索（消融实验）
+    ///
+    /// 与 tokenChamferTwoStage 相同的粗筛，精排阶段使用密度加权 PQ-Chamfer。
+    /// 密度 = 1 / mean_knn_distance，文档端密集区域的 token 匹配获得更高权重。
+    ///
+    /// @param queryId - query 文档 ID
+    /// @param coarseTop - 粗筛候选池大小
+    /// @param topN - 精排后返回数
+    /// @param densityK - KNN K 值（如 3, 5, 7）
+    /// @param weightQuery - 是否也对 query 端加权
+    /// @returns [[doc_id, score], ...] score = exp(-2 * chamfer_distance)
+    #[napi]
+    pub fn token_chamfer_two_stage_density(
+        &self,
+        query_id: u32,
+        coarse_top: u32,
+        top_n: u32,
+        density_k: u32,
+        weight_query: bool,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self
+            .token_cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "token 点云未加载，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+        let query_store = self
+            .query_token_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "query token 点云未加载，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+        let centroids = self
+            .token_centroids
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "token 质心未计算，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 在 query token store 中不存在", query_id))
+        })?;
+
+        let results = token_chamfer::token_chamfer_two_stage_density(
+            query_cloud,
+            token_store,
+            centroids,
+            coarse_top as usize,
+            top_n as usize,
+            density_k as usize,
+            weight_query,
+        );
+
+        Ok(results
+            .into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
+    /// PQ 重建向量消融实验：token_chamfer_two_stage 的 PQ 重建版
+    ///
+    /// 与 tokenChamferTwoStage 相同的粗筛，但精排阶段用 PQ 码本重建的近似向量
+    /// 替代原始 f32 向量，用于验证 PQ 重建的信息损失对精排质量的影响。
+    ///
+    /// @param queryId - query 文档 ID
+    /// @param coarseTop - 粗筛候选池大小
+    /// @param topN - 精排后返回数
+    /// @returns [[doc_id, score], ...] score = exp(-2 * chamfer_distance)
+    #[napi]
+    pub fn token_chamfer_two_stage_pq_recon(
+        &self,
+        query_id: u32,
+        coarse_top: u32,
+        top_n: u32,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self
+            .token_cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "token 点云未加载，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+        let query_store = self
+            .query_token_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "query token 点云未加载，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+        let centroids = self
+            .token_centroids
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "token 质心未计算，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+        let pq = self
+            .pq_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "PQ store 未加载".to_string(),
+            ))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 在 query token store 中不存在", query_id))
+        })?;
+
+        let results = token_chamfer::token_chamfer_two_stage_pq_recon(
+            query_cloud,
+            token_store,
+            centroids,
+            &pq.codebook,
+            coarse_top as usize,
+            top_n as usize,
+        );
+
         Ok(results
             .into_iter()
             .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
@@ -1373,6 +1915,173 @@ impl LawVexus {
             .collect())
     }
 
+    /// Token 梯度对流 PDE 管线
+    ///
+    /// 跨粒度融合：句子级图结构 + token 级对流驱动
+    ///
+    /// 流程:
+    /// 1. cosine 粗筛 top-N → 句子级 VT-Aligned 距离矩阵 → KNN 图
+    /// 2. C0 = exp(-2 * VT句子级距离)（句子级信号）
+    /// 3. 获取 query 的 token 点云，对 top-N 文档计算 token Chamfer 分数 S_i
+    /// 4. 对流场 u_ij = beta * (S_j - S_i)（token 级信号）
+    /// 5. 跑 token 梯度 PDE（跨粒度融合）
+    /// 6. 按 PDE 浓度降序返回 top-K
+    ///
+    /// @param queryBuf - query 向量 (4096d f32 Buffer)
+    /// @param queryId - query 在 query_token_store 中的 ID（用于获取 token 点云）
+    /// @param k - 返回 top-K
+    /// @param topN - 粗筛候选数
+    /// @param beta - 对流强度（默认 1.0）
+    /// @returns [{id, score}] 按 PDE 浓度降序
+    #[napi]
+    pub fn token_gradient_pde_pipeline(
+        &self,
+        query_buf: Buffer,
+        query_id: u32,
+        k: u32,
+        top_n: u32,
+        beta: Option<f64>,
+    ) -> napi::Result<Vec<FullscanHit>> {
+        // 检查句子级点云（用于图构建和 C0）
+        let sentence_store = self
+            .cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("句子级点云未加载，请先调用 loadClouds".to_string()))?;
+
+        // 检查 token 级点云（用于对流场）
+        let token_store = self
+            .token_cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "token 点云未加载，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+        let query_token_store = self
+            .query_token_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "query token 点云未加载，请先调用 loadTokenCloudsSqlite".to_string(),
+            ))?;
+
+        // 解析 query 向量
+        let query_slice: &[f32] = unsafe {
+            std::slice::from_raw_parts(
+                query_buf.as_ptr() as *const f32,
+                query_buf.len() / std::mem::size_of::<f32>(),
+            )
+        };
+        if query_slice.len() != pq_chamfer::FULL_DIM {
+            return Err(napi::Error::from_reason(format!(
+                "query 维度不匹配: 期望 {}，实际 {}",
+                pq_chamfer::FULL_DIM,
+                query_slice.len()
+            )));
+        }
+
+        let beta_val = beta.unwrap_or(1.0);
+        let k_usize = k as usize;
+        let top_n_usize = top_n as usize;
+
+        // ===== 第一部分：句子级图结构（复用 shape_cfd 前半部分） =====
+
+        // 1. cosine 全库排序 top-N
+        let candidates = vt_distance::cosine_top_n(query_slice, sentence_store, top_n_usize);
+        let n = candidates.len();
+        if n == 0 {
+            return Ok(Vec::new());
+        }
+
+        // 收集候选文档的句子级点云
+        let clouds: Vec<Vec<&[f32]>> = candidates
+            .iter()
+            .map(|&(id, _)| {
+                sentence_store
+                    .get_cloud(id)
+                    .map(|doc| doc.as_slice_refs())
+                    .unwrap_or_default()
+            })
+            .collect();
+
+        // 过滤掉空点云（防御性）
+        if clouds.iter().any(|c| c.is_empty()) {
+            return Ok(candidates
+                .into_iter()
+                .take(k_usize)
+                .map(|(id, dist)| FullscanHit { id, score: 1.0 - dist as f64 })
+                .collect());
+        }
+
+        // 2. VT-Aligned 距离矩阵 → KNN 图
+        let dist_matrix = vt_distance::compute_vt_distance_matrix(&clouds);
+        let knn_k = 3usize.min(n.saturating_sub(1));
+        let adj = vt_distance::build_knn(n, knn_k, &dist_matrix);
+
+        // 3. C0 = exp(-2 * VT句子级距离)（句子级信号）
+        let c0: Vec<f64> = clouds
+            .iter()
+            .map(|cloud| (-2.0 * vt_distance::vt_aligned_query_doc(query_slice, cloud) as f64).exp())
+            .collect();
+
+        // ===== 第二部分：token 级对流场 =====
+
+        // 获取 query 的 token 点云
+        let query_cloud = query_token_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 在 query token store 中不存在", query_id))
+        })?;
+
+        // 对每个候选文档计算 token Chamfer 分数
+        let candidate_ids: Vec<u32> = candidates.iter().map(|&(id, _)| id).collect();
+        let token_scores_raw: Vec<f64> = candidate_ids
+            .iter()
+            .map(|&doc_id| {
+                if let Some(doc_cloud) = token_store.get_cloud(doc_id) {
+                    let dist = token_chamfer::token_pq_chamfer(query_cloud, doc_cloud);
+                    (-2.0 * dist).exp()  // 转为相似度分数 [0,1]
+                } else {
+                    0.0
+                }
+            })
+            .collect();
+
+        // 归一化到 [0, 1]（min-max）
+        let s_min = token_scores_raw.iter().cloned().fold(f64::MAX, f64::min);
+        let s_max = token_scores_raw.iter().cloned().fold(f64::MIN, f64::max);
+        let range = s_max - s_min;
+        let norm_scores: Vec<f64> = if range > 1e-8 {
+            token_scores_raw.iter().map(|&s| (s - s_min) / range).collect()
+        } else {
+            vec![0.5; token_scores_raw.len()]
+        };
+
+        // ===== 第三部分：Token 梯度 PDE 求解 =====
+
+        // 默认参数：D=0.15, gamma=0.2, dt=0.03, maxIter=60, epsilon=1e-3
+        let c_final = pde::solve_token_gradient_pde(
+            &c0,
+            &adj,
+            &norm_scores,
+            beta_val,
+            0.15,   // diff_coeff
+            0.2,    // gamma (Allen-Cahn)
+            0.03,   // dt
+            60,     // max_iter
+            1e-3,   // epsilon
+        );
+
+        // ===== 排序返回 =====
+        let mut ranked: Vec<(u32, f64)> = candidates
+            .iter()
+            .zip(c_final.iter())
+            .map(|(&(id, _), &score)| (id, score))
+            .collect();
+        ranked.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap_or(std::cmp::Ordering::Equal));
+        ranked.truncate(k_usize);
+
+        Ok(ranked
+            .into_iter()
+            .map(|(id, score)| FullscanHit { id, score })
+            .collect())
+    }
+
     /// 方案3：极弱 PDE 验证（D=0.01, alpha=0.01）
     ///
     /// 与 tokenChamferPipeline 相同流程，但 PDE 参数极弱，
@@ -1488,6 +2197,410 @@ impl LawVexus {
             .into_iter()
             .map(|(id, score)| vec![id as f64, score])
             .collect())
+    }
+
+    /// V14: 倒排索引两阶段检索
+    /// 用 token 倒排索引替代质心 cosine 粗筛
+    ///
+    /// @param queryId - query ID
+    /// @param coarseTop - 倒排粗筛候选数（如 200）
+    /// @param topN - 精排返回数
+    /// @param nProbe - 每个子空间探查的码本中心数（1=快, 3=准）
+    /// @returns [[doc_id, score], ...] score = exp(-2 * chamfer_distance)
+    #[napi]
+    pub fn token_inverted_two_stage(
+        &self,
+        query_id: u32,
+        coarse_top: u32,
+        top_n: u32,
+        n_probe: u32,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self
+            .token_cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_store = self
+            .query_token_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let inv_index = self
+            .token_inverted_index
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("倒排索引未构建".to_string()))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let results = inverted_index::inverted_two_stage(
+            query_cloud,
+            token_store,
+            inv_index,
+            coarse_top as usize,
+            top_n as usize,
+            n_probe as usize,
+        );
+
+        Ok(results
+            .into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
+    /// V14c: 快速倒排索引（大候选池 + argmin/select_nth 优化）
+    #[napi]
+    pub fn token_inverted_fast(
+        &self,
+        query_id: u32,
+        coarse_top: u32,
+        top_n: u32,
+        n_probe: u32,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self.token_cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let inv_index = self.token_inverted_index.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("倒排索引未构建".to_string()))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let results = inverted_index::inverted_two_stage_fast(
+            query_cloud, token_store, inv_index,
+            coarse_top as usize, top_n as usize, n_probe as usize,
+        );
+
+        Ok(results.into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
+    /// V14-PQ ADC 两阶段检索：质心粗筛 + ADC PQ-Chamfer 精排
+    /// 用 PQ 量化后的向量做精排，无需原始 f32 向量
+    ///
+    /// @param queryId - query 文档 ID
+    /// @param coarseTop - 粗筛候选数
+    /// @param topN - 精排返回数
+    /// @returns [[doc_id, score], ...] score = exp(-2 * chamfer_distance)
+    #[napi]
+    pub fn token_adc_two_stage(
+        &self,
+        query_id: u32,
+        coarse_top: u32,
+        top_n: u32,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let pq = self.pq_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("PQ store 未加载".to_string()))?;
+        let query_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let centroids = self.token_centroids.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("质心未计算".to_string()))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let results = adc_chamfer::centroid_adc_two_stage(
+            query_cloud, pq, centroids,
+            coarse_top as usize, top_n as usize,
+        );
+
+        Ok(results.into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
+    // ===== V15: Multi-Probe Retrieval =====
+
+    /// 预计算最强 token 代表向量（Probe 2 离线阶段）
+    ///
+    /// 对每个文档，取离质心最远的 top-K 个 token 的均值向量。
+    /// 必须在 loadTokenCloudsSqlite 之后调用。
+    ///
+    /// @param topK - 每文档取离质心最远的前几个 token（推荐 3）
+    /// @returns 预计算的文档数
+    #[napi]
+    pub fn precompute_max_token_repr(&mut self, top_k: u32) -> napi::Result<u32> {
+        let token_store = self
+            .token_cloud_store
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let centroids = self
+            .token_centroids
+            .as_ref()
+            .ok_or_else(|| napi::Error::from_reason("质心未计算".to_string()))?;
+
+        let t0 = std::time::Instant::now();
+        let reprs = multi_probe::precompute_max_token_repr(
+            token_store,
+            centroids,
+            top_k as usize,
+        );
+        let count = reprs.len() as u32;
+        let mem_bytes: usize = reprs.iter().map(|r| {
+            r.vector.len() * 4 + r.sub_norms.len() * 4
+        }).sum();
+
+        eprintln!(
+            "[LawVexus] Max-token repr 预计算完成: {} 文档, {:.1} MB, {:.1}s",
+            count,
+            mem_bytes as f64 / (1024.0 * 1024.0),
+            t0.elapsed().as_secs_f64(),
+        );
+
+        self.max_token_reprs = Some(reprs);
+        Ok(count)
+    }
+
+    /// 多路粗筛检索（Multi-Probe Retrieve）
+    ///
+    /// 组合 3 个探测器的结果（质心 Chamfer + 最强 token + 倒排索引），
+    /// 用指定策略合并，返回候选列表。
+    ///
+    /// @param queryId - query ID
+    /// @param perProbeTop - 每个 probe 返回的候选数（如 200）
+    /// @param mergedTop - 合并后返回的候选数（如 200）
+    /// @param mergeStrategy - 合并策略: "rrf" | "max" | "hit"
+    /// @param nProbeInv - 倒排索引的 n_probe 参数（如 1）
+    /// @param useInverted - 是否使用倒排索引探针
+    /// @returns [[doc_id, merged_score], ...] 按 merged_score 降序
+    #[napi]
+    pub fn multi_probe_retrieve(
+        &self,
+        query_id: u32,
+        per_probe_top: u32,
+        merged_top: u32,
+        merge_strategy: String,
+        n_probe_inv: u32,
+        use_inverted: bool,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self.token_cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let centroids = self.token_centroids.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("质心未计算".to_string()))?;
+        let max_token_reprs = self.max_token_reprs.as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "max_token_repr 未预计算，请先调用 precomputeMaxTokenRepr".to_string(),
+            ))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let strategy = match merge_strategy.as_str() {
+            "rrf" => multi_probe::MergeStrategy::Rrf,
+            "max" => multi_probe::MergeStrategy::MaxScore,
+            "hit" => multi_probe::MergeStrategy::HitMax,
+            _ => return Err(napi::Error::from_reason(
+                format!("未知的合并策略: {}，可选: rrf, max, hit", merge_strategy),
+            )),
+        };
+
+        let inv_index = if use_inverted {
+            self.token_inverted_index.as_ref()
+        } else {
+            None
+        };
+
+        let result = multi_probe::multi_probe_retrieve(
+            query_cloud,
+            token_store,
+            centroids,
+            max_token_reprs,
+            inv_index,
+            per_probe_top as usize,
+            merged_top as usize,
+            strategy,
+            n_probe_inv as usize,
+        );
+
+        // 将 doc_idx 转回 doc_id
+        Ok(result
+            .merged
+            .into_iter()
+            .map(|(idx, score)| {
+                let doc_id = token_store.documents[idx].doc_id;
+                vec![doc_id as f64, score]
+            })
+            .collect())
+    }
+
+    /// 多路粗筛 + token Chamfer 精排
+    ///
+    /// 先用多路粗筛取 coarseTop 候选，然后对候选做全 token PQ-Chamfer 精排。
+    ///
+    /// @param queryId - query ID
+    /// @param coarseTop - 多路粗筛候选数
+    /// @param topN - 精排后返回数
+    /// @param mergeStrategy - 合并策略: "rrf" | "max" | "hit"
+    /// @param nProbeInv - 倒排索引的 n_probe 参数
+    /// @param perProbeTop - 每个 probe 返回的候选数
+    /// @param useInverted - 是否使用倒排索引探针
+    /// @returns [[doc_id, score], ...] score = exp(-2 * chamfer_distance)
+    #[napi]
+    pub fn multi_probe_two_stage(
+        &self,
+        query_id: u32,
+        coarse_top: u32,
+        top_n: u32,
+        merge_strategy: String,
+        n_probe_inv: u32,
+        per_probe_top: u32,
+        use_inverted: bool,
+    ) -> napi::Result<Vec<Vec<f64>>> {
+        let token_store = self.token_cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let centroids = self.token_centroids.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("质心未计算".to_string()))?;
+        let max_token_reprs = self.max_token_reprs.as_ref()
+            .ok_or_else(|| napi::Error::from_reason(
+                "max_token_repr 未预计算".to_string(),
+            ))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let strategy = match merge_strategy.as_str() {
+            "rrf" => multi_probe::MergeStrategy::Rrf,
+            "max" => multi_probe::MergeStrategy::MaxScore,
+            "hit" => multi_probe::MergeStrategy::HitMax,
+            _ => return Err(napi::Error::from_reason(
+                format!("未知的合并策略: {}", merge_strategy),
+            )),
+        };
+
+        let inv_index = if use_inverted {
+            self.token_inverted_index.as_ref()
+        } else {
+            None
+        };
+
+        // 1. 多路粗筛
+        let coarse_result = multi_probe::multi_probe_retrieve(
+            query_cloud,
+            token_store,
+            centroids,
+            max_token_reprs,
+            inv_index,
+            per_probe_top as usize,
+            coarse_top as usize,
+            strategy,
+            n_probe_inv as usize,
+        );
+
+        // 2. 精排：对候选做 token PQ-Chamfer
+        use rayon::prelude::*;
+        let mut fine_scores: Vec<(u32, f64)> = coarse_result
+            .merged
+            .par_iter()
+            .filter_map(|&(idx, _)| {
+                let doc = &token_store.documents[idx];
+                let dist = token_chamfer::token_pq_chamfer(query_cloud, doc);
+                Some((doc.doc_id, dist))
+            })
+            .collect();
+
+        fine_scores.sort_by(|a, b| a.1.partial_cmp(&b.1).unwrap_or(std::cmp::Ordering::Equal));
+        fine_scores.truncate(top_n as usize);
+
+        Ok(fine_scores
+            .into_iter()
+            .map(|(id, dist)| vec![id as f64, (-2.0 * dist).exp()])
+            .collect())
+    }
+
+    /// 多路粗筛 recall 统计
+    ///
+    /// 返回各路探测器单独的候选 doc_id 列表，以及合并后的候选列表，
+    /// 供 JS 端计算 recall@K。
+    ///
+    /// @param queryId - query ID
+    /// @param perProbeTop - 每个 probe 返回的候选数
+    /// @param mergedTop - 合并后返回的候选数
+    /// @param mergeStrategy - 合并策略
+    /// @param nProbeInv - 倒排索引 n_probe
+    /// @returns { probe1Ids, probe2Ids, probe3Ids, mergedIds }
+    #[napi]
+    pub fn multi_probe_recall(
+        &self,
+        query_id: u32,
+        per_probe_top: u32,
+        merged_top: u32,
+        merge_strategy: String,
+        n_probe_inv: u32,
+    ) -> napi::Result<MultiProbeRecallResult> {
+        let token_store = self.token_cloud_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("token 点云未加载".to_string()))?;
+        let query_store = self.query_token_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("query token 点云未加载".to_string()))?;
+        let centroids = self.token_centroids.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("质心未计算".to_string()))?;
+        let max_token_reprs = self.max_token_reprs.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("max_token_repr 未预计算".to_string()))?;
+
+        let query_cloud = query_store.get_cloud(query_id).ok_or_else(|| {
+            napi::Error::from_reason(format!("query_id={} 不存在", query_id))
+        })?;
+
+        let strategy = match merge_strategy.as_str() {
+            "rrf" => multi_probe::MergeStrategy::Rrf,
+            "max" => multi_probe::MergeStrategy::MaxScore,
+            "hit" => multi_probe::MergeStrategy::HitMax,
+            _ => return Err(napi::Error::from_reason(
+                format!("未知的合并策略: {}", merge_strategy),
+            )),
+        };
+
+        let per_top = per_probe_top as usize;
+
+        // 各路单独跑
+        let probe1 = multi_probe::centroid_probe(query_cloud, centroids, per_top);
+        let probe2 = multi_probe::max_token_probe(query_cloud, max_token_reprs, per_top);
+        let probe3 = if let Some(idx) = self.token_inverted_index.as_ref() {
+            multi_probe::inverted_probe(query_cloud, idx, per_top, n_probe_inv as usize)
+        } else {
+            Vec::new()
+        };
+
+        // 合并
+        let probes = if probe3.is_empty() {
+            vec![probe1.clone(), probe2.clone()]
+        } else {
+            vec![probe1.clone(), probe2.clone(), probe3.clone()]
+        };
+        let merged = multi_probe::merge_probes(&probes, strategy, merged_top as usize);
+
+        // 转 doc_idx -> doc_id
+        let to_ids = |items: &[(usize, f32)]| -> Vec<u32> {
+            items.iter().map(|&(idx, _)| token_store.documents[idx].doc_id).collect()
+        };
+
+        Ok(MultiProbeRecallResult {
+            probe1_ids: to_ids(&probe1),
+            probe2_ids: to_ids(&probe2),
+            probe3_ids: to_ids(&probe3),
+            merged_ids: merged.merged.iter().map(|&(idx, _)| token_store.documents[idx].doc_id).collect(),
+        })
+    }
+
+    /// 保存 PQ 编码到 SQLite
+    ///
+    /// @param outputPath - 输出 SQLite 文件路径
+    /// @returns 保存结果描述字符串
+    #[napi]
+    pub fn save_pq_store(&self, output_path: String) -> napi::Result<String> {
+        let pq = self.pq_store.as_ref()
+            .ok_or_else(|| napi::Error::from_reason("PQ store 未加载".to_string()))?;
+        pq.save_to_sqlite(&output_path)
+            .map_err(|e| napi::Error::from_reason(e))?;
+        Ok(format!("PQ store 已保存到 {}", output_path))
     }
 }
 
