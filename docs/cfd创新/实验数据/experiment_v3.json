@@ -1,0 +1,464 @@
+{
+  "timestamp": "2026-03-25T08:01:04.208Z",
+  "params": {
+    "v2": {
+      "D": 0.15,
+      "uStrength": 0.1,
+      "knn": 3,
+      "maxIter": 50,
+      "epsilon": 0.001
+    },
+    "mda": {
+      "M": 8,
+      "k": 32,
+      "D": 0.15,
+      "uStrength": 0.3,
+      "knn": 3,
+      "maxIter": 50,
+      "epsilon": 0.001
+    },
+    "baa": {
+      "B": 8,
+      "D": 0.15,
+      "uStrength": 0.3,
+      "knn": 3,
+      "maxIter": 50,
+      "epsilon": 0.001
+    },
+    "preFilterK": 30
+  },
+  "results": [
+    {
+      "query": "劳动合同解除赔偿标准",
+      "speed": {
+        "A": 1.3,
+        "B": 47,
+        "C": 107.7,
+        "D": 7.3
+      },
+      "overlap": {
+        "B": 60,
+        "C": 60,
+        "D": 60
+      },
+      "peclet": {
+        "B": 0.075,
+        "C": 0.387,
+        "D": 0.249
+      },
+      "advContrib": {
+        "C": 90,
+        "D": 93.3
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 2,
+          "cScore": 1,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 3,
+          "dScore": 2,
+          "winner": "cosine"
+        }
+      }
+    },
+    {
+      "query": "醉驾量刑标准",
+      "speed": {
+        "A": 6.1,
+        "B": 16.7,
+        "C": 153.2,
+        "D": 9.9
+      },
+      "overlap": {
+        "B": 60,
+        "C": 60,
+        "D": 70
+      },
+      "peclet": {
+        "B": 0.054,
+        "C": 0.363,
+        "D": 0.197
+      },
+      "advContrib": {
+        "C": 90,
+        "D": 90
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": true
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 4,
+          "cScore": 3,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 4,
+          "dScore": 3,
+          "winner": "cosine"
+        }
+      }
+    },
+    {
+      "query": "房屋租赁合同违约金",
+      "speed": {
+        "A": 1.4,
+        "B": 15.3,
+        "C": 378.5,
+        "D": 9
+      },
+      "overlap": {
+        "B": 30,
+        "C": 40,
+        "D": 30
+      },
+      "peclet": {
+        "B": 0.058,
+        "C": 0.321,
+        "D": 0.194
+      },
+      "advContrib": {
+        "C": 86.7,
+        "D": 90
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 1,
+          "cScore": 2,
+          "winner": "MDA"
+        },
+        "AD": {
+          "aScore": 1,
+          "dScore": 1,
+          "winner": "平局"
+        }
+      }
+    },
+    {
+      "query": "工伤认定标准和赔偿",
+      "speed": {
+        "A": 16.1,
+        "B": 4.8,
+        "C": 361.9,
+        "D": 8.6
+      },
+      "overlap": {
+        "B": 60,
+        "C": 60,
+        "D": 60
+      },
+      "peclet": {
+        "B": 0.061,
+        "C": 0.347,
+        "D": 0.232
+      },
+      "advContrib": {
+        "C": 86.7,
+        "D": 90
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 4,
+          "cScore": 3,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 3,
+          "dScore": 4,
+          "winner": "BAA"
+        }
+      }
+    },
+    {
+      "query": "离婚财产分割",
+      "speed": {
+        "A": 4.6,
+        "B": 42.7,
+        "C": 64.4,
+        "D": 7.2
+      },
+      "overlap": {
+        "B": 40,
+        "C": 40,
+        "D": 40
+      },
+      "peclet": {
+        "B": 0.07,
+        "C": 0.38,
+        "D": 0.238
+      },
+      "advContrib": {
+        "C": 90,
+        "D": 90
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 4,
+          "cScore": 2,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 4,
+          "dScore": 2,
+          "winner": "cosine"
+        }
+      }
+    },
+    {
+      "query": "借款合同利息上限",
+      "speed": {
+        "A": 11.1,
+        "B": 15.6,
+        "C": 67.1,
+        "D": 6.5
+      },
+      "overlap": {
+        "B": 70,
+        "C": 80,
+        "D": 60
+      },
+      "peclet": {
+        "B": 0.061,
+        "C": 0.359,
+        "D": 0.239
+      },
+      "advContrib": {
+        "C": 70,
+        "D": 90
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 4,
+          "cScore": 2,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 3,
+          "dScore": 4,
+          "winner": "BAA"
+        }
+      }
+    },
+    {
+      "query": "交通事故责任划分",
+      "speed": {
+        "A": 16.4,
+        "B": 5.4,
+        "C": 67.6,
+        "D": 6.3
+      },
+      "overlap": {
+        "B": 40,
+        "C": 50,
+        "D": 40
+      },
+      "peclet": {
+        "B": 0.075,
+        "C": 0.332,
+        "D": 0.251
+      },
+      "advContrib": {
+        "C": 83.3,
+        "D": 76.7
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": true
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 3,
+          "cScore": 2,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 2,
+          "dScore": 4,
+          "winner": "BAA"
+        }
+      }
+    },
+    {
+      "query": "商标侵权赔偿",
+      "speed": {
+        "A": 15.4,
+        "B": 5,
+        "C": 67.7,
+        "D": 6.7
+      },
+      "overlap": {
+        "B": 40,
+        "C": 60,
+        "D": 50
+      },
+      "peclet": {
+        "B": 0.066,
+        "C": 0.304,
+        "D": 0.233
+      },
+      "advContrib": {
+        "C": 90,
+        "D": 80
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 3,
+          "cScore": 4,
+          "winner": "MDA"
+        },
+        "AD": {
+          "aScore": 3,
+          "dScore": 4,
+          "winner": "BAA"
+        }
+      }
+    },
+    {
+      "query": "行政处罚听证程序",
+      "speed": {
+        "A": 21.3,
+        "B": 2.4,
+        "C": 65.3,
+        "D": 8.6
+      },
+      "overlap": {
+        "B": 80,
+        "C": 80,
+        "D": 90
+      },
+      "peclet": {
+        "B": 0.069,
+        "C": 0.362,
+        "D": 0.221
+      },
+      "advContrib": {
+        "C": 86.7,
+        "D": 80
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 3,
+          "cScore": 4,
+          "winner": "MDA"
+        },
+        "AD": {
+          "aScore": 3,
+          "dScore": 4,
+          "winner": "BAA"
+        }
+      }
+    },
+    {
+      "query": "未成年人犯罪处罚",
+      "speed": {
+        "A": 27.3,
+        "B": 2.4,
+        "C": 66.8,
+        "D": 6.8
+      },
+      "overlap": {
+        "B": 40,
+        "C": 40,
+        "D": 40
+      },
+      "peclet": {
+        "B": 0.061,
+        "C": 0.353,
+        "D": 0.204
+      },
+      "advContrib": {
+        "C": 86.7,
+        "D": 96.7
+      },
+      "convergence": {
+        "B": true,
+        "C": false,
+        "D": false
+      },
+      "blindEval": {
+        "AC": {
+          "aScore": 4,
+          "cScore": 2,
+          "winner": "cosine"
+        },
+        "AD": {
+          "aScore": 4,
+          "dScore": 2,
+          "winner": "cosine"
+        }
+      }
+    }
+  ],
+  "summary": {
+    "avgSpeed": {
+      "A": 12.1,
+      "B": 15.7,
+      "C": 140,
+      "D": 7.7
+    },
+    "avgOverlap": {
+      "B": 52,
+      "C": 57,
+      "D": 54
+    },
+    "avgPeclet": {
+      "B": 0.065,
+      "C": 0.351,
+      "D": 0.226
+    },
+    "avgAdvContrib": {
+      "C": 86,
+      "D": 87.7
+    },
+    "blindEval": {
+      "AC": {
+        "avgCosine": 3.2,
+        "avgMDA": 2.5
+      },
+      "AD": {
+        "avgCosine": 3,
+        "avgBAA": 3
+      }
+    }
+  }
+}

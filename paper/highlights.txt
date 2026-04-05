@@ -1,0 +1,5 @@
+- PQ-Chamfer distance repurposes Product Quantization as a distance measure, improving six BEIR benchmarks by +2.7% to +136.2%
+- Training-free pipeline surpasses BGE-large-en-v1.5 on FiQA (+8.4%) and SCIDOCS (+32.5%) at under $50 compute cost
+- Cross-model validation on three embedding architectures confirms model-agnostic effectiveness
+- PQ subspace decomposition creates implicit point clouds from single vectors, enabling +136% gain on single-sentence documents
+- 21 systematically falsified approaches establish clear applicability boundaries

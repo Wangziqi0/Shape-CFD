@@ -1,0 +1,26 @@
+{
+  "methods": [
+    "cosine",
+    "ad_rank_v2",
+    "shape_v4",
+    "bm25",
+    "v5_maxsim",
+    "v5_cutoff",
+    "v5_allen_cahn",
+    "v5_adaptive",
+    "v5_full",
+    "v5_ensemble"
+  ],
+  "ndcg": {
+    "cosine": 0.1683,
+    "ad_rank_v2": 0.1677,
+    "shape_v4": 0.1681,
+    "bm25": 0.1947,
+    "v5_maxsim": 0.1681,
+    "v5_cutoff": 0.1683,
+    "v5_allen_cahn": 0.1683,
+    "v5_adaptive": 0.1683,
+    "v5_full": 0.1683,
+    "v5_ensemble": 0.1686
+  }
+}

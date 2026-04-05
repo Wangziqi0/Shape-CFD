@@ -1,0 +1,79 @@
+{
+  "timestamp": "2026-03-25T07:58:13.877Z",
+  "baseParams": {
+    "D": 0.15,
+    "uStrength": 0.1,
+    "knn": 3,
+    "maxIter": 50,
+    "epsilon": 0.001,
+    "dt": 0.1
+  },
+  "configs": [
+    {
+      "name": "基线 (原始)",
+      "pcaDim": 0,
+      "tempAlpha": 1
+    },
+    {
+      "name": "仅 PCA (dim=32)",
+      "pcaDim": 32,
+      "tempAlpha": 1
+    },
+    {
+      "name": "仅温度 (α=0.5)",
+      "pcaDim": 0,
+      "tempAlpha": 0.5
+    },
+    {
+      "name": "PCA+温度",
+      "pcaDim": 32,
+      "tempAlpha": 0.5
+    }
+  ],
+  "summary": [
+    {
+      "config": "基线 (原始)",
+      "pcaDim": 0,
+      "tempAlpha": 1,
+      "avgPe": 0.0646298569686454,
+      "avgRe": 0.6951993218098436,
+      "avgTimeMs": 13.4,
+      "convergenceRate": "5/5",
+      "avgIter": 30.2
+    },
+    {
+      "config": "仅 PCA (dim=32)",
+      "pcaDim": 32,
+      "tempAlpha": 1,
+      "avgPe": 0.11326196501740812,
+      "avgRe": 0.962438504029149,
+      "avgTimeMs": 36,
+      "convergenceRate": "4/5",
+      "avgIter": 36.8
+    },
+    {
+      "config": "仅温度 (α=0.5)",
+      "pcaDim": 0,
+      "tempAlpha": 0.5,
+      "avgPe": 0.5988310014384337,
+      "avgRe": 1.132043474788057,
+      "avgTimeMs": 4.8,
+      "convergenceRate": "1/5",
+      "avgIter": 49.4
+    },
+    {
+      "config": "PCA+温度",
+      "pcaDim": 32,
+      "tempAlpha": 0.5,
+      "avgPe": 0.8001260341744677,
+      "avgRe": 1.264180565345303,
+      "avgTimeMs": 21.1,
+      "convergenceRate": "0/5",
+      "avgIter": 50
+    }
+  ],
+  "baseline_pe": 0.0646298569686454,
+  "best_pe": 0.8001260341744677,
+  "best_config": "PCA+温度",
+  "pe_boost": 12.4
+}

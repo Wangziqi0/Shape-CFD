@@ -1,0 +1,17 @@
+{
+  "dataset": "nfcorpus",
+  "nQueries": 323,
+  "elapsedSec": 749,
+  "qps": 0.43,
+  "probeMethod": "two-stage: cosine-centroid(top30) + pqMaxSim-cloud",
+  "topN": 10,
+  "results": {
+    "cosine": 0.2195,
+    "shape_pq64": 0.2461,
+    "stefan_rust": 0.2679
+  },
+  "deltas_vs_pq64": {
+    "cosine": "-10.8%",
+    "stefan_rust": "+8.9%"
+  }
+}

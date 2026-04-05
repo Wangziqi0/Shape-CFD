@@ -1,0 +1,9 @@
+Documents Are Shapes, Not Points: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing
+
+Yifan Chen
+
+Independent Researcher
+Hefei, Anhui, China
+
+Email: 1426704936@qq.com
+GitHub: https://github.com/Wangziqi0/Shape-CFD

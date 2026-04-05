@@ -1,0 +1,245 @@
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!70!black,
+}
+
+\title{Response to the Editor\\
+\large Manuscript IPM-D-26-02154\\[6pt]
+\normalsize ``Point Cloud Retrieval with PQ-Chamfer Distance and Graph Regularization: A Training-Free Approach''}
+\author{Yifan Chen}
+\date{April 2026}
+
+\begin{document}
+\maketitle
+
+Dear Editor,
+
+Thank you for your constructive feedback on our manuscript. We have carefully addressed each of your ten comments. Below we provide a point-by-point response. All changes in the revised manuscript are highlighted in \textcolor{blue}{blue} where feasible; structural changes (section reordering, compression) are described with specific section/page references.
+
+% ============================================================
+\section*{Comment 1: Abstract lacks specific numbers}
+% ============================================================
+
+\textbf{Editor's comment:} ``Your abstract does not highlight the specifics of this work in terms of data and results. We should see specific numbers in your abstract.''
+
+\textbf{Response:} We have completely rewritten the abstract to remove background narrative and foreground specific numbers. The revised abstract (150 words) now includes:
+\begin{itemize}[leftmargin=*]
+\item \textbf{6 BEIR datasets} spanning \textbf{2,473 to 522,931 documents}
+\item NDCG@10 gains of \textbf{+2.7\% to +136.2\%} over cosine baselines
+\item Surpasses \textbf{BGE-large-en-v1.5} on two benchmarks (FiQA: 0.398 vs 0.367; SCIDOCS: 0.215 vs 0.162)
+\item Statistical significance across \textbf{3 embedding models} ($p < 0.05$)
+\item Total cost of \textbf{\$47} on a single consumer GPU
+\item \textbf{21 falsified approaches} documented
+\end{itemize}
+
+\textbf{Location in manuscript:} Abstract (page 1).
+
+% ============================================================
+\section*{Comment 2: Research objectives needed}
+% ============================================================
+
+\textbf{Editor's comment:} ``Your paper will benefit from a clear Research Objective section.''
+
+\textbf{Response:} We have added Section 1.2 ``Research Objectives'' with three explicitly stated research questions:
+\begin{enumerate}
+\item \textbf{RQ1:} Can training-free geometric operations on general-purpose LLM hidden states improve dense retrieval quality?
+\item \textbf{RQ2:} Is the improvement model-agnostic, generalizing across different embedding architectures?
+\item \textbf{RQ3:} At what computational cost can these improvements be achieved compared to training specialized retrieval models?
+\end{enumerate}
+
+These RQs are systematically addressed in Sections 4--5 (RQ1: six-dataset evaluation), Section 4.5 (RQ2: cross-model generalization), and Section 5.2 (RQ3: cost analysis).
+
+\textbf{Location in manuscript:} Section 1.2 (page 2).
+
+% ============================================================
+\section*{Comment 3: Dataset descriptions insufficient}
+% ============================================================
+
+\textbf{Editor's comment:} ``More descriptions are needed for the datasets used in this work.''
+
+\textbf{Response:} We have expanded Table 1 (Section 4.1) to include:
+\begin{itemize}[leftmargin=*]
+\item Specific average document lengths in characters (60--1,700)
+\item Task descriptions for each dataset (e.g., bio-medical retrieval, claim verification, citation prediction)
+\item A new paragraph explaining the selection rationale: the six datasets were chosen to cover diverse domains, corpus scales spanning three orders of magnitude (2K to 523K), document lengths ranging from 60 to 1,700 characters, and retrieval task types, ensuring that observed improvements reflect genuine properties of the geometric operations rather than domain-specific artifacts.
+\end{itemize}
+
+\textbf{Location in manuscript:} Table 1 and surrounding text, Section 4.1 (page 6).
+
+% ============================================================
+\section*{Comment 4: Baselines are outdated; comparison with LLM-based methods needed}
+% ============================================================
+
+\textbf{Editor's comment:} ``Your baselines used in this work are outdated. Consider comparing your work with the state-of-the-art method and LLM-based method.''
+
+\textbf{Response:} We have made three additions:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{New Literature Review subsection} on LLM-based reranking (Section 2), covering RankGPT (Sun et al., EMNLP 2024), RankLLM (Pradeep et al., SIGIR 2025), and AFR-Rank (Liu et al., \textit{Information Processing \& Management}, 2025). We note that AFR-Rank is published in IPM, making it directly relevant to the journal's scope.
+
+\item \textbf{Expanded baselines discussion} (Section 4.1) contextualizing our results against LLM-based rerankers: ``LLM-based rerankers such as RankGPT achieve state-of-the-art results on BEIR benchmarks but require expensive API calls (\$0.01--0.10 per query); AFR-Rank mitigates this cost through noise filtering but still requires LLM inference. Our training-free approach achieves competitive results at orders of magnitude lower cost (\$47 total for all experiments).''
+
+\item \textbf{Cost comparison in Analysis} (Section 5.2, Table 6) and Discussion (Section 6.2) now explicitly compare our per-query cost (50\,ms on CPU, no API calls) against LLM-based rerankers (RankGPT, RankLLM) and trained models (BGE, ColBERTv2).
+\end{enumerate}
+
+We note that direct numerical comparison on our specific six datasets is difficult because LLM-based rerankers report on different BEIR subsets and use different first-stage retrievers. We address this honestly in Section 4.1 rather than making unfair comparisons.
+
+\textbf{Location in manuscript:} Section 2 (Literature Review), Section 4.1 (Baselines), Section 5.2, Section 6.2.
+
+% ============================================================
+\section*{Comment 5: Theoretical and practical implications unclear}
+% ============================================================
+
+\textbf{Editor's comment:} ``I would like more analysis and make a clear distinction of the theoretical and practical implication.''
+
+\textbf{Response:} We have added a new Section 6 ``Discussion'' (between Analysis and Conclusion) with four subsections:
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{Section 6.1: Theoretical Implications.} The geometric structure of LLM hidden states contains retrieval-relevant signal that training only implicitly captures. The failure of convection-diffusion equations reveals that not all physical analogies transfer to high-dimensional spaces.
+
+\item \textbf{Section 6.2: Practical Implications.} Any practitioner with a general-purpose LLM can improve retrieval without training data or GPU clusters (\$47 total cost). The pipeline benefits immediately from new LLM releases without retraining.
+
+\item \textbf{Section 6.3: When to Use Training-Free vs Trained Models.} Clear decision boundaries: training-free methods excel when cosine baselines are weak (NDCG@10 $< 0.3$) or training data is unavailable; trained models remain superior for strong baselines or when top-tier absolute performance is required.
+
+\item \textbf{Section 6.4: Limitations.} Moved from Conclusion to Discussion per IPM convention.
+\end{itemize}
+
+\textbf{Location in manuscript:} Section 6 (pages 12--13).
+
+% ============================================================
+\section*{Comment 6: English language polishing needed}
+% ============================================================
+
+\textbf{Editor's comment:} ``This paper needs a minor English editing.''
+
+\textbf{Response:} We have performed a comprehensive language review:
+\begin{itemize}[leftmargin=*]
+\item Split overly long sentences throughout (e.g., the original abstract was one 200+ word sentence block; now broken into clear declarative statements)
+\item Reduced passive voice where appropriate (e.g., ``it is shown that'' $\to$ ``we show that'')
+\item Ensured consistent technical terminology (e.g., ``training-free'' used consistently, not alternating with ``zero-shot'' or ``unsupervised'')
+\item Tightened prose throughout, particularly in Introduction and Analysis sections
+\end{itemize}
+
+\textbf{Location in manuscript:} Throughout.
+
+% ============================================================
+\section*{Comment 7: Paper is too long}
+% ============================================================
+
+\textbf{Editor's comment:} ``This paper is WAY too long. You should aim for max 16 pages.''
+
+\textbf{Response:} We have reduced the manuscript from \textbf{22 pages to 16 pages}, a 27\% reduction. Specific cuts:
+
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Falsification Analysis} (Section 4.6): Reduced from 4 detailed case studies to 2 (convection-diffusion failure and density-weighted Chamfer). The SciFact and multi-emission cases are summarized in Table 5 only. Saved ${\sim}$1.5 pages.
+
+\item \textbf{Analysis section} (Section 5): Merged ``Why PQ-Chamfer Works'' and ``Why Graph Smoothing Works'' into one subsection. Removed detailed engineering optimization discussion (468$\times$ speedup details). Removed ``Paradigm Implications'' (moved to Discussion). Removed ``Counter-Intuitive Findings'' (key points folded into other sections). Saved ${\sim}$2.5 pages.
+
+\item \textbf{Literature Review} (Section 2): Merged the former ``Extended Discussion'' (which duplicated Related Work content with ColBERT, FAISS, BERTScore discussions) into a single compact Literature Review. Saved ${\sim}$1.5 pages.
+
+\item \textbf{Tables}: Applied \verb|\footnotesize| to large tables (main results, falsification summary) for compactness.
+
+\item \textbf{Conclusion}: Removed Limitations (now in Discussion) and compressed Future Work. Saved ${\sim}$0.5 pages.
+
+\item \textbf{Acknowledgements}: Compressed from 3 paragraphs to 2 short paragraphs.
+\end{enumerate}
+
+\textbf{Final page count:} 16 pages (compiled with \texttt{pdflatex}).
+
+% ============================================================
+\section*{Comment 8: References need updating}
+% ============================================================
+
+\textbf{Editor's comment:} ``Your references need to be updated.''
+
+\textbf{Response:} We have added \textbf{8 new references} from 2024--2026:
+
+\begin{enumerate}[leftmargin=*]
+\item Sun et al. (2024) --- RankGPT, EMNLP 2024
+\item Pradeep et al. (2025) --- RankLLM, SIGIR 2025
+\item Liu et al. (2025) --- \textbf{AFR-Rank, \textit{Information Processing \& Management}} 2025
+\item Li et al. (2025) --- Reranking survey, arXiv 2025
+\item Wang et al. (2024) --- E5-Mistral
+\item Li et al. (2024) --- GTE
+\item Muennighoff et al. (2024) --- MTEB/BEIR leaderboard
+\item Ma et al. (2024) --- LLaMA for retrieval, SIGIR 2024
+\end{enumerate}
+
+We particularly highlight the inclusion of AFR-Rank (Liu et al., 2025), which is published in \textit{Information Processing \& Management} and directly relates to our work on efficient reranking without expensive LLM inference.
+
+\textbf{Location in manuscript:} Section 2 (Literature Review), Section 4.1 (Baselines), Section 5.2 (Cost Analysis), Section 6.2 (Practical Implications), and \texttt{references.bib}.
+
+% ============================================================
+\section*{Comment 9: APA reference format required}
+% ============================================================
+
+\textbf{Editor's comment:} ``APA referencing format is required for this paper.''
+
+\textbf{Response:} We have changed the bibliography style from \verb|\bibliographystyle{plainnat}| to \verb|\bibliographystyle{apalike}|, which produces APA-style author-year citations compatible with the \texttt{natbib} package used in the manuscript.
+
+\textbf{Location in manuscript:} Line before \verb|\bibliography{references}| (page 14).
+
+% ============================================================
+\section*{Comment 10: Paper structure should match IPM conventions}
+% ============================================================
+
+\textbf{Editor's comment:} ``You should refer to other IPM papers for format.''
+
+\textbf{Response:} We have restructured the paper to follow the standard IPM section ordering:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+\textbf{IPM Convention} & \textbf{Our Section} \\
+\midrule
+Introduction              & Section 1: Introduction \\
+Literature Review         & Section 2: Literature Review (renamed from ``Background and Related Work'') \\
+Methodology               & Section 3: Methodology (renamed from ``Method'') \\
+Experiments               & Section 4: Experiments \\
+Analysis                  & Section 5: Analysis \\
+Discussion                & Section 6: Discussion (new section) \\
+Conclusion                & Section 7: Conclusion \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The former ``Extended Discussion'' section (which contained additional related work) has been merged into Section 2 (Literature Review). The new Section 6 (Discussion) contains theoretical implications, practical implications, decision boundaries, and limitations, following IPM convention.
+
+\textbf{Location in manuscript:} All section headers throughout.
+
+% ============================================================
+\section*{Summary of Changes}
+% ============================================================
+
+\begin{itemize}[leftmargin=*]
+\item Abstract rewritten with specific numbers (150 words)
+\item Research Objectives section added (Section 1.2)
+\item Dataset table expanded with character lengths and task descriptions (Table 1)
+\item LLM-based reranking baselines added (RankGPT, RankLLM, AFR-Rank)
+\item Discussion section added with theoretical/practical implications (Section 6)
+\item English polished throughout
+\item Manuscript compressed from 22 to \textbf{16 pages}
+\item 8 new references added (2024--2026), including AFR-Rank from IPM
+\item APA bibliography style applied
+\item Section structure aligned with IPM conventions
+\end{itemize}
+
+\vspace{12pt}
+We hope these revisions address all of your concerns. We thank you again for the opportunity to improve this manuscript and look forward to your response.
+
+\vspace{12pt}
+Sincerely,\\
+Yifan Chen\\
+Independent Researcher
+
+\end{document}

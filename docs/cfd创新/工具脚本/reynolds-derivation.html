@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AD-Rank 雷诺数公式推导</title>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['$', '$']],
+      displayMath: [['$$', '$$']],
+      tags: 'ams'
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg-primary: #0a0e1a;
+    --bg-card: #111827;
+    --bg-card-hover: #1a2332;
+    --bg-accent: rgba(99, 102, 241, 0.08);
+    --border: #1e293b;
+    --border-accent: rgba(99, 102, 241, 0.3);
+    --text-primary: #e2e8f0;
+    --text-secondary: #94a3b8;
+    --text-dim: #64748b;
+    --accent: #818cf8;
+    --accent-bright: #a5b4fc;
+    --red: #f87171;
+    --red-bg: rgba(248, 113, 113, 0.08);
+    --green: #34d399;
+    --green-bg: rgba(52, 211, 153, 0.08);
+    --yellow: #fbbf24;
+    --yellow-bg: rgba(251, 191, 36, 0.08);
+    --blue: #60a5fa;
+    --blue-bg: rgba(96, 165, 250, 0.08);
+    --purple: #c084fc;
+    --purple-bg: rgba(192, 132, 252, 0.08);
+    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.8;
+    min-height: 100vh;
+  }
+
+  /* 顶部渐变装饰 */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 400px;
+    background: radial-gradient(ellipse at 50% -20%, rgba(99,102,241,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 60px 24px 100px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 标题区 */
+  .header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .header .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    background: var(--bg-accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--accent-bright);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-bottom: 20px;
+  }
+
+  .header h1 {
+    font-size: 2.8em;
+    font-weight: 700;
+    background: linear-gradient(135deg, #e2e8f0 0%, #818cf8 50%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .header .subtitle {
+    font-size: 1.1em;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* 章节 */
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .section-title {
+    font-size: 1.4em;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .section-title .num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--gradient-1);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  /* 卡片 */
+  .card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    border-color: var(--border-accent);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.05);
+  }
+
+  .card h3 {
+    font-size: 1.05em;
+    font-weight: 600;
+    color: var(--accent-bright);
+    margin-bottom: 16px;
+  }
+
+  .card p, .card li {
+    color: var(--text-secondary);
+    font-size: 0.95em;
+    margin-bottom: 12px;
+  }
+
+  /* 公式块 */
+  .formula-block {
+    background: var(--bg-accent);
+    border: 1px solid var(--border-accent);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin: 20px 0;
+    overflow-x: auto;
+  }
+
+  .formula-block.danger {
+    background: var(--red-bg);
+    border-color: rgba(248, 113, 113, 0.3);
+  }
+
+  .formula-block.success {
+    background: var(--green-bg);
+    border-color: rgba(52, 211, 153, 0.3);
+  }
+
+  .formula-block.warning {
+    background: var(--yellow-bg);
+    border-color: rgba(251, 191, 36, 0.3);
+  }
+
+  .formula-block.info {
+    background: var(--blue-bg);
+    border-color: rgba(96, 165, 250, 0.3);
+  }
+
+  .formula-label {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .formula-label.red { color: var(--red); }
+  .formula-label.green { color: var(--green); }
+  .formula-label.yellow { color: var(--yellow); }
+  .formula-label.blue { color: var(--blue); }
+  .formula-label.purple { color: var(--purple); }
+
+  /* 推导步骤 */
+  .derivation-step {
+    position: relative;
+    padding-left: 32px;
+    margin: 16px 0;
+    border-left: 2px solid var(--border);
+  }
+
+  .derivation-step::before {
+    content: attr(data-step);
+    position: absolute;
+    left: -11px;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background: var(--accent);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .derivation-step .step-note {
+    font-size: 0.85em;
+    color: var(--text-dim);
+    font-style: italic;
+    margin-top: 4px;
+  }
+
+  /* 对比方案表格 */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .compare-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .compare-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+  }
+
+  .compare-card.opt-a::before { background: var(--red); }
+  .compare-card.opt-b::before { background: var(--green); }
+  .compare-card.opt-c::before { background: var(--blue); }
+  .compare-card.opt-d::before { background: var(--purple); }
+
+  .compare-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--border-accent);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+  }
+
+  .compare-card .opt-label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .compare-card.opt-a .opt-label { color: var(--red); }
+  .compare-card.opt-b .opt-label { color: var(--green); }
+  .compare-card.opt-c .opt-label { color: var(--blue); }
+  .compare-card.opt-d .opt-label { color: var(--purple); }
+
+  .compare-card .opt-title {
+    font-size: 1.05em;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 12px;
+  }
+
+  .compare-card .opt-verdict {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  .verdict-bad { background: var(--red-bg); color: var(--red); }
+  .verdict-good { background: var(--green-bg); color: var(--green); }
+  .verdict-ok { background: var(--blue-bg); color: var(--blue); }
+  .verdict-alt { background: var(--purple-bg); color: var(--purple); }
+
+  /* 关键结论 */
+  .conclusion {
+    background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(192,132,252,0.1) 100%);
+    border: 1px solid rgba(129, 140, 248, 0.3);
+    border-radius: 16px;
+    padding: 32px;
+    margin-top: 40px;
+  }
+
+  .conclusion h3 {
+    color: var(--accent-bright);
+    font-size: 1.2em;
+    margin-bottom: 16px;
+  }
+
+  /* 图示 */
+  .graph-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    margin: 20px 0;
+  }
+
+  .graph-visual svg {
+    max-width: 100%;
+  }
+
+  /* 动画 */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section { animation: fadeInUp 0.6s ease forwards; }
+  .section:nth-child(2) { animation-delay: 0.1s; }
+  .section:nth-child(3) { animation-delay: 0.2s; }
+  .section:nth-child(4) { animation-delay: 0.3s; }
+
+  /* 注解 */
+  .annotation {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 16px;
+    background: rgba(251, 191, 36, 0.05);
+    border-radius: 10px;
+    border-left: 3px solid var(--yellow);
+    margin: 16px 0;
+  }
+
+  .annotation .icon { font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+  .annotation .text { font-size: 0.9em; color: var(--text-secondary); }
+
+  /* 箭头指示 */
+  .arrow-down {
+    text-align: center;
+    padding: 8px 0;
+    color: var(--text-dim);
+    font-size: 20px;
+  }
+
+  /* 代码内联 */
+  code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88em;
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: var(--accent-bright);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 标题 -->
+  <div class="header">
+    <div class="badge">AD-Rank · 数学分析</div>
+    <h1>雷诺数在对称图上<br>恒为零的推导</h1>
+    <p class="subtitle">为什么指令中的 $Re = \frac{|\Sigma\text{对流}|}{|\Sigma\text{扩散}|}$ 在对称 KNN 图上退化？四种修正方案的数学对比。</p>
+  </div>
+
+  <!-- §1 符号定义 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">1</span> 符号定义
+    </div>
+    <div class="card">
+      <div class="formula-block">
+$$\begin{aligned}
+G &= (V, E) \quad \text{对称 KNN 图，} V = \{0, 1, \dots, N{-}1\} \\[6pt]
+W_{ij} &= e^{-\beta(1 - \text{sim}(i,j))}, \quad \beta = 2.0 \\[6pt]
+C_i &\in [0,1] \quad \text{节点 } i \text{ 的浓度（相关度分数）} \\[6pt]
+u_{ij} &= \langle \hat{e}_{ij},\; \hat{q} \rangle \cdot \alpha \quad \text{对流系数} \\[6pt]
+\hat{e}_{ij} &= \frac{\mathbf{d}_j - \mathbf{d}_i}{\|\mathbf{d}_j - \mathbf{d}_i\|} \quad \text{边方向单位向量} \\[6pt]
+D &\quad \text{扩散系数（默认 0.15）}
+\end{aligned}$$
+      </div>
+    </div>
+  </div>
+
+  <!-- §2 单节点更新方程 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">2</span> 单节点更新方程
+    </div>
+    <div class="card">
+      <p>每个时间步，节点 $i$ 的浓度更新：</p>
+      <div class="formula-block">
+$$C_i^{(t+1)} = C_i^{(t)} + \Delta t \cdot \Bigl(\underbrace{F_i^{\text{diff}}}_{\text{扩散}} + \underbrace{F_i^{\text{adv}}}_{\text{对流}}\Bigr)$$
+      </div>
+      <p>其中：</p>
+      <div class="formula-block info">
+        <div class="formula-label blue">扩散项</div>
+$$F_i^{\text{diff}} = D \sum_{j \in \mathcal{N}(i)} W_{ij}\,(C_j - C_i)$$
+      </div>
+      <div class="formula-block info">
+        <div class="formula-label blue">对流项 (Upwind)</div>
+$$F_i^{\text{adv}} = -\sum_{j \in \mathcal{N}(i)} \max(u_{ij},\, 0) \cdot W_{ij}\,(C_j - C_i)$$
+      </div>
+    </div>
+  </div>
+
+  <!-- §3 关键性质：u 的反对称 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">3</span> 关键性质：对流系数的反对称性
+    </div>
+    <div class="card">
+      <div class="derivation-step" data-step="1">
+        <p>由边方向定义：</p>
+$$\hat{e}_{ji} = \frac{\mathbf{d}_i - \mathbf{d}_j}{\|\mathbf{d}_i - \mathbf{d}_j\|} = -\hat{e}_{ij}$$
+      </div>
+
+      <div class="derivation-step" data-step="2">
+        <p>代入对流系数：</p>
+$$u_{ji} = \langle \hat{e}_{ji},\, \hat{q}\rangle \cdot \alpha = \langle -\hat{e}_{ij},\, \hat{q}\rangle \cdot \alpha = -u_{ij}$$
+      </div>
+
+      <div class="formula-block success">
+        <div class="formula-label green">结论</div>
+$$\boxed{u_{ji} = -u_{ij}} \quad \text{对流系数关于边方向反对称}$$
+      </div>
+
+      <div class="annotation">
+        <span class="icon">💡</span>
+        <span class="text">这意味着：如果 $u_{ij} > 0$（从 $i$ 看向 $j$ 的方向与 query 一致），那么 $u_{ji} < 0$（从 $j$ 看向 $i$ 的方向与 query 相反）。</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- §4 核心推导：扩散项全局和 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">4</span> 核心推导：扩散项全局和
+    </div>
+    <div class="card">
+      <h3>为什么 $\sum_i F_i^{\text{diff}} = 0$？</h3>
+
+      <div class="derivation-step" data-step="1">
+        <p>展开全局和：</p>
+$$\sum_{i=0}^{N-1} F_i^{\text{diff}} = D \sum_{i=0}^{N-1} \sum_{j \in \mathcal{N}(i)} W_{ij}\,(C_j - C_i)$$
+      </div>
+
+      <div class="derivation-step" data-step="2">
+        <p>由于图对称，每条<strong>无向边</strong> $\{i,j\}$ 在双重求和中被枚举<strong>恰好两次</strong>：一次以 $(i \to j)$，一次以 $(j \to i)$：</p>
+$$= D \sum_{\{i,j\} \in E} \Big[ W_{ij}(C_j - C_i) + W_{ji}(C_i - C_j) \Big]$$
+      </div>
+
+      <div class="derivation-step" data-step="3">
+        <p>由于余弦相似度对称 $\text{sim}(i,j) = \text{sim}(j,i)$，所以 $W_{ij} = W_{ji}$。提取公因子：</p>
+$$= D \sum_{\{i,j\} \in E} W_{ij} \Big[ (C_j - C_i) + (C_i - C_j) \Big]$$
+      </div>
+
+      <div class="derivation-step" data-step="4">
+        <p>括号内恒为零：</p>
+$$(C_j - C_i) + (C_i - C_j) = 0$$
+      </div>
+
+      <div class="formula-block danger">
+        <div class="formula-label red">核心结论</div>
+$$\boxed{\sum_{i=0}^{N-1} F_i^{\text{diff}} = 0} \quad \forall\, C, \; \forall\, W \quad \text{（恒等式）}$$
+        <p style="margin-top: 12px; font-size: 0.9em; color: var(--text-secondary);">
+          这是对称图上扩散算子的<strong>通量守恒</strong>：扩散不产生也不消灭"浓度"，只在节点间重新分配。全局净通量永远为零，与浓度场 $C$ 无关。
+        </p>
+      </div>
+
+      <!-- SVG 图示 -->
+      <div class="graph-visual">
+        <svg width="400" height="180" viewBox="0 0 400 180">
+          <!-- 节点 i -->
+          <circle cx="120" cy="90" r="30" fill="none" stroke="#818cf8" stroke-width="2"/>
+          <text x="120" y="95" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="600">$i$</text>
+          <text x="120" y="140" text-anchor="middle" fill="#94a3b8" font-size="12">C_i = 0.8</text>
+
+          <!-- 节点 j -->
+          <circle cx="280" cy="90" r="30" fill="none" stroke="#818cf8" stroke-width="2"/>
+          <text x="280" y="95" text-anchor="middle" fill="#e2e8f0" font-size="16" font-weight="600">$j$</text>
+          <text x="280" y="140" text-anchor="middle" fill="#94a3b8" font-size="12">C_j = 0.3</text>
+
+          <!-- 上箭头 i→j -->
+          <line x1="155" y1="75" x2="245" y2="75" stroke="#34d399" stroke-width="2" marker-end="url(#arrowG)"/>
+          <text x="200" y="68" text-anchor="middle" fill="#34d399" font-size="11">W·(C_j−C_i) = −0.5W</text>
+
+          <!-- 下箭头 j→i -->
+          <line x1="245" y1="105" x2="155" y2="105" stroke="#f87171" stroke-width="2" marker-end="url(#arrowR)"/>
+          <text x="200" y="122" text-anchor="middle" fill="#f87171" font-size="11">W·(C_i−C_j) = +0.5W</text>
+
+          <!-- 等号 -->
+          <text x="340" y="95" text-anchor="middle" fill="#fbbf24" font-size="18" font-weight="700">= 0</text>
+
+          <defs>
+            <marker id="arrowG" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#34d399"/>
+            </marker>
+            <marker id="arrowR" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L8,3 L0,6" fill="#f87171"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- §5 对流项全局和 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">5</span> 对流项全局和：不为零但被 Upwind 截断
+    </div>
+    <div class="card">
+      <h3>$\sum_i F_i^{\text{adv}}$ 的行为</h3>
+
+      <div class="derivation-step" data-step="1">
+        <p>考虑一条边 $\{i,j\}$，假设 $u_{ij} > 0$（则 $u_{ji} = -u_{ij} < 0$）：</p>
+
+$$\text{节点 } i \text{ 的对流贡献: } -u_{ij} \cdot W_{ij} \cdot (C_j - C_i) \quad (\text{因为 } u_{ij} > 0)$$
+$$\text{节点 } j \text{ 的对流贡献: } 0 \quad (\text{因为 } u_{ji} < 0, \; \max(u_{ji}, 0) = 0)$$
+      </div>
+
+      <div class="derivation-step" data-step="2">
+        <p>对全图求和，每条边只贡献一侧：</p>
+$$\sum_i F_i^{\text{adv}} = -\sum_{\substack{\{i,j\} \in E \\ u_{ij} > 0}} u_{ij} \cdot W_{ij} \cdot (C_j - C_i)$$
+      </div>
+
+      <div class="formula-block success">
+        <div class="formula-label green">结论</div>
+$$\sum_{i} F_i^{\text{adv}} \neq 0 \quad \text{（一般情况下非零）}$$
+        <p style="margin-top: 8px; font-size: 0.9em; color: var(--text-secondary);">Upwind 格式打破了对称性——只取 $\max(u_{ij}, 0)$ 的那一侧，所以不会像扩散项那样完全抵消。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- §6 矛盾 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">6</span> 矛盾：指令公式退化
+    </div>
+    <div class="card">
+      <h3>指令要求</h3>
+      <div class="formula-block warning">
+        <div class="formula-label yellow">指令原文</div>
+$$Re = \frac{\left|\displaystyle\sum_{i} F_i^{\text{adv}}\right|}{\left|\displaystyle\sum_{i} F_i^{\text{diff}}\right|}$$
+      </div>
+
+      <div class="arrow-down">⬇</div>
+
+      <div class="formula-block danger">
+        <div class="formula-label red">代入 §4 的结论</div>
+$$Re = \frac{\left|\displaystyle\sum_{i} F_i^{\text{adv}}\right|}{\left| 0 \right|} = \frac{\text{非零}}{0} \quad \to \quad \text{undefined}$$
+        <p style="margin-top: 12px; font-size: 0.9em; color: var(--text-secondary);">
+          代码中用 $|分母| > 10^{-12}$ 的阈值拦截，导致 $Re$ 恒输出 0。
+        </p>
+      </div>
+
+      <div class="annotation">
+        <span class="icon">⚠️</span>
+        <span class="text">
+          <strong>问题本质</strong>：$|\Sigma \text{扩散}|$ 测量的是「全局净扩散通量」，而扩散在守恒系统中 net flux = 0 是物理上的必然——类似于热传导不会凭空产生或消灭热量。指令的公式在离散对称图上退化。
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- §7 四种修正方案 -->
+  <div class="section">
+    <div class="section-title">
+      <span class="num">7</span> 四种修正方案
+    </div>
+
+    <div class="compare-grid">
+
+      <!-- 方案 A -->
+      <div class="compare-card opt-a">
+        <div class="opt-label">方案 A — 严格遵循指令</div>
+        <div class="opt-title">$Re = \frac{|\Sigma_i F_i^{\text{adv}}|}{|\Sigma_i F_i^{\text{diff}}|}$</div>
+        <div class="formula-block danger" style="margin:12px 0">
+$$Re \equiv 0 \quad \text{（分母恒为零，被阈值拦截）}$$
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.9em;">符合指令字面意思，但完全失去了物理意义。无法区分对流主导和扩散主导的流场。</p>
+        <span class="opt-verdict verdict-bad">❌ 无物理意义</span>
+      </div>
+
+      <!-- 方案 B -->
+      <div class="compare-card opt-b">
+        <div class="opt-label">方案 B — 逐节点绝对值</div>
+        <div class="opt-title">$Re = \frac{\displaystyle\sum_i |F_i^{\text{adv}}|}{\displaystyle\sum_i |F_i^{\text{diff}}|}$</div>
+        <div class="formula-block success" style="margin:12px 0">
+$$\sum_i |F_i^{\text{diff}}| = D \sum_i \left|\sum_{j \in \mathcal{N}(i)} W_{ij}(C_j - C_i)\right| > 0$$
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.9em;">每个节点的扩散量取绝对值后再求和。测量的是「整个图上扩散活动的总强度」。与原始代码实现一致（修复之前的版本）。</p>
+        <span class="opt-verdict verdict-good">✅ 有物理意义，简洁</span>
+      </div>
+
+      <!-- 方案 C -->
+      <div class="compare-card opt-c">
+        <div class="opt-label">方案 C — 均值（等价于 B）</div>
+        <div class="opt-title">$Re = \frac{\frac{1}{N}\displaystyle\sum_i |F_i^{\text{adv}}|}{\frac{1}{N}\displaystyle\sum_i |F_i^{\text{diff}}|}$</div>
+        <div class="formula-block info" style="margin:12px 0">
+$$= \frac{\sum_i |F_i^{\text{adv}}|}{\sum_i |F_i^{\text{diff}}|} \quad \text{（}\frac{1}{N}\text{ 约掉，数学上等价于方案 B）}$$
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.9em;">与方案 B 完全等价，只是表述形式不同。</p>
+        <span class="opt-verdict verdict-ok">≡ 等价于 B</span>
+      </div>
+
+      <!-- 方案 D -->
+      <div class="compare-card opt-d">
+        <div class="opt-label">方案 D — 局部雷诺数平均</div>
+        <div class="opt-title">$Re_i = \frac{|F_i^{\text{adv}}|}{|F_i^{\text{diff}}| + \varepsilon}$, $\quad Re = \frac{1}{N}\displaystyle\sum_i Re_i$</div>
+        <div class="formula-block" style="background:var(--purple-bg);border-color:rgba(192,132,252,0.3);margin:12px 0">
+          <div class="formula-label purple">物理含义</div>
+$$Re = \text{mean}\left(\frac{|F_i^{\text{adv}}|}{|F_i^{\text{diff}}| + \varepsilon}\right)$$
+        </div>
+        <p style="color:var(--text-secondary); font-size:0.9em;">
+          最接近 CFD 中的物理定义。每个节点有自己的局部 Re，最终取平均值。注意 $\varepsilon$ 防止除零。<br><br>
+          <strong>注意与方案 B 的区别</strong>：B 是 $\frac{\sum|a_i|}{\sum|d_i|}$ （总量之比），D 是 $\text{mean}(\frac{|a_i|}{|d_i|})$ （比率之均）。当各节点贡献不均匀时两者差异显著。
+        </p>
+        <span class="opt-verdict verdict-alt">🔬 最接近 CFD 物理语义</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 结论 -->
+  <div class="conclusion">
+    <h3>🎯 决策点</h3>
+    <p style="color:var(--text-secondary); font-size:0.95em; margin-bottom:16px;">
+      这不是 bug，而是<strong>离散对称图上的数学必然</strong>。指令中 $|\Sigma\text{扩散}|$ 的 scope 需要明确：
+    </p>
+    <div class="formula-block" style="border-color: rgba(129,140,248,0.4);">
+$$\underbrace{|\Sigma_i F_i^{\text{diff}}|}_{\substack{\text{全局净通量} \\ \text{= 0（守恒）}}} \quad \neq \quad \underbrace{\Sigma_i |F_i^{\text{diff}}|}_{\substack{\text{总扩散活动强度} \\ \text{> 0}}}$$
+    </div>
+    <p style="color:var(--text-secondary); font-size:0.95em;">
+      <strong>方案 B</strong> 是最自然的修正，且实现最简单。<strong>方案 D</strong> 更符合 CFD 精神但计算量略大。当前代码采用方案 A（Re 恒为 0）。
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>

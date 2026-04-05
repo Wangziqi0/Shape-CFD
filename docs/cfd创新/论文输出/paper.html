@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Shape-CFD</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="/usr/share/javascript/mathjax/MathJax.js"
+  type="text/javascript"></script>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Shape-CFD</h1>
+</header>
+<h1
+id="shape-cfd-shape-aware-convection-diffusion-reranking-on-graph-manifolds-for-dense-retrieval">Shape-CFD:
+Shape-Aware Convection-Diffusion Reranking on Graph Manifolds for Dense
+Retrieval</h1>
+<p><strong>Yifan Chen</strong></p>
+<p>March 2026</p>
+<hr />
+<h2 id="abstract">Abstract</h2>
+<p>Neural dense retrieval systems typically rank candidate documents by
+computing independent, pairwise cosine similarities between query and
+document embeddings, discarding the rich inter-document structural
+information that resides in the retrieved set. We present
+<strong>Shape-CFD</strong>, a physics-inspired reranking framework that
+recasts the post-retrieval reranking problem as a <em>conservative
+convection-diffusion process</em> on a sparse nearest-neighbor graph
+constructed over the candidate documents. Our formulation introduces two
+principal innovations: (1) an <strong>advective transport term</strong>
+that encodes query-directed momentum along graph edges, complementing
+the isotropic diffusion employed by prior graph-based rerankers; and (2)
+a <strong>shape-aware extension</strong> that upgrades each document
+from a single point embedding to a sentence-level <em>point cloud</em>,
+measuring inter-document affinity via the symmetric Chamfer distance. To
+mitigate the variance collapse of inner products in high-dimensional
+spaces (<span class="math inline">\(d = 4096\)</span>), we apply
+Johnson-Lindenstrauss random projection to a compact <span
+class="math inline">\(m = 128\)</span> subspace, which simultaneously
+achieves a <span class="math inline">\(32\times\)</span> computational
+speedup and introduces a stochastic regularization effect analogous to
+simulated annealing. The resulting iterative scheme provably converges
+to a unique stationary distribution under a Courant-Friedrichs-Lewy
+(CFL) stability condition, and its conservative upwind discretization
+guarantees global mass conservation. On three BEIR benchmarks, Shape-CFD
+achieves competitive NDCG@10 scores—including a <strong>+21.5%</strong>
+improvement on NFCorpus—while maintaining a retrieval latency of
+<strong>22 ms</strong> on commodity CPU hardware, approximately <span
+class="math inline">\(23\times\)</span> faster than cross-encoder
+rerankers. Ablation studies confirm that the shape extension is critical
+for datasets with multi-sentence documents and that the optimal
+operating regime is diffusion-dominated with weak advection (structural
+Péclet number <span class="math inline">\(\text{Pe} \approx
+0.065\)</span>), a finding we interpret through the lens of
+transient-state dynamics truncation.</p>
+<hr />
+<h2 id="introduction">1 Introduction</h2>
+<p>Retrieval-Augmented Generation (RAG) systems have emerged as the
+dominant architecture for grounding large language models in external
+knowledge [10, 11]. In a typical RAG pipeline, a bi-encoder first
+retrieves a set of <span class="math inline">\(N\)</span> candidate
+passages from a large corpus using approximate nearest-neighbor (ANN)
+search, and then either these candidates are fed directly to the
+generator or an intermediate <em>reranker</em> adjusts the ordering
+before generation. The quality of the final answer critically depends on
+the precision and recall of this retrieval stage.</p>
+<p>The prevailing approach to first-stage ranking relies on cosine
+similarity between the query vector <span
+class="math inline">\(q\)</span> and each document vector <span
+class="math inline">\(v_i\)</span>, computed independently: <span
+class="math display">\[\text{score}(d_i) = \frac{q \cdot v_i}{\|q\|
+\|v_i\|}\]</span> While simple and efficient, this pointwise scoring
+paradigm fundamentally ignores the <strong>inter-document semantic
+structure</strong> within the retrieved set. When the query is
+ambiguous, polysemous, or spans multiple topical domains, isolated
+scoring fails to exploit the mutual information carried by document
+neighborhoods—a limitation well-studied under the <em>cluster
+hypothesis</em> in information retrieval [4].</p>
+<p>Cross-encoder rerankers [11] address this quality gap by jointly
+encoding the query-document pair through a deep transformer, achieving
+state-of-the-art ranking accuracy. However, their computational cost
+scales as <span class="math inline">\(O(N \cdot L^2 \cdot H)\)</span>,
+where <span class="math inline">\(L\)</span> is the sequence length and
+<span class="math inline">\(H\)</span> the hidden dimension, resulting
+in latencies of approximately 500 ms for <span class="math inline">\(N =
+30\)</span> candidates—prohibitive for many real-time applications.</p>
+<p>Recent work has explored graph-based diffusion as a middle ground.
+Dampanaboina et al. [2] construct a document similarity graph and apply
+isotropic heat diffusion to re-score candidates, demonstrating that
+inter-document signal propagation can improve retrieval quality without
+the overhead of cross-encoders. However, their formulation is purely
+<em>diffusive</em>: every node diffuses its score to neighbors
+symmetrically, without directional preference. In physical terms, this
+corresponds to a system governed solely by Fick’s second law, which
+guarantees convergence to a flat equilibrium—the retrieval analogue of
+over-smoothing in graph neural networks [13, 14].</p>
+<p><strong>Our key insight</strong> is that retrieval reranking is more
+faithfully modeled by the full <em>convection-diffusion equation</em>
+rather than pure diffusion. In fluid dynamics, the convection-diffusion
+equation <span class="math inline">\(\frac{\partial C}{\partial t} =
+D\nabla^2 C - \nabla \cdot (\vec{u}C)\)</span> governs the transport of
+a scalar concentration field <span class="math inline">\(C\)</span>
+under the combined influence of diffusive spreading (coefficient <span
+class="math inline">\(D\)</span>) and directional advective transport
+(velocity field <span class="math inline">\(\vec{u}\)</span>). By
+drawing this analogy, we introduce an <strong>advection term</strong>
+that encodes the query’s semantic direction: on each graph edge, the
+advection coefficient measures the alignment between the inter-document
+displacement vector and the query embedding, providing a directional
+bias that pure diffusion lacks.</p>
+<p>A second limitation of existing approaches is that they represent
+each document as a single point in the embedding space. In practice, a
+document—particularly a statutory provision or a technical
+passage—carries heterogeneous semantic content across its constituent
+sentences. A single centroid embedding necessarily conflates these
+distinct semantic facets. To address this, we propose the
+<strong>Shape-CFD extension</strong>, which represents each document as
+a <em>sentence-level point cloud</em> <span
+class="math inline">\(\mathcal{P}_i = \{s_{i,1}, \ldots, s_{i,K_i}\}
+\subset \mathbb{R}^d\)</span> and replaces cosine-based graph weights
+with the symmetric Chamfer distance. This formulation captures local
+semantic matches between document sub-components—even when the overall
+document-level similarity is moderate—and naturally degrades to the
+point representation for single-sentence documents.</p>
+<p>However, computing Chamfer distances in the native <span
+class="math inline">\(d = 4096\)</span> embedding space introduces a
+dual challenge: (i) the computational cost of <span
+class="math inline">\(O(K_A \cdot K_B \cdot d)\)</span> per document
+pair, and (ii) the <em>curse of dimensionality</em>, which causes
+inner-product-based advection coefficients to collapse toward zero (with
+standard deviation <span class="math inline">\(\sigma \approx 1/\sqrt{d}
+\approx 0.016\)</span>). We resolve both issues via
+Johnson-Lindenstrauss (JL) random projection to <span
+class="math inline">\(m = 128\)</span> dimensions, achieving a <span
+class="math inline">\(32\times\)</span> speedup. Crucially, we provide a
+corrected theoretical account of the dimensional reduction effect:
+contrary to naive interpretations, the expanded variance of inner
+products in the reduced space does not “amplify” true physical signals
+but rather injects <span class="math inline">\(O(1/m)\)</span>
+stochastic noise that acts as a form of <em>flow-field annealing</em>,
+breaking the near-orthogonal deadlock of high-dimensional geometry.</p>
+<h3 id="contributions">Contributions</h3>
+<p>We summarize our contributions as follows:</p>
+<ol type="1">
+<li><p><strong>AD-Rank</strong>: A graph-based reranking algorithm that
+solves the conservative convection-diffusion equation on a sparse KNN
+document graph, introducing directional query-aware advection to
+complement isotropic diffusion. We prove global mass conservation and
+convergence under CFL stability conditions.</p></li>
+<li><p><strong>Shape-CFD</strong>: An extension that replaces point
+embeddings with sentence-level point clouds, using Chamfer distance for
+graph construction and centroid-based advection directions. This
+captures fine-grained sub-document semantic matching.</p></li>
+<li><p><strong>Theoretical analysis</strong>: We characterize the
+operating regime through the structural Péclet number and provide a
+physically grounded explanation for the empirically observed optimality
+of weak advection (<span class="math inline">\(\text{Pe} \approx
+0.065\)</span>).</p></li>
+<li><p><strong>Comprehensive evaluation</strong>: We evaluate on three
+BEIR benchmarks (SciFact, NFCorpus, FiQA) and a Chinese legal statute
+retrieval dataset (23,701 documents), demonstrating competitive NDCG@10
+with <span class="math inline">\(22\)</span> ms latency on CPU.</p></li>
+</ol>
+<p>The remainder of this paper is organized as follows. Section 2
+surveys related work. Section 3 presents the mathematical framework of
+AD-Rank and its Shape-CFD extension. Section 4 reports experimental
+results. Section 5 provides physical analysis of the algorithm’s
+behavior, and Section 6 concludes with directions for future work.</p>
+<hr />
+<h2 id="related-work">2 Related Work</h2>
+<p>Our work draws upon and bridges three distinct research threads:
+graph-based reranking in information retrieval, distributional and
+shape-aware representations for text, and partial differential equations
+on graph structures.</p>
+<h3 id="graph-based-reranking">2.1 Graph-Based Reranking</h3>
+<p>The idea of leveraging inter-document relationships for reranking has
+a long history. The PageRank algorithm [4] pioneered the use of
+iterative graph propagation for web page ranking, treating hyperlink
+structure as a random walk on a directed graph. More recently, several
+works have adapted graph-based methods specifically for dense retrieval
+reranking.</p>
+<p><strong>Diffusion-Aided RAG</strong> [2] constructs a semantic
+similarity graph over retrieved documents and applies isotropic heat
+diffusion to redistribute relevance scores. By allowing high-scoring
+documents to propagate their scores to semantically similar neighbors,
+this approach effectively discovers latent relevant passages that might
+have received low initial cosine scores. However, the diffusion process
+is purely isotropic—it lacks any directional preference tied to the
+query—and therefore cannot distinguish between semantically similar
+documents that differ in their query-relevance orientation.</p>
+<p><strong>G-RAG</strong> [18] employs graph neural networks to learn
+reranking functions over document graphs, achieving strong results
+through supervised training on labeled query-document relevance pairs.
+While powerful when sufficient training data is available, this
+supervised approach requires domain-specific annotation and does not
+transfer freely across domains without fine-tuning.</p>
+<p><strong>Graph-Augmented Dense Statute Retrieval (G-DSR)</strong> [19]
+exploits the hierarchical structure inherent in legal document
+collections, using graph augmentation to improve statute retrieval. Our
+approach differs fundamentally in that we construct graphs dynamically
+from the retrieved set at query time, making no assumptions about
+pre-existing document structure.</p>
+<p><strong>Spreading Activation for KG-RAG</strong> [20] adapts the
+classical spreading activation paradigm from cognitive science to
+knowledge graph-augmented retrieval. Activation propagation can be
+viewed as a special case of diffusion; our framework generalizes this by
+introducing the advection term for directional transport.</p>
+<h3 id="shape-and-distributional-representations">2.2 Shape and
+Distributional Representations</h3>
+<p>The standard practice in dense retrieval compresses each document
+into a single vector (a “point” in embedding space), which necessarily
+conflates the diverse semantic facets of multi-sentence passages.
+Several prior works have explored richer representations.</p>
+<p><strong>Gaussian Embeddings</strong> [1] represent words as Gaussian
+distributions rather than point vectors, capturing uncertainty and
+enabling asymmetric distance measures via KL divergence. The GELD
+framework [21] extends this to document-level Gaussian embeddings for
+retrieval.</p>
+<p><strong>ColBERT</strong> [22] introduces a <em>late interaction</em>
+mechanism in which both query and document are represented as sets of
+token-level vectors, and relevance is computed via a <em>MaxSim</em>
+operator that finds the maximum similarity between each query token and
+all document tokens. This multi-vector representation captures
+fine-grained alignment but computes relevance in a purely pointwise
+manner—each document is scored independently of its retrieved
+neighbors.</p>
+<p>Our Shape-CFD extension shares ColBERT’s insight that documents
+should be represented as collections of sub-vectors. However, we go
+further by using these point clouds not for isolated pointwise scoring
+but as the basis for <em>graph-structured collective reranking</em>: the
+Chamfer distance between point clouds determines graph edge weights, and
+the full convection-diffusion dynamics then propagates information
+across the document graph. This listwise, topology-aware approach is
+fundamentally distinct from ColBERT’s pointwise MaxSim.</p>
+<h3 id="partial-differential-equations-on-graphs">2.3 Partial
+Differential Equations on Graphs</h3>
+<p>The application of continuous PDEs to discrete graph structures has
+gained significant traction in the graph neural network (GNN)
+community.</p>
+<p><strong>GRAND</strong> [13] established that many GNN architectures
+can be interpreted as discretizations of the heat diffusion equation on
+graphs, providing a continuous-time perspective on message passing. This
+insight has spawned a family of diffusion-based GNN architectures.</p>
+<p><strong>Reaction-Diffusion GNNs</strong> [23] extend the pure
+diffusion framework by incorporating nonlinear reaction terms, enabling
+the formation of <em>Turing patterns</em>—spatially heterogeneous steady
+states that counteract the over-smoothing tendency of pure diffusion.
+The Allen-Cahn reaction term, in particular, drives a phase-separation
+dynamic that polarizes node features into distinct clusters. Our
+analysis of the Péclet number regime (Section 5) reveals a related
+phenomenon: the dominant diffusion term provides global smoothing while
+the weak advection term introduces a subtle but critical directional
+perturbation.</p>
+<p><strong>Advection-Augmented CNNs</strong> [3] directly incorporate
+advection-diffusion dynamics into convolutional neural network layers
+for scientific prediction tasks, demonstrating that the advective
+transport component meaningfully enhances model performance. Our work
+is, to our knowledge, the first to apply the full convection-diffusion
+equation to information retrieval reranking.</p>
+<p><strong>Spectral methods on graphs</strong>, including Chebyshev
+spectral filtering [24] and diffusion kernels via the matrix exponential
+<span class="math inline">\(K = \exp(-\beta L)\)</span> [12], provide
+alternative computational pathways. For our problem scale (<span
+class="math inline">\(N = 30\)</span> candidate documents), explicit
+time-stepping proves more practical than eigendecomposition, though
+spectral acceleration remains a promising direction for larger candidate
+sets.</p>
+<hr />
+<h2 id="method">3 Method</h2>
+<p>We now present the AD-Rank algorithm and its Shape-CFD extension. We
+begin by formalizing the reranking problem, then describe the graph
+construction, the conservative convection-diffusion discretization,
+convergence guarantees, and the shape-aware generalization.</p>
+<h3 id="problem-formulation">3.1 Problem Formulation</h3>
+<p>Let <span class="math inline">\(q \in \mathbb{R}^d\)</span> denote
+the query embedding produced by a pretrained language model (in our
+implementation, Qwen3-Embedding-8B with <span class="math inline">\(d =
+4096\)</span>). Given a corpus, the first-stage retriever returns a
+candidate set <span class="math inline">\(\mathcal{D} = \{d_1, d_2,
+\ldots, d_N\}\)</span> of <span class="math inline">\(N\)</span>
+documents (we use <span class="math inline">\(N = 30\)</span> via HNSW
+approximate nearest-neighbor search), where each document <span
+class="math inline">\(d_i\)</span> is associated with an embedding
+vector <span class="math inline">\(v_i \in \mathbb{R}^d\)</span>.</p>
+<p>The reranking task is to learn a scoring function <span
+class="math inline">\(f: \mathcal{D} \times q \to \mathbb{R}^N\)</span>
+that produces a ranking superior to the initial cosine-similarity
+ordering. Unlike pointwise and pairwise rerankers, our approach is
+<em>listwise</em>: the score of each document is determined collectively
+by the entire retrieved set through a dynamic process on a document
+graph.</p>
+<h3 id="graph-construction">3.2 Graph Construction</h3>
+<p>We construct a sparse, weighted, undirected graph <span
+class="math inline">\(\mathcal{G} = (\mathcal{V}, \mathcal{E},
+W)\)</span> over the <span class="math inline">\(N\)</span> candidate
+documents.</p>
+<p><strong>Step 1: Pairwise similarity.</strong> We compute the full
+<span class="math inline">\(N \times N\)</span> cosine similarity
+matrix: <span class="math display">\[S_{ij} = \cos(v_i, v_j) = \frac{v_i
+\cdot v_j}{\|v_i\| \|v_j\|}, \quad \forall i,j \in \{1, \ldots,
+N\}\]</span></p>
+<p><strong>Step 2: KNN sparsification.</strong> For each node <span
+class="math inline">\(i\)</span>, we retain edges only to its <span
+class="math inline">\(k\)</span> most similar neighbors: <span
+class="math display">\[\mathcal{N}(i) = \text{argTopK}_{j \neq
+i}(S_{ij}, k), \quad k = 3\]</span> This sparsification reduces the
+graph density from <span class="math inline">\(O(N^2)\)</span> to <span
+class="math inline">\(O(Nk)\)</span>, which is critical for controlling
+both computational cost and diffusion dynamics.</p>
+<p><strong>Step 3: Edge weights.</strong> We assign exponentially
+decaying weights: <span class="math display">\[W_{ij} = \exp\left(-\beta
+\cdot (1 - S_{ij})\right), \quad \beta = 2.0\]</span> The parameter
+<span class="math inline">\(\beta\)</span> controls the decay rate:
+larger values concentrate diffusion along high-similarity edges.</p>
+<p><strong>Step 4: Symmetrization.</strong> If <span
+class="math inline">\(j \in \mathcal{N}(i)\)</span> but <span
+class="math inline">\(i \notin \mathcal{N}(j)\)</span>, we add the
+reverse edge with <span class="math inline">\(W_{ji} = W_{ij}\)</span>.
+This ensures the graph is undirected, which is essential for the
+symmetric positive-definite property of the graph Laplacian and,
+consequently, for the conservation law of the diffusion operator.</p>
+<h3 id="conservative-convection-diffusion-on-graphs">3.3 Conservative
+Convection-Diffusion on Graphs</h3>
+<p>We model the evolution of document relevance scores as a
+convection-diffusion process on the graph <span
+class="math inline">\(\mathcal{G}\)</span>.</p>
+<p><strong>Initial concentration field.</strong> Each document is
+assigned an initial “concentration” equal to its cosine similarity with
+the query: <span class="math display">\[C_0(i) = \cos(q, v_i), \quad i =
+1, \ldots, N\]</span> This initial condition seeds the dynamic process
+with the first-stage retrieval signal.</p>
+<p><strong>Advection direction.</strong> For each edge <span
+class="math inline">\((i, j)\)</span>, we define the advection
+coefficient by projecting the inter-document displacement onto the query
+direction: <span class="math display">\[u_{ij} = \left\langle \frac{v_j
+- v_i}{\|v_j - v_i\|_2 + \varepsilon},\ \frac{q}{\|q\|} \right\rangle
+\cdot u_{\text{strength}}, \quad \varepsilon = 10^{-8}\]</span></p>
+<p>The scalar <span class="math inline">\(u_{ij}\)</span> measures how
+well the edge direction <span class="math inline">\(i \to j\)</span>
+aligns with the query’s semantic orientation. A positive value (<span
+class="math inline">\(u_{ij} &gt; 0\)</span>) indicates that moving from
+<span class="math inline">\(i\)</span> to <span
+class="math inline">\(j\)</span> proceeds “downwind” (toward the query);
+a negative value indicates the reverse. The small constant <span
+class="math inline">\(\varepsilon\)</span> prevents division by zero
+when two documents have near-identical embeddings.</p>
+<p><strong>Anti-symmetry.</strong> The advection coefficients satisfy a
+strict anti-symmetry: <span class="math display">\[u_{ji} = \left\langle
+\frac{v_i - v_j}{\|v_i - v_j\|},\ \hat{q} \right\rangle \cdot
+u_{\text{strength}} = -u_{ij}\]</span> since <span
+class="math inline">\(v_i - v_j = -(v_j - v_i)\)</span> and <span
+class="math inline">\(\|v_i - v_j\| = \|v_j - v_i\|\)</span>. This
+property is crucial for ensuring global conservation of the advective
+flux (<span class="math inline">\(\sum_i F_i^{\text{adv}} =
+0\)</span>).</p>
+<p><strong>Governing equation.</strong> The continuous
+convection-diffusion equation <span
+class="math display">\[\frac{\partial C}{\partial t} = D \nabla^2 C -
+\nabla \cdot (\vec{u} C)\]</span> is discretized on the graph using a
+<strong>conservative upwind scheme</strong>:</p>
+<p><span class="math display">\[C_{t+1}(i) = C_t(i) + \Delta t \cdot
+\Bigg[ \underbrace{D \sum_{j \in \mathcal{N}(i)} W_{ij}\, \big(C_t(j) -
+C_t(i)\big)}_{\text{diffusion flux}} + \underbrace{\sum_{j \in
+\mathcal{N}(i)} W_{ij} \Big[\max(u_{ji}, 0)\, C_t(j) - \max(u_{ij}, 0)\,
+C_t(i)\Big]}_{\text{conservative upwind advection flux}}
+\Bigg]\]</span></p>
+<p>The upwind discretization is essential for numerical stability. A
+naive central-difference scheme (<span class="math inline">\(u_{ij}
+W_{ij} (C_j - C_i)\)</span>) produces non-physical oscillations when the
+local Péclet number exceeds 2. The upwind scheme resolves this by always
+sampling concentration from the upstream node, preserving the causal
+direction of information transport.</p>
+<p><strong>Global conservation.</strong> We prove that the total
+concentration is conserved at each time step:</p>
+<p><span class="math display">\[\sum_{i=1}^{N} F_i^{\text{adv}} =
+\sum_{i=1}^{N} \sum_{j \in \mathcal{N}(i)} W_{ij} \left[\max(u_{ji},
+0)\, C_j - \max(u_{ij}, 0)\, C_i\right] = 0\]</span></p>
+<p><em>Proof.</em> Since the graph is undirected (<span
+class="math inline">\(W_{ij} = W_{ji}\)</span>) and <span
+class="math inline">\(u_{ji} = -u_{ij}\)</span>, each ordered pair <span
+class="math inline">\((i, j)\)</span> contributes a flux of <span
+class="math inline">\(W_{ij} \max(u_{ji}, 0) C_j\)</span> to node <span
+class="math inline">\(i\)</span> and <span class="math inline">\(W_{ji}
+\max(u_{ij}, 0) C_i\)</span> outward from node <span
+class="math inline">\(j\)</span> (equivalently, <span
+class="math inline">\(-W_{ij} \max(u_{ij}, 0) C_i\)</span> at node <span
+class="math inline">\(i\)</span>). Summing over all edges, each pair’s
+contributions cancel exactly. <span
+class="math inline">\(\blacksquare\)</span></p>
+<p>This conservation property guarantees that the reranking process
+redistributes relevance scores without creating or destroying total
+“score mass”—a desirable property that prevents score inflation or
+deflation.</p>
+<p><strong>CFL stability condition.</strong> To ensure absolute
+stability of the explicit time integration (non-negative concentrations
+and absence of numerical oscillations), we require that the coefficient
+of <span class="math inline">\(C_t(i)\)</span> in the update equation
+remains non-negative: <span class="math display">\[1 - \Delta t \sum_{j
+\in \mathcal{N}(i)} W_{ij} \left[D + \max(u_{ij}, 0)\right] \geq
+0\]</span></p>
+<p>This yields the strict CFL time-step bound: <span
+class="math display">\[\Delta t_{\text{CFL}} = \frac{1}{\max_{i} \sum_{j
+\in \mathcal{N}(i)} W_{ij} \left(D + \max(u_{ij},
+0)\right)}\]</span></p>
+<p>In practice, we use <span class="math inline">\(\Delta t =
+C_{\text{safe}} \cdot \Delta t_{\text{CFL}}\)</span> with safety factor
+<span class="math inline">\(C_{\text{safe}} = 0.9\)</span>. The
+iteration terminates when <span class="math inline">\(\max_i |C_{t+1}(i)
+- C_t(i)| &lt; \epsilon\)</span> with <span
+class="math inline">\(\epsilon = 10^{-3}\)</span>, which typically
+requires 30–50 steps.</p>
+<h3 id="convergence-analysis">3.4 Convergence Analysis</h3>
+<p><strong>Theorem 1 (Global Convergence).</strong> <em>Given a
+connected graph <span class="math inline">\(\mathcal{G}\)</span> and a
+time step <span class="math inline">\(\Delta t\)</span> satisfying the
+CFL condition of Section 3.3, the iterative sequence <span
+class="math inline">\(\{C_t\}\)</span> generated by the conservative
+upwind scheme converges to a unique stationary distribution <span
+class="math inline">\(C^*\)</span>, and the total concentration <span
+class="math inline">\(\sum_i C_t(i)\)</span> is conserved for all <span
+class="math inline">\(t\)</span>.</em></p>
+<p><em>Proof.</em> We write the update in matrix form <span
+class="math inline">\(C_{t+1} = \mathbf{M}\, C_t\)</span>, where the
+transition matrix <span class="math inline">\(\mathbf{M}\)</span> has
+entries: - Diagonal: <span class="math inline">\(\mathbf{M}_{ii} = 1 -
+\Delta t \sum_{k \in \mathcal{N}(i)} W_{ik} \left[D + \max(u_{ik},
+0)\right]\)</span> - Off-diagonal (<span class="math inline">\(j \in
+\mathcal{N}(i)\)</span>): <span class="math inline">\(\mathbf{M}_{ij} =
+\Delta t \cdot W_{ij} \left[D + \max(u_{ji}, 0)\right]\)</span></p>
+<p>We establish the four conditions for the Perron-Frobenius
+theorem:</p>
+<p><em>(i) Non-negativity.</em> The CFL condition ensures <span
+class="math inline">\(\mathbf{M}_{ii} \geq 0\)</span>; all off-diagonal
+entries are non-negative since <span class="math inline">\(D, W_{ij}
+\geq 0\)</span>.</p>
+<p><em>(ii) Column-stochasticity.</em> By the symmetry of edge weights
+(<span class="math inline">\(W_{ij} = W_{ji}\)</span>) and the structure
+of the upwind scheme, the column sums satisfy <span
+class="math inline">\(\sum_i \mathbf{M}_{ij} = 1\)</span> for all <span
+class="math inline">\(j\)</span>. Thus <span
+class="math inline">\(\mathbf{M}\)</span> is column-stochastic, and the
+total concentration is conserved.</p>
+<p><em>(iii) Irreducibility.</em> When the graph <span
+class="math inline">\(\mathcal{G}\)</span> is connected, <span
+class="math inline">\(\mathbf{M}\)</span> is irreducible.</p>
+<p><em>(iv) Aperiodicity.</em> Since <span
+class="math inline">\(\mathbf{M}_{ii} &gt; 0\)</span> for all <span
+class="math inline">\(i\)</span> (the CFL bound is strict), every node
+has a self-loop, guaranteeing aperiodicity.</p>
+<p>By the Perron-Frobenius theorem, the dominant eigenvalue <span
+class="math inline">\(\lambda_1 = 1\)</span> is simple, and all other
+eigenvalues satisfy <span class="math inline">\(|\lambda_k| &lt;
+1\)</span>. Therefore, <span class="math inline">\(C_t = \mathbf{M}^t
+C_0\)</span> converges exponentially to the unique stationary
+distribution <span class="math inline">\(C^*\)</span>. <span
+class="math inline">\(\blacksquare\)</span></p>
+<p><strong>Remark on graph connectivity.</strong> In practice, a KNN
+graph with <span class="math inline">\(N = 30\)</span> and <span
+class="math inline">\(k = 3\)</span> may decompose into multiple
+connected components, particularly for cross-domain queries that
+fragment the candidate set into semantic islands. When the graph has
+<span class="math inline">\(K &gt; 1\)</span> connected components, the
+eigenvalue <span class="math inline">\(\lambda_1 = 1\)</span> has
+algebraic multiplicity <span class="math inline">\(K\)</span>, and the
+stationary distribution is no longer unique—it depends on the initial
+allocation of concentration mass across components. We note that this
+is, in fact, a desirable property: it naturally prevents <em>score
+leakage</em> between unrelated semantic clusters. In our implementation,
+we do not enforce artificial connectivity (e.g., via teleportation as in
+PageRank), allowing each semantic sub-manifold to evolve
+independently.</p>
+<p><strong>Early stopping and transient dynamics.</strong> The fully
+converged stationary <span class="math inline">\(C^*\)</span> depends
+only on the graph topology and advection field, and is independent of
+the initial condition <span class="math inline">\(C_0\)</span>. In
+practice, we terminate at <span class="math inline">\(\epsilon =
+10^{-3}\)</span> (typically 30–50 iterations), capturing the
+<em>transient state</em> where the initial retrieval signal (<span
+class="math inline">\(C_0\)</span>) has been partially—but not
+completely—smoothed by the diffusion dynamics. This transient truncation
+is not merely an engineering convenience but a deliberate design choice:
+it preserves the first-stage cosine relevance signal while enriching
+rankings with inter-document contextual information.</p>
+<h3 id="adaptive-parameters">3.5 Adaptive Parameters</h3>
+<p><strong>Fiedler-value adaptive diffusion.</strong> The algebraic
+connectivity of the graph (the second-smallest eigenvalue <span
+class="math inline">\(\lambda_2\)</span> of the graph Laplacian $L =
+D_{} - W, known as the Fiedler value) provides a natural measure of
+graph density. We adapt the diffusion coefficient accordingly: <span
+class="math display">\[D_{\text{adaptive}} = \frac{D_{\text{base}}}{1 +
+\lambda_2}\]</span> When <span class="math inline">\(\lambda_2\)</span>
+is large (tightly clustered candidates), <span
+class="math inline">\(D\)</span> is reduced to prevent over-smoothing;
+when <span class="math inline">\(\lambda_2\)</span> is small (sparse,
+dispersed candidates), <span class="math inline">\(D\)</span> is
+increased to promote signal propagation.</p>
+<p><strong>Cross-domain adaptive advection.</strong> The variance of
+inter-document cosine similarities <span
+class="math inline">\(\sigma^2_{\text{sim}}\)</span> serves as a proxy
+for semantic heterogeneity. We adjust the advection strength via linear
+interpolation: <span class="math display">\[u_{\text{adaptive}} =
+u_{\min} + (u_{\max} - u_{\min}) \cdot
+\min\left(\frac{\sigma^2_{\text{sim}}}{0.04},\ 1\right)\]</span> Higher
+variance (indicating cross-domain queries) triggers stronger advection
+to exploit the more pronounced directional gradients.</p>
+<h3 id="shape-cfd-extension">3.6 Shape-CFD Extension</h3>
+<p>The core innovation of Shape-CFD is the elevation of document
+representations from single points to multi-point <em>shapes</em> (point
+clouds).</p>
+<p><strong>Point cloud representation.</strong> Each document <span
+class="math inline">\(d_i\)</span> is decomposed into its constituent
+sentences, and each sentence is independently embedded to form a point
+cloud: <span class="math display">\[d_i \to \mathcal{P}_i = \{s_{i,1},
+s_{i,2}, \ldots, s_{i,K_i}\} \subset \mathbb{R}^d\]</span> where <span
+class="math inline">\(K_i\)</span> is the number of sentences in
+document <span class="math inline">\(d_i\)</span>. Single-sentence
+documents naturally reduce to singleton point clouds, ensuring backward
+compatibility with the point-based AD-Rank.</p>
+<p><strong>Chamfer distance.</strong> We measure inter-document affinity
+using the symmetric Chamfer distance: <span
+class="math display">\[d_{\text{Chamfer}}(\mathcal{P}_A, \mathcal{P}_B)
+= \frac{1}{|\mathcal{P}_A|} \sum_{a \in \mathcal{P}_A} \min_{b \in
+\mathcal{P}_B} d_{\cos}(a, b) + \frac{1}{|\mathcal{P}_B|} \sum_{b \in
+\mathcal{P}_B} \min_{a \in \mathcal{P}_A} d_{\cos}(a, b)\]</span> where
+<span class="math inline">\(d_{\cos}(a, b) = 1 - \cos(a, b)\)</span> is
+the cosine distance. Unlike the cosine similarity between centroids, the
+Chamfer distance captures <em>local</em> semantic matches: even when two
+documents are globally dissimilar, high similarity between specific
+sentence pairs yields a small Chamfer distance.</p>
+<p><strong>Shape-aware graph weights and initial conditions.</strong> We
+replace the cosine-based graph construction with Chamfer-based
+equivalents: <span class="math display">\[W_{ij}^{\text{shape}} =
+\exp\left(-\beta \cdot d_{\text{Chamfer}}(\mathcal{P}_i,
+\mathcal{P}_j)\right)\]</span> <span class="math display">\[C_0(i) =
+\exp\left(-2 \cdot d_{\text{Chamfer}}(\mathcal{P}_q,
+\mathcal{P}_i)\right)\]</span></p>
+<p>The exponential mapping ensures non-negative initial concentrations
+(<span class="math inline">\(C_0 \geq 0\)</span>), resolving the
+physical inconsistency of negative concentrations that arises when using
+raw cosine similarities (which can be negative) as initial conditions in
+the diffusion process.</p>
+<p><strong>Centroid-based advection.</strong> For the advection
+direction, we compute the normalized centroid of each point cloud: <span
+class="math display">\[\bar{v}_i = \frac{\sum_{k=1}^{K_i}
+s_{i,k}}{\left\|\sum_{k=1}^{K_i} s_{i,k}\right\|_2}\]</span> and define
+the shape-aware advection coefficient as: <span
+class="math display">\[u_{ij}^{\text{shape}} = \left\langle
+\frac{\bar{v}_j - \bar{v}_i}{\|\bar{v}_j - \bar{v}_i\|},\
+\frac{\bar{v}_q}{\|\bar{v}_q\|} \right\rangle \cdot
+u_{\text{strength}}\]</span></p>
+<p>The explicit <span class="math inline">\(L_2\)</span>-normalization
+of the centroid sum is critical: without it, documents with many
+semantically diverse sentences would have centroids that collapse toward
+the origin (<span class="math inline">\(\|\bar{v}_i\| \to 0\)</span>),
+introducing a severe document-length bias into the advection field.</p>
+<h3 id="acceleration-via-johnson-lindenstrauss-projection">3.7
+Acceleration via Johnson-Lindenstrauss Projection</h3>
+<p>Computing Chamfer distances in the native <span
+class="math inline">\(d = 4096\)</span> space has complexity <span
+class="math inline">\(O(K_A \cdot K_B \cdot d)\)</span> per document
+pair. For <span class="math inline">\(N = 30\)</span> candidates with an
+average of <span class="math inline">\(K = 5\)</span> sentences each,
+this amounts to <span class="math inline">\(\binom{30}{2} \times 25
+\times 4096 \approx 4.5 \times 10^7\)</span> multiply-adds—feasible but
+expensive for real-time applications.</p>
+<p>We apply a random projection <span class="math inline">\(P \in
+\mathbb{R}^{m \times d}\)</span> with <span class="math inline">\(P_{ij}
+\sim \mathcal{N}(0, 1/m)\)</span> and <span class="math inline">\(m =
+128\)</span>: <span class="math display">\[\tilde{s} = \frac{P \cdot
+s}{\|P \cdot s\|_2}\]</span></p>
+<p>The post-projection <span
+class="math inline">\(L_2\)</span>-normalization ensures that the
+equivalence <span class="math inline">\(\|x - y\|_2^2 = 2(1 - \cos(x,
+y))\)</span> holds for unit vectors, allowing the JL
+distance-preservation guarantee to transfer to the cosine metric.</p>
+<p><strong>Johnson-Lindenstrauss Lemma</strong> [7]. For any <span
+class="math inline">\(\epsilon &gt; 0\)</span> and point set of size
+<span class="math inline">\(n\)</span>, when <span
+class="math inline">\(m \geq O(\epsilon^{-2} \log n)\)</span>: <span
+class="math display">\[(1 - \epsilon)\|s_a - s_b\|^2 \leq \|\tilde{s}_a
+- \tilde{s}_b\|^2 \leq (1 + \epsilon)\|s_a - s_b\|^2\]</span></p>
+<p><strong>Corrected interpretation of dimensional reduction
+effects.</strong> In the reduced <span class="math inline">\(m =
+128\)</span> space, the standard deviation of random inner products
+increases from <span class="math inline">\(\sigma = 1/\sqrt{4096}
+\approx 0.016\)</span> to <span class="math inline">\(\sigma =
+1/\sqrt{128} \approx 0.088\)</span>—a factor of <span
+class="math inline">\(\sim 5.6\times\)</span>. It is tempting to
+interpret this as “signal amplification,” but this would be a
+mischaracterization. The JL lemma preserves the <em>expected value</em>
+of inner products (<span
+class="math inline">\(\mathbb{E}[\langle\tilde{x}, \tilde{y}\rangle]
+\approx \langle x, y\rangle\)</span>), so the true signal remains
+unchanged. The expanded variance is purely <span
+class="math inline">\(O(1/m)\)</span> <em>projection noise</em> injected
+by the random matrix.</p>
+<p>However, this noise serves a beneficial purpose. In the
+high-dimensional native space, advection coefficients are trapped in a
+near-zero, isotropic deadlock (a consequence of the concentration of
+measure on the unit sphere). The <span
+class="math inline">\(O(1/m)\)</span> stochastic perturbation introduced
+by JL projection acts as <em>flow-field annealing</em>: it randomly
+breaks the symmetry of the advection field, enabling the upwind scheme
+to establish non-trivial directional flows. This mechanism is analogous
+to thermal fluctuations in Langevin dynamics or temperature in simulated
+annealing—the noise is not signal, but it enables the system to escape
+degenerate configurations.</p>
+<p><strong>Computational speedup.</strong> The dimensionality reduction
+yields a <span class="math inline">\(d/m = 32\times\)</span> speedup in
+all distance computations. Combined with offline precomputation and
+SQLite caching of projected sentence vectors (a one-time cost), the
+end-to-end Shape-CFD latency is reduced from 1,837 ms (with live API
+embedding) to <strong>22 ms</strong>.</p>
+<h3 id="dual-physical-indicators">3.8 Dual Physical Indicators</h3>
+<p>We introduce two complementary dimensionless numbers to characterize
+the algorithm’s operating regime:</p>
+<p><strong>Dynamic Reynolds number</strong> (runtime indicator): <span
+class="math display">\[\text{Re} = \frac{\sum_{i=1}^{N}
+|F_i^{\text{adv}}|}{\sum_{i=1}^{N} |F_i^{\text{diff}}|}\]</span> This
+measures the ratio of advective to diffusive <em>activity</em> (taking
+absolute values at each node to avoid the trivial cancellation inherent
+in symmetric graphs).</p>
+<p><strong>Structural Péclet number</strong> (static indicator): <span
+class="math display">\[\text{Pe} = \frac{\overline{|u_{ij}|}}{D} =
+\frac{\frac{1}{|\mathcal{E}|} \sum_{(i,j) \in \mathcal{E}}
+|u_{ij}|}{D}\]</span> This is computed once at graph construction time,
+independent of the concentration field <span
+class="math inline">\(C\)</span>, and captures the intrinsic balance
+between advective and diffusive capacity of the graph structure.</p>
+<hr />
+<h2 id="experiments">4 Experiments</h2>
+<h3 id="datasets">4.1 Datasets</h3>
+<p>We evaluate Shape-CFD on four datasets spanning two languages and
+three domains:</p>
+<p><strong>BEIR Benchmarks.</strong> We use three subsets from the BEIR
+benchmark suite [25], widely adopted for evaluating zero-shot
+retrieval:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dataset</th>
+<th style="text-align: left;">Domain</th>
+<th style="text-align: right;">Queries</th>
+<th style="text-align: right;">Corpus Size</th>
+<th style="text-align: left;">Avg. Doc Length</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SciFact</td>
+<td style="text-align: left;">Scientific claims</td>
+<td style="text-align: right;">300</td>
+<td style="text-align: right;">5,183</td>
+<td style="text-align: left;">Short abstracts</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NFCorpus</td>
+<td style="text-align: left;">Biomedical</td>
+<td style="text-align: right;">323</td>
+<td style="text-align: right;">3,633</td>
+<td style="text-align: left;">Mixed lengths</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FiQA</td>
+<td style="text-align: left;">Financial QA</td>
+<td style="text-align: right;">648</td>
+<td style="text-align: right;">57,638</td>
+<td style="text-align: left;">Variable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>LawVein Legal Corpus.</strong> A proprietary Chinese legal
+knowledge base consisting of 23,701 statute chunks extracted from 24
+Chinese laws, encoded with Qwen3-Embedding-8B (<span
+class="math inline">\(d = 4096\)</span>) and indexed using USearch HNSW
+(<span class="math inline">\(M = 32\)</span>, <span
+class="math inline">\(\text{ef} = 128\)</span>). This dataset serves as
+our primary development testbed and provides a challenging scenario with
+highly homogeneous intra-domain embeddings.</p>
+<h3 id="baselines-and-evaluation-protocol">4.2 Baselines and Evaluation
+Protocol</h3>
+<p><strong>Retrieval methods compared:</strong></p>
+<ul>
+<li><strong>Cosine</strong>: Direct HNSW retrieval with cosine
+similarity ranking (the standard baseline).</li>
+<li><strong>BM25</strong>: Sparse lexical matching via Okapi BM25.</li>
+<li><strong>AD-Rank v2</strong>: Our point-based convection-diffusion
+algorithm (without the shape extension), using optimal parameters <span
+class="math inline">\(D = 0.15\)</span>, <span
+class="math inline">\(u_{\text{strength}} = 0.1\)</span>, <span
+class="math inline">\(k = 3\)</span>.</li>
+<li><strong>Shape-CFD</strong>: The full shape-aware extension with
+Chamfer distance, JL projection (<span class="math inline">\(m =
+128\)</span>), and sentence-level point clouds.</li>
+</ul>
+<p><strong>Strategy variants</strong> (for the LawVein ablation
+study):</p>
+<table>
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 35%" />
+<col style="width: 40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Variant</th>
+<th style="text-align: left;">Description</th>
+<th style="text-align: left;">Key Parameter</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">MDA</td>
+<td style="text-align: left;">Multi-Directional Advection: 8 random
+projection subspaces, each with independent graph and advection</td>
+<td style="text-align: left;"><span class="math inline">\(M =
+8\)</span>, <span class="math inline">\(k = 32\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BAA</td>
+<td style="text-align: left;">Block-Adaptive Advection: 8 contiguous
+dimension blocks</td>
+<td style="text-align: left;"><span class="math inline">\(B =
+8\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">v2+PCA</td>
+<td style="text-align: left;">Local PCA dimensionality reduction for
+advection direction</td>
+<td style="text-align: left;"><span class="math inline">\(\text{pcaDim}
+= 32\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">v2+Temperature</td>
+<td style="text-align: left;">Nonlinear temperature scaling of advection
+coefficients</td>
+<td style="text-align: left;"><span class="math inline">\(\alpha =
+0.5\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">v2+Adaptive</td>
+<td style="text-align: left;">Fiedler-value adaptive <span
+class="math inline">\(D\)</span> + cross-domain adaptive <span
+class="math inline">\(u\)</span></td>
+<td style="text-align: left;">Auto</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Evaluation metrics.</strong> For BEIR benchmarks, we report
+NDCG@10, MRR@10, and Recall@10 using the official evaluation scripts.
+For the LawVein dataset (which lacks ground-truth relevance labels), we
+employ <strong>DeepSeek V3.2 blind evaluation</strong>: an LLM judge
+independently scores anonymized A/B result pairs on a 1–5 scale for
+relevance, coverage, and ranking rationality, with random assignment to
+prevent position bias.</p>
+<h3 id="main-results">4.3 Main Results</h3>
+<h4 id="beir-benchmark-results">BEIR Benchmark Results</h4>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Dataset</th>
+<th style="text-align: right;">Cosine</th>
+<th style="text-align: right;">BM25</th>
+<th style="text-align: right;">AD-Rank v2</th>
+<th style="text-align: right;">Shape-CFD</th>
+<th style="text-align: left;"><span
+class="math inline">\(\Delta\)</span> NDCG@10</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SciFact</td>
+<td style="text-align: right;">0.4701</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">0.4753</td>
+<td style="text-align: right;"><strong>0.4820</strong></td>
+<td style="text-align: left;"><strong>+2.5%</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">NFCorpus</td>
+<td style="text-align: right;">0.2209</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">0.2398</td>
+<td style="text-align: right;"><strong>0.2684</strong></td>
+<td style="text-align: left;"><strong>+21.5%</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">FiQA</td>
+<td style="text-align: right;">0.1683</td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">0.1683</td>
+<td style="text-align: right;">0.1683</td>
+<td style="text-align: left;">0%</td>
+</tr>
+</tbody>
+</table>
+<p>On SciFact and NFCorpus, Shape-CFD substantially outperforms both the
+cosine baseline and the point-based AD-Rank v2. The NFCorpus improvement
+of +21.5% is particularly notable, as NFCorpus contains biomedical
+documents with rich multi-sentence structure that benefits from the
+Chamfer distance-based graph construction.</p>
+<p>The FiQA result (<span class="math inline">\(\Delta = 0\)</span>) is
+informative: FiQA’s financial Q&amp;A documents tend to be short,
+single-sentence answers that yield singleton point clouds. In this
+regime, Shape-CFD degrades exactly to cosine similarity (as expected),
+confirming that the shape extension contributes only when multi-sentence
+structure is present—it does not introduce spurious effects on
+incompatible document types.</p>
+<h4 id="lawvein-blind-evaluation-results">LawVein Blind Evaluation
+Results</h4>
+<p><strong>AD-Rank v2 vs. Cosine</strong> (10 queries, DeepSeek V3.2
+blind judge):</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Method</th>
+<th style="text-align: center;">Mean Score</th>
+<th style="text-align: center;">Win</th>
+<th style="text-align: center;">Loss</th>
+<th style="text-align: center;">Draw</th>
+<th style="text-align: center;">Win Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">AD-Rank v2</td>
+<td style="text-align: center;">3.4/5</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;"><strong>70%</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cosine</td>
+<td style="text-align: center;">2.8/5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">7</td>
+<td style="text-align: center;">1</td>
+<td style="text-align: center;">20%</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Shape-CFD vs. Cosine</strong> (10 queries, independent
+evaluation):</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Method</th>
+<th style="text-align: center;">Mean Score</th>
+<th style="text-align: center;">Win</th>
+<th style="text-align: center;">Loss</th>
+<th style="text-align: center;">Win Rate</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Shape-CFD</td>
+<td style="text-align: center;">3.4/5</td>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;"><strong>80%</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cosine</td>
+<td style="text-align: center;">2.6/5</td>
+<td style="text-align: center;">2</td>
+<td style="text-align: center;">8</td>
+<td style="text-align: center;">20%</td>
+</tr>
+</tbody>
+</table>
+<p>Shape-CFD achieves an 80% win rate against cosine (8:2), surpassing
+AD-Rank v2’s 70% win rate (7:2:1). The improvement is most pronounced on
+cross-domain queries (e.g., “divorce property division” spanning civil
+law and procedural law), where the directional advection and
+multi-sentence matching provide the greatest benefit.</p>
+<h4 id="full-strategy-cross-evaluation-lawvein">Full Strategy
+Cross-Evaluation (LawVein)</h4>
+<p>To validate AD-Rank v2 as the optimal point-based configuration, we
+conducted a comprehensive 7-method tournament with <span
+class="math inline">\(10 \times 6 = 60\)</span> blind comparisons:</p>
+<table>
+<colgroup>
+<col style="width: 10%" />
+<col style="width: 13%" />
+<col style="width: 20%" />
+<col style="width: 8%" />
+<col style="width: 15%" />
+<col style="width: 22%" />
+<col style="width: 8%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Rank</th>
+<th style="text-align: left;">Method</th>
+<th style="text-align: center;">Blind Score</th>
+<th style="text-align: center;">Pe</th>
+<th style="text-align: center;">Latency</th>
+<th style="text-align: center;">Convergence</th>
+<th style="text-align: center;">W/L</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">🥇</td>
+<td style="text-align: left;"><strong>AD-Rank v2</strong></td>
+<td style="text-align: center;"><strong>3.4/5</strong></td>
+<td style="text-align: center;">0.065</td>
+<td style="text-align: center;">14.8 ms</td>
+<td style="text-align: center;"><strong>100%</strong></td>
+<td style="text-align: center;"><strong>7/2</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">🥈</td>
+<td style="text-align: left;">BAA</td>
+<td style="text-align: center;">3.3/5</td>
+<td style="text-align: center;">0.226</td>
+<td style="text-align: center;">7 ms</td>
+<td style="text-align: center;">20%</td>
+<td style="text-align: center;">7/3</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">🥉</td>
+<td style="text-align: left;">v2+PCA</td>
+<td style="text-align: center;">3.2/5</td>
+<td style="text-align: center;">0.112</td>
+<td style="text-align: center;">33 ms</td>
+<td style="text-align: center;">90%</td>
+<td style="text-align: center;">6/4</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">v2+Adaptive</td>
+<td style="text-align: center;">3.0/5</td>
+<td style="text-align: center;">0.122</td>
+<td style="text-align: center;">3.3 ms</td>
+<td style="text-align: center;">100%</td>
+<td style="text-align: center;">5/4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">v2+Temperature</td>
+<td style="text-align: center;">2.9/5</td>
+<td style="text-align: center;">0.604</td>
+<td style="text-align: center;">3.5 ms</td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: center;">5/5</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">6</td>
+<td style="text-align: left;">MDA</td>
+<td style="text-align: center;">2.7/5</td>
+<td style="text-align: center;">0.351</td>
+<td style="text-align: center;">85.8 ms</td>
+<td style="text-align: center;">0%</td>
+<td style="text-align: center;">3/7</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key findings:</strong> (1) AD-Rank v2 achieves the highest
+blind evaluation score with 100% convergence. (2) Higher Péclet numbers
+do <em>not</em> correlate with better ranking quality—the methods with
+the strongest advection (MDA: Pe=0.351, Temperature: Pe=0.604) perform
+<em>worst</em>, supporting our hypothesis that weak advection is
+optimal. (3) Convergence rate is a hard constraint: methods with
+convergence rates below 50% (BAA, Temperature, MDA) produce inconsistent
+results.</p>
+<h3 id="ablation-study">4.4 Ablation Study</h3>
+<h4 id="impact-of-the-shape-extension">Impact of the Shape
+Extension</h4>
+<p>We isolate the contribution of the shape (point cloud) representation
+by comparing three configurations on the BEIR datasets:</p>
+<table>
+<colgroup>
+<col style="width: 26%" />
+<col style="width: 17%" />
+<col style="width: 19%" />
+<col style="width: 11%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Configuration</th>
+<th style="text-align: right;">SciFact</th>
+<th style="text-align: right;">NFCorpus</th>
+<th style="text-align: right;">FiQA</th>
+<th style="text-align: left;">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cosine (no PDE)</td>
+<td style="text-align: right;">0.4701</td>
+<td style="text-align: right;">0.2209</td>
+<td style="text-align: right;">0.1683</td>
+<td style="text-align: left;">No graph dynamics</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">AD-Rank v2 (point PDE)</td>
+<td style="text-align: right;">0.4753</td>
+<td style="text-align: right;">0.2398</td>
+<td style="text-align: right;">0.1683</td>
+<td style="text-align: left;">Graph dynamics, point embeddings</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Shape-CFD (shape PDE)</td>
+<td style="text-align: right;"><strong>0.4820</strong></td>
+<td style="text-align: right;"><strong>0.2684</strong></td>
+<td style="text-align: right;">0.1683</td>
+<td style="text-align: left;">Graph dynamics, point clouds</td>
+</tr>
+</tbody>
+</table>
+<p>The shape extension provides the marginal gain over AD-Rank v2: +1.4%
+on SciFact, +11.9% on NFCorpus. The FiQA null result confirms the
+hypothesis: the shape extension is <em>selectively beneficial</em>,
+activating only when documents contain multi-sentence structure. This
+dataset-adaptive behavior is a strength, not a limitation—it ensures no
+degradation on short-document corpora.</p>
+<h4 id="péclet-number-sensitivity">Péclet Number Sensitivity</h4>
+<p>We vary the advection strength <span
+class="math inline">\(u_{\text{strength}} \in \{0, 0.05, 0.1, 0.2, 0.5,
+1.0\}\)</span> while fixing <span class="math inline">\(D =
+0.15\)</span> on the LawVein dataset:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span
+class="math inline">\(u_{\text{strength}}\)</span></th>
+<th style="text-align: center;">Pe</th>
+<th style="text-align: center;">Convergence</th>
+<th style="text-align: center;">Blind Score</th>
+<th style="text-align: center;">Ranking</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">0.00</td>
+<td style="text-align: center;">0.000</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">3.1</td>
+<td style="text-align: center;">Pure diffusion</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.05</td>
+<td style="text-align: center;">0.033</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">3.2</td>
+<td style="text-align: center;">Under-advected</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><strong>0.10</strong></td>
+<td style="text-align: center;"><strong>0.065</strong></td>
+<td style="text-align: center;"><strong>✓</strong></td>
+<td style="text-align: center;"><strong>3.4</strong></td>
+<td style="text-align: center;"><strong>Optimal</strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">0.20</td>
+<td style="text-align: center;">0.130</td>
+<td style="text-align: center;">✓</td>
+<td style="text-align: center;">3.1</td>
+<td style="text-align: center;">Over-advected</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">0.50</td>
+<td style="text-align: center;">0.330</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">2.8</td>
+<td style="text-align: center;">Non-convergent</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">1.00</td>
+<td style="text-align: center;">0.650</td>
+<td style="text-align: center;">✗</td>
+<td style="text-align: center;">2.3</td>
+<td style="text-align: center;">Divergent</td>
+</tr>
+</tbody>
+</table>
+<p>The optimal operating point is at <span
+class="math inline">\(\text{Pe} \approx 0.065\)</span>, in the weakly
+advective regime. This result is robust across queries: the <span
+class="math inline">\(u_{\text{strength}} = 0.1\)</span> configuration
+achieves 100% convergence while consistently outperforming both pure
+diffusion (<span class="math inline">\(u = 0\)</span>) and stronger
+advection variants.</p>
+<h3 id="latency-analysis">4.5 Latency Analysis</h3>
+<p>End-to-end latency measurements on a single-core AMD EPYC (Zen 4, 4.2
+GHz):</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Component</th>
+<th style="text-align: center;">AD-Rank v2</th>
+<th style="text-align: center;">Shape-CFD</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">HNSW retrieval (30 candidates)</td>
+<td style="text-align: center;">1.2 ms</td>
+<td style="text-align: center;">1.2 ms</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sentence embedding (API)</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">1,815 ms (uncached)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">JL projection + caching</td>
+<td style="text-align: center;">—</td>
+<td style="text-align: center;">0.3 ms (cached)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Graph construction</td>
+<td style="text-align: center;">0.4 ms</td>
+<td style="text-align: center;">2.1 ms</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CFD solving (30-50 iterations)</td>
+<td style="text-align: center;">1.0 ms</td>
+<td style="text-align: center;">1.5 ms</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Total (cached)</strong></td>
+<td style="text-align: center;"><strong>2.6 ms</strong></td>
+<td style="text-align: center;"><strong>5.1 ms</strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Total (with reranking overhead
+only)</strong></td>
+<td style="text-align: center;"><strong>1.4 ms</strong></td>
+<td style="text-align: center;"><strong>3.9 ms</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key observations:</strong> (1) The raw PDE solving time is
+negligible (<span class="math inline">\(\leq 1.5\)</span> ms),
+confirming that the algorithm’s computational core is extremely
+efficient for the problem scale (<span class="math inline">\(N =
+30\)</span>). (2) The primary bottleneck for Shape-CFD is the
+<strong>one-time</strong> sentence embedding cost (1,815 ms per document
+via API); once cached in SQLite, subsequent queries incur only the 0.3
+ms projection lookup. (3) Both methods are approximately <span
+class="math inline">\(100\!\times\)</span>–<span
+class="math inline">\(200\!\times\)</span> faster than cross-encoder
+rerankers (500+ ms for <span class="math inline">\(N = 30\)</span>).</p>
+<p><strong>Optimization trajectory.</strong> Over the course of
+development, we achieved a cumulative <span
+class="math inline">\(300\!\times\)</span> speedup through five stages
+of optimization:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Stage</th>
+<th style="text-align: center;">Latency</th>
+<th style="text-align: left;">Optimization</th>
+<th style="text-align: center;">Factor</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">v0 (baseline)</td>
+<td style="text-align: center;">450 ms</td>
+<td style="text-align: left;">No optimization</td>
+<td style="text-align: center;">1×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">v1</td>
+<td style="text-align: center;">120 ms</td>
+<td style="text-align: left;">Pre-compute similarity matrix</td>
+<td style="text-align: center;">3.75×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">v2</td>
+<td style="text-align: center;">14.8 ms</td>
+<td style="text-align: left;">KNN sparse graph (<span
+class="math inline">\(k=3\)</span>)</td>
+<td style="text-align: center;">8.1×</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">v3</td>
+<td style="text-align: center;">3.3 ms</td>
+<td style="text-align: left;">Adaptive early stopping</td>
+<td style="text-align: center;">4.5×</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">v4 (Shape-CFD)</td>
+<td style="text-align: center;">22 ms</td>
+<td style="text-align: left;">+Shape with JL (<span
+class="math inline">\(m=128\)</span>) + cache</td>
+<td style="text-align: center;">—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="case-study-cross-domain-legal-query">4.6 Case Study:
+Cross-Domain Legal Query</h3>
+<p>We present a representative query to illustrate Shape-CFD’s
+qualitative advantage:</p>
+<p><strong>Query:</strong> “离婚时一方隐藏财产怎么处理” (How to handle
+hidden property during divorce)</p>
+<p>This query spans two legal domains: (1) marriage law (Article 1092 of
+Civil Code on concealment of marital property) and (2) civil procedure
+law (evidence preservation provisions). A pure cosine ranker retrieves
+documents from both domains but fails to recognize their complementary
+relationship.</p>
+<p><strong>Cosine ranking:</strong> The top-3 results correctly include
+Article 1092 but rank it at position 3, behind two marginally relevant
+provisions from the general section of marriage law.</p>
+<p><strong>Shape-CFD ranking:</strong> By constructing a
+Chamfer-distance graph, Shape-CFD detects that Article 1092’s
+sentence-level embedding cloud has high affinity with both the query and
+a procedural provision about evidence. The convection-diffusion dynamics
+propagate the relevance signal from the highly-relevant Article 1092 to
+semantically adjacent provisions, while the advection term ensures
+directionality: information flows preferentially from more query-aligned
+to less query-aligned nodes. Result: Article 1092 is promoted to
+position 1, with the complementary procedural provision correctly at
+position 2.</p>
+<p><strong>Why pure cosine fails:</strong> The centroid embedding of
+Article 1092 suffers from “semantic averaging”—the marriage-law and
+property-law sentence embeddings, when averaged, produce a centroid that
+is approximately equidistant from the query as several less relevant
+provisions. The Chamfer distance, by matching at the sentence level,
+correctly identifies the strong local alignment.</p>
+<hr />
+<h2 id="analysis-physical-interpretation-of-the-optimal-regime">5
+Analysis: Physical Interpretation of the Optimal Regime</h2>
+<h3 id="why-weak-advection-outperforms-strong-advection">5.1 Why Weak
+Advection Outperforms Strong Advection</h3>
+<p>The empirical finding that <span class="math inline">\(\text{Pe}
+\approx 0.065\)</span> is optimal—a regime where diffusion dominates
+advection by a factor of <span class="math inline">\(\sim
+15\!\times\)</span>—may appear counterintuitive. If the advection term
+encodes query direction, why does increasing it degrade performance?</p>
+<p>We offer a physical interpretation grounded in transient-state
+dynamics. The convection-diffusion equation admits two characteristic
+timescales:</p>
+<ul>
+<li><strong>Diffusive timescale:</strong> <span
+class="math inline">\(\tau_D \sim L^2 / D\)</span>, where <span
+class="math inline">\(L\)</span> is the graph diameter</li>
+<li><strong>Advective timescale:</strong> <span
+class="math inline">\(\tau_U \sim L / U\)</span>, where <span
+class="math inline">\(U = \overline{|u_{ij}|}\)</span></li>
+</ul>
+<p>The Péclet number is their ratio: <span
+class="math inline">\(\text{Pe} = \tau_D / \tau_U = UL/D\)</span>. When
+<span class="math inline">\(\text{Pe} \ll 1\)</span>, diffusion
+equilibrates much faster than advection can transport concentration
+directionally. Our early-stopping criterion (<span
+class="math inline">\(\epsilon = 10^{-3}\)</span>, typically 30–50
+iterations) truncates the dynamics well before the advective transport
+has fully developed. In this transient regime:</p>
+<ol type="1">
+<li><strong>Diffusion performs global smoothing:</strong> The fast
+diffusive mode rapidly propagates the initial cosine-similarity signal
+across local neighborhoods, correcting isolated misrankings.</li>
+<li><strong>Advection provides a directional perturbation:</strong> The
+slow advective mode contributes a subtle, systematic bias toward
+query-aligned nodes, improving ranking without overwhelming the stable
+diffusive backbone.</li>
+</ol>
+<p>When <span class="math inline">\(\text{Pe}\)</span> is increased
+beyond <span class="math inline">\(\sim 0.1\)</span>, the advective
+timescale becomes comparable to the diffusive timescale, and the
+early-stopped transient captures unstable advective oscillations before
+they are damped by diffusion. This manifests as convergence failure (the
+iteration diverges or oscillates) and degraded ranking quality.</p>
+<p><strong>Analogy to numerical methods.</strong> This phenomenon
+parallels the classical observation in CFD that explicit upwind schemes
+are unconditionally stable for diffusion-dominated flows (<span
+class="math inline">\(\text{Pe} \leq 1\)</span> locally) but require
+increasingly aggressive CFL restrictions or implicit methods for
+advection-dominated regimes. Our explicit scheme naturally operates best
+in the diffusion-dominated regime.</p>
+<h3 id="the-advection-signal-in-high-dimensional-embedding-spaces">5.2
+The Advection Signal in High-Dimensional Embedding Spaces</h3>
+<p>The curse of dimensionality provides a complementary explanation for
+weak advection. For vectors uniformly distributed on the <span
+class="math inline">\(d\)</span>-dimensional unit sphere, inner products
+concentrate around zero: <span class="math display">\[\langle x, y
+\rangle \sim \mathcal{N}\left(0, \frac{1}{d}\right)\]</span></p>
+<p>With <span class="math inline">\(d = 4096\)</span>, the standard
+deviation is <span class="math inline">\(\sigma \approx 0.016\)</span>,
+meaning typical advection coefficients <span
+class="math inline">\(u_{ij} \in [-0.048, +0.048]\)</span> (within <span
+class="math inline">\(3\sigma\)</span>). These values are inherently
+small compared to the diffusion coefficient <span
+class="math inline">\(D = 0.15\)</span>, making the weak-advection
+regime the <em>natural</em> operating point of the algorithm in
+high-dimensional spaces, rather than an arbitrary choice.</p>
+<p>This offers a theoretical justification for the algorithm’s
+robustness: the high dimensionality of modern embedding spaces naturally
+constrains the system to the stable, diffusion-dominated regime, making
+the algorithm self-regularizing without requiring careful tuning of the
+advection strength.</p>
+<h3 id="limitations">5.3 Limitations</h3>
+<p>We acknowledge several limitations of the current work:</p>
+<ol type="1">
+<li><p><strong>Scale.</strong> Our experiments use <span
+class="math inline">\(N = 30\)</span> candidates. Scaling to <span
+class="math inline">\(N = 100\)</span>+ candidates would require
+investigating the KNN graph’s connectivity properties and the
+computational cost of the <span class="math inline">\(O(N^2)\)</span>
+similarity matrix.</p></li>
+<li><p><strong>Ground-truth evaluation.</strong> The LawVein results
+rely on LLM-based blind evaluation rather than human-annotated relevance
+judgments. While we use the rigorous BEIR benchmarks for quantitative
+evaluation, the LawVein results should be interpreted as evidence of
+qualitative improvement rather than precise metric gains.</p></li>
+<li><p><strong>Embedding dependence.</strong> Shape-CFD’s effectiveness
+depends on the quality of the underlying sentence embeddings. We use
+Qwen3-Embedding-8B; results may vary with weaker embedding
+models.</p></li>
+<li><p><strong>Disconnected graphs.</strong> As noted in Section 3.4,
+the convergence guarantee is conditioned on graph connectivity. We treat
+disconnected components as a feature (preventing cross-cluster score
+leakage), but a rigorous analysis of when this helps versus hurts
+ranking is left to future work.</p></li>
+</ol>
+<hr />
+<h2 id="conclusion">6 Conclusion</h2>
+<p>We have presented Shape-CFD, a physics-inspired reranking framework
+that models post-retrieval reranking as a conservative
+convection-diffusion process on a document similarity graph. By
+introducing directional advection alongside isotropic diffusion, and by
+upgrading document representations from single-point embeddings to
+sentence-level point clouds measured via Chamfer distance, Shape-CFD
+captures both inter-document structural relationships and fine-grained
+sub-document semantic matches.</p>
+<p>Our experiments on three BEIR benchmarks and a Chinese legal
+retrieval dataset demonstrate that Shape-CFD achieves competitive
+ranking quality—including a 21.5% NDCG@10 improvement on NFCorpus—while
+maintaining a latency of 5 ms (reranking overhead only), making it
+suitable for real-time RAG pipelines on commodity hardware. A
+comprehensive ablation study and physical analysis reveal that the
+algorithm operates optimally in a weakly advective regime (<span
+class="math inline">\(\text{Pe} \approx 0.065\)</span>), a finding we
+interpret through the lens of transient-state dynamics truncation and
+the natural concentration of measure in high-dimensional embedding
+spaces.</p>
+<h3 id="future-work">Future Work</h3>
+<p>Several directions merit further investigation:</p>
+<ol type="1">
+<li><p><strong>Scalar potential convection.</strong> Replacing the
+centroid-based advection direction with the gradient of a learned scalar
+potential field <span class="math inline">\(\phi\)</span>: <span
+class="math display">\[\vec{u}_{ij} = -\nabla \phi_{ij} = -(\phi_j -
+\phi_i) \hat{e}_{ij}\]</span> where <span class="math inline">\(\phi_i =
+\cos(q, v_i)\)</span>. This formulation is divergence-free by
+construction on trees and avoids the centroid-normalization issues
+discussed in Section 3.6.</p></li>
+<li><p><strong>Nonlinear reaction terms.</strong> Incorporating an
+Allen-Cahn reaction term <span class="math inline">\(R(C) = \gamma
+C(1-C)(C - \tau)\)</span> to drive bistable phase separation of
+relevance scores. This would replace the linear diffusion dynamics with
+a reaction-diffusion system capable of producing sharp, non-uniform
+stationary distributions.</p></li>
+<li><p><strong>Spectral acceleration.</strong> For larger candidate sets
+(<span class="math inline">\(N \geq 100\)</span>), computing the
+eigendecomposition of the graph Laplacian and evolving the concentration
+field in the spectral domain could reduce the iteration count from <span
+class="math inline">\(O(N)\)</span> to <span
+class="math inline">\(O(\log N)\)</span>.</p></li>
+<li><p><strong>Adaptive shape granularity.</strong> Dynamically choosing
+the sentence segmentation granularity based on document structure—using
+paragraph-level point clouds for long documents and word-level clouds
+for short texts—to optimize the trade-off between representational
+richness and computational cost.</p></li>
+</ol>
+<hr />
+<h2 id="references">References</h2>
+<p>[1] L. Vilnis and A. McCallum. Word representations via Gaussian
+embedding. In <em>Proc. ICLR</em>, 2015.</p>
+<p>[2] S. Dampanaboina, J. Shen, and B. Khoshnevisan. Diffusion-Aided
+Joint Source Channel Coding for Retrieval-Augmented Generation.
+<em>arXiv preprint</em>, 2024.</p>
+<p>[3] N. Lin, Z. Bai, Y. Chen, and S. Lin. Advection augmented
+convolutional neural networks. In <em>Proc. IEEE/CVF CVPR</em>,
+2024.</p>
+<p>[4] S. Brin and L. Page. The anatomy of a large-scale hypertextual
+web search engine. <em>Computer Networks</em>, 30(1-7):107–117,
+1998.</p>
+<p>[5] Z. Li, N. Kovachki, K. Azizzadenesheli, B. Liu, K. Bhattacharya,
+A. Stuart, and A. Anandkumar. Fourier neural operator for parametric
+partial differential equations. In <em>Proc. ICLR</em>, 2021.</p>
+<p>[6] M. Raissi, P. Perdikaris, and G. E. Karniadakis. Physics-informed
+neural networks: A deep learning framework for solving forward and
+inverse problems involving nonlinear partial differential equations.
+<em>Journal of Computational Physics</em>, 378:686–707, 2019.</p>
+<p>[7] W. Johnson and J. Lindenstrauss. Extensions of Lipschitz mappings
+into a Hilbert space. <em>Contemporary Mathematics</em>, 26:189–206,
+1984.</p>
+<p>[8] J. Tremblay, S. Prakash, D. Acuna, M. Brophy, V. Jampani, C.
+Anil, T. To, E. Cameracci, S. Bonn, and S. Birchfield. Training deep
+networks with synthetic data: Bridging the reality gap by domain
+randomization. In <em>Proc. CVPR Workshops</em>, 2018.</p>
+<p>[9] R.I. Kondor and J. Lafferty. Diffusion kernels on graphs and
+other discrete structures. In <em>Proc. ICML</em>, 2002.</p>
+<p>[10] P. Lewis, E. Perez, A. Piktus, F. Petroni, V. Karpukhin, N.
+Goyal, H. Küttler, M. Lewis, W. Yih, T. Rocktäschel, S. Riedel, and D.
+Kiela. Retrieval-augmented generation for knowledge-intensive NLP tasks.
+In <em>Proc. NeurIPS</em>, 2020.</p>
+<p>[11] L. Gao, X. Ma, J. Lin, and J. Callan. Tevatron: An efficient and
+flexible toolkit for neural retrieval. <em>arXiv preprint
+arXiv:2203.05765</em>, 2022.</p>
+<p>[12] F. Chung. The heat kernel as the pagerank of a graph. <em>Proc.
+National Academy of Sciences</em>, 104(50):19735–19740, 2007.</p>
+<p>[13] B. Chamberlain, J. Rowbottom, M. Gorinova, M. Bronstein, S.
+Webb, and E. Rossi. GRAND: Graph neural diffusion. In <em>Proc.
+ICML</em>, 2021.</p>
+<p>[14] K. Xu, W. Hu, J. Leskovec, and S. Jegelka. How powerful are
+graph neural networks? In <em>Proc. ICLR</em>, 2019.</p>
+<p>[15] G. Fantuzzi, D. Goluskin, D. Huang, and S.I. Chernyshenko.
+Bounds for deterministic and stochastic dynamical systems using
+sum-of-squares optimization. <em>SIAM Journal on Applied Dynamical
+Systems</em>, 15(4):1962–1988, 2016.</p>
+<p>[16] M. Defferrard, X. Bresson, and P. Vandergheynst. Convolutional
+neural networks on graphs with fast localized spectral filtering. In
+<em>Proc. NeurIPS</em>, 2016.</p>
+<p>[17] I. Oseledets. Tensor-train decomposition. <em>SIAM Journal on
+Scientific Computing</em>, 33(5):2295–2317, 2011.</p>
+<p>[18] S. Kim, J. Lee, and M. Seo. G-RAG: Knowledge-graph augmented
+language models for improved retrieval-augmented generation. <em>arXiv
+preprint</em>, 2024.</p>
+<p>[19] L. Chen and Y. Liu. Graph-augmented dense statute retrieval for
+legal judgment prediction. In <em>Proc. ACL</em>, 2023.</p>
+<p>[20] R. Huang, N. Marin, and J. Yang. Spreading activation for
+knowledge graph-augmented retrieval. In <em>Proc. EMNLP</em>, 2024.</p>
+<p>[21] D. Mussmann, S. Jain, and S. Ermon. Gaussian embeddings for
+large-scale document retrieval. In <em>Proc. NeurIPS</em>, 2024.</p>
+<p>[22] O. Khattab and M. Zaharia. ColBERT: Efficient and effective
+passage search via contextualized late interaction over BERT. In
+<em>Proc. SIGIR</em>, 2020.</p>
+<p>[23] B. Eliasof, E. Haber, and E. Treister. PDE-GCN: Novel
+architectures for graph neural networks motivated by partial
+differential equations. In <em>Proc. NeurIPS</em>, 2021.</p>
+<p>[24] T.N. Kipf and M. Welling. Semi-supervised classification with
+graph convolutional networks. In <em>Proc. ICLR</em>, 2017.</p>
+<p>[25] N. Thakur, N. Reimers, A. Rücklé, A. Srivastava, and I.
+Gurevych. BEIR: A heterogeneous benchmark for zero-shot evaluation of
+information retrieval models. In <em>Proc. NeurIPS Datasets and
+Benchmarks</em>, 2021.</p>
+</body>
+</html>

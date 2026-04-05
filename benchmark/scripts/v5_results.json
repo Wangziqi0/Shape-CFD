@@ -1,0 +1,64 @@
+{
+  "scifact": [
+    {
+      "method": "cosine",
+      "ndcg10": 0.4701,
+      "time_ms": 0,
+      "delta": ""
+    },
+    {
+      "method": "ad_rank_v2",
+      "ndcg10": 0.4709,
+      "time_ms": 4,
+      "delta": ""
+    },
+    {
+      "method": "shape_v4",
+      "ndcg10": 0.4253,
+      "time_ms": 1005.9,
+      "delta": ""
+    },
+    {
+      "method": "bm25",
+      "ndcg10": 0.483,
+      "time_ms": 3.5,
+      "delta": ""
+    },
+    {
+      "method": "v5_maxsim",
+      "ndcg10": 0.4186,
+      "time_ms": 0,
+      "delta": "-1.6%"
+    },
+    {
+      "method": "v5_cutoff",
+      "ndcg10": 0.4186,
+      "time_ms": 0,
+      "delta": "-1.6%"
+    },
+    {
+      "method": "v5_allen_cahn",
+      "ndcg10": 0.4186,
+      "time_ms": 0,
+      "delta": "-1.6%"
+    },
+    {
+      "method": "v5_adaptive",
+      "ndcg10": 0.4198,
+      "time_ms": 0,
+      "delta": "-1.3%"
+    },
+    {
+      "method": "v5_full",
+      "ndcg10": 0.4198,
+      "time_ms": 0,
+      "delta": "-1.3%"
+    },
+    {
+      "method": "v5_ensemble",
+      "ndcg10": 0.4195,
+      "time_ms": 1.4,
+      "delta": "-1.4%"
+    }
+  ]
+}

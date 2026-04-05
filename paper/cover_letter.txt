@@ -1,0 +1,21 @@
+Dear Editor-in-Chief,
+
+We are pleased to submit our manuscript entitled "Documents Are Shapes, Not Points: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing" for consideration for publication in Information Processing and Management.
+
+This paper introduces a training-free geometric post-processing pipeline for dense document retrieval. The core idea is to treat LLM hidden states as point clouds rather than collapsing them into single vectors. We propose PQ-Chamfer distance—a new dissimilarity measure that repurposes Product Quantization from a compression tool into a distance metric—and combine it with graph Laplacian smoothing for score refinement.
+
+Key results:
+- The pipeline improves retrieval quality by +2.7% to +136.2% (NDCG@10) across six BEIR benchmarks, spanning 2,500 to 523,000 documents.
+- On two benchmarks (FiQA and SCIDOCS), the training-free pipeline surpasses BGE-large-en-v1.5, a model specifically trained for retrieval.
+- Cross-model experiments on three embedding architectures (Qwen3-8B, BGE-M3, BGE-large) confirm the method is model-agnostic.
+- We report 21 systematically falsified approaches, establishing clear applicability boundaries.
+
+The manuscript has not been published elsewhere and is not under consideration by another journal. A preprint version is available on Zenodo (DOI: 10.5281/zenodo.19402100).
+
+We believe this work is well-suited for IPM given its focus on novel information processing methods with strong empirical validation across multiple datasets and models.
+
+Thank you for your consideration.
+
+Sincerely,
+Chen Yifan
+Independent Researcher
