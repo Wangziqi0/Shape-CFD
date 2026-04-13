@@ -1,8 +1,16 @@
 # Shape-CFD: Point Cloud Retrieval with PQ-Chamfer Distance and Graph Smoothing
 
+[![DOI](https://img.shields.io/badge/DOI-pending_Zenodo_archival-lightgrey)](https://github.com/Wangziqi0/Shape-CFD)
+[![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-blue.svg)](LICENSE)
+[![Status: v0.1.0](https://img.shields.io/badge/status-v0.1.0-orange)](https://github.com/Wangziqi0/Shape-CFD/releases)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0008--8344--1149-a6ce39)](https://orcid.org/0009-0008-8344-1149)
+[![Manuscript](https://img.shields.io/badge/manuscript-under_review_at_IPM-yellow)](#manuscript)
+
 **Documents Are Shapes, Not Points.**
 
 A training-free geometric post-processing pipeline that improves dense retrieval by treating LLM hidden states as point clouds.
+
+**Keywords**: PQ-Chamfer distance, graph Laplacian smoothing, training-free retrieval, dense retrieval, BEIR, point cloud, Chamfer matching, reranking, LLM hidden states.
 
 ## Results
 
@@ -71,16 +79,29 @@ node benchmark/build_clouds.js beir_data/scifact
 node benchmark/beir_multi_bench.js scifact 55,100,200
 ```
 
+<a id="manuscript"></a>
+## Manuscript
+
+The manuscript describing this work is currently **under review at Information Processing & Management** (submission ID: `IPM-D-26-02154`, submitted 2026-04-04, required reviews in progress).
+
 ## Citation
 
+If you use Shape-CFD in academic work:
+
 ```bibtex
-@article{chen2026shapes,
-  title={Documents Are Shapes, Not Points: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing},
-  author={Chen, Yifan},
-  year={2026},
-  note={Preprint available on Zenodo}
+@software{chen2026shapecfd,
+  author       = {Chen, Yifan},
+  title        = {Shape-CFD: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing},
+  year         = 2026,
+  publisher    = {Zenodo},
+  version      = {v0.1.0},
+  doi          = {10.5281/zenodo.XXXXXXX},
+  url          = {https://github.com/Wangziqi0/Shape-CFD},
+  orcid        = {0009-0008-8344-1149}
 }
 ```
+
+Structured citation metadata (supported by GitHub, Zenodo, Zotero) is in [`CITATION.cff`](CITATION.cff). When the IPM manuscript is published, the journal citation should be preferred.
 
 ## License
 

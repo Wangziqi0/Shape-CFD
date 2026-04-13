@@ -1,0 +1,21 @@
+Shape-CFD
+Copyright 2026 Yifan Chen
+
+This product includes work developed by the Shape-CFD project
+(https://github.com/Wangziqi0/Shape-CFD).
+
+Author:    Yifan Chen (Independent Researcher)
+ORCID iD:  0009-0008-8344-1149
+
+License:   Business Source License 1.1
+           Change Date: 2030-03-31
+           Change License: Apache License 2.0
+
+The manuscript describing this work is under review at
+Information Processing & Management (submission ID: IPM-D-26-02154).
+
+Acknowledgment of AI-assisted development:
+This work was developed with assistance from Claude (by Anthropic),
+deployed across multiple instances for experimentation, debugging, and
+manuscript drafting. All method design, algorithmic choices, final
+experimental decisions, and scientific judgments are the author's.

@@ -1,0 +1,45 @@
+cff-version: 1.2.0
+message: "If you use Shape-CFD in academic work, please cite it as below."
+title: "Shape-CFD: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing"
+abstract: >-
+  Shape-CFD is a training-free geometric post-processing pipeline that improves
+  dense retrieval by treating LLM hidden states as point clouds rather than
+  single vectors. The method combines PQ-Chamfer Distance (splitting 4096-d
+  vectors into 64×64-d subspaces and aggregating via Chamfer matching),
+  Graph Laplacian Smoothing over KNN candidate graphs, and score fusion.
+  Evaluated on six BEIR benchmarks (NFCorpus, SciFact, ArguAna, SCIDOCS, FiQA,
+  Quora), Shape-CFD achieves up to +136% nDCG@10 improvement over cosine
+  baselines on FiQA, and surpasses BGE-large-en-v1.5 on FiQA and SCIDOCS
+  without any retrieval-specific training. Implementation is in Rust (NAPI
+  bindings for Node.js). The manuscript is under review at Information
+  Processing & Management (IPM-D-26-02154).
+authors:
+  - family-names: "Chen"
+    given-names: "Yifan"
+    orcid: "https://orcid.org/0009-0008-8344-1149"
+    affiliation: "Independent Researcher"
+version: "0.1.0"
+date-released: "2026-04-13"
+license: "BUSL-1.1"
+repository-code: "https://github.com/Wangziqi0/Shape-CFD"
+url: "https://github.com/Wangziqi0/Shape-CFD"
+keywords:
+  - training-free-retrieval
+  - pq-chamfer-distance
+  - graph-laplacian-smoothing
+  - dense-retrieval
+  - point-cloud-retrieval
+  - information-retrieval
+  - BEIR
+  - chamfer-distance
+  - reranking
+  - LLM-hidden-states
+references:
+  - type: article
+    authors:
+      - family-names: "Chen"
+        given-names: "Yifan"
+    title: "Documents Are Shapes, Not Points: Training-Free Retrieval via PQ-Chamfer Distance and Graph Smoothing"
+    year: 2026
+    journal: "Information Processing & Management (under review)"
+    notes: "Submission ID IPM-D-26-02154"
