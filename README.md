@@ -1,6 +1,6 @@
 # Shape-CFD: Point Cloud Retrieval with PQ-Chamfer Distance and Graph Smoothing
 
-[![DOI](https://img.shields.io/badge/DOI-pending_Zenodo_archival-lightgrey)](https://github.com/Wangziqi0/Shape-CFD)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.19553941.svg)](https://doi.org/10.5281/zenodo.19553941)
 [![License: BUSL-1.1](https://img.shields.io/badge/License-BUSL--1.1-blue.svg)](LICENSE)
 [![Status: v0.1.0](https://img.shields.io/badge/status-v0.1.0-orange)](https://github.com/Wangziqi0/Shape-CFD/releases)
 [![ORCID](https://img.shields.io/badge/ORCID-0009--0008--8344--1149-a6ce39)](https://orcid.org/0009-0008-8344-1149)
@@ -95,11 +95,15 @@ If you use Shape-CFD in academic work:
   year         = 2026,
   publisher    = {Zenodo},
   version      = {v0.1.0},
-  doi          = {10.5281/zenodo.XXXXXXX},
-  url          = {https://github.com/Wangziqi0/Shape-CFD},
+  doi          = {10.5281/zenodo.19553941},
+  url          = {https://doi.org/10.5281/zenodo.19553941},
   orcid        = {0009-0008-8344-1149}
 }
 ```
+
+**Note on DOIs**:
+- Concept DOI: [`10.5281/zenodo.19553941`](https://doi.org/10.5281/zenodo.19553941) — use for general academic citation (always points to the latest version)
+- Version DOI: [`10.5281/zenodo.19553942`](https://doi.org/10.5281/zenodo.19553942) — use when reproducibility to v0.1.0 matters
 
 Structured citation metadata (supported by GitHub, Zenodo, Zotero) is in [`CITATION.cff`](CITATION.cff). When the IPM manuscript is published, the journal citation should be preferred.
 

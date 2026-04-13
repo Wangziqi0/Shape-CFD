@@ -23,6 +23,14 @@ date-released: "2026-04-13"
 license: "BUSL-1.1"
 repository-code: "https://github.com/Wangziqi0/Shape-CFD"
 url: "https://github.com/Wangziqi0/Shape-CFD"
+doi: "10.5281/zenodo.19553941"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.19553941"
+    description: "Concept DOI — always points to the latest version"
+  - type: doi
+    value: "10.5281/zenodo.19553942"
+    description: "Version DOI for v0.1.0 release"
 keywords:
   - training-free-retrieval
   - pq-chamfer-distance
