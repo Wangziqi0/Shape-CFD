@@ -1,0 +1,13 @@
+falsification_id: F03
+short_name: allen_cahn_normalized
+period: V5.1
+family: numerical_design_pathology
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Min-max normalization of C lifts F2's reaction-term dormancy.
+protocol_brief: Same as F2; pre-normalize C to [0,1] before reaction.
+result_summary: "NDCG@10 -12.9% on NFCorpus."
+status: falsified
+provenance: complete
+raw_data_source: walkthrough.md §2.2 V5.1 normalized failure
+appendix_C_section: F03

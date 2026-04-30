@@ -1,0 +1,1 @@
+{"falsification_id": "F16", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"diverged_at_step": 10, "peclet": 0.604, "max_stable_peclet": 0.5}, "per_query_data": "not_preserved_in_vV3", "see_paper_section": "Appendix C \\SF16"}

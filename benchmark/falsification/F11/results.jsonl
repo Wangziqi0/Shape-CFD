@@ -1,0 +1,1 @@
+{"falsification_id": "F11", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"latency_overhead": "3x", "ndcg_delta": "~0"}, "per_query_data": "not_preserved_in_vV11", "see_paper_section": "Appendix C \\SF11"}

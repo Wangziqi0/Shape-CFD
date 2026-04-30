@@ -1,0 +1,15 @@
+falsification_id: F04
+short_name: jl_random_projection
+period: V3
+family: curse_of_orthogonality
+datasets_tested:
+  - nfcorpus
+  - fiqa
+  - scidocs
+hypothesis_brief: "JL random projection 4096->128 preserves distances within 1+/-eps with 32x speedup."
+protocol_brief: W ~ N(0,1/d) in R^(128x4096); cosine reranking on projected representations.
+result_summary: "NDCG@10 -7.6% across NFCorpus, FiQA, SCIDOCS."
+status: falsified
+provenance: reconstructed
+raw_data_source: cfd_problems_briefing.md problem 1
+appendix_C_section: F04

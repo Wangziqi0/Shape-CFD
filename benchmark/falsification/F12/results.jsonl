@@ -1,0 +1,1 @@
+{"falsification_id": "F12", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"per_op_speedup": "~32x", "end_to_end_speedup": "~1x"}, "per_query_data": "not_preserved_in_vV8", "see_paper_section": "Appendix C \\SF12"}

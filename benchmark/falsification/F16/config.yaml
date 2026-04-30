@@ -1,0 +1,13 @@
+falsification_id: F16
+short_name: temperature_scaled_advection
+period: V3
+family: curse_of_orthogonality
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Adaptive temperature T(x) softens advection in high-density regions.
+protocol_brief: T(x) ~ 1/density(x); u_eff = T(x)*u.
+result_summary: Numerical divergence within 10 steps.
+status: falsified
+provenance: reconstructed
+raw_data_source: V3 stability tests
+appendix_C_section: F16

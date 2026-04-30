@@ -1,0 +1,13 @@
+falsification_id: F20
+short_name: strong_baseline_saturation
+period: V11
+family: numerical_design_pathology
+datasets_tested:
+  - scifact
+hypothesis_brief: PQ-Chamfer + Laplacian improves over any cosine baseline including strong ones.
+protocol_brief: SciFact (cosine baseline 0.4483, strongest in our set).
+result_summary: "Token-level PQ-Chamfer -3.1% on SciFact."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/scifact_*.json
+appendix_C_section: F20

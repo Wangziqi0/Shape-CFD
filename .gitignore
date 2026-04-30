@@ -6,3 +6,28 @@ benchmark/data/beir_data
 *.bbl
 node_modules/
 target/
+
+# v10 additions (Linux 姐姐 cleanup 2026-04-30)
+# Large data files — not source-controlled
+benchmark/data/beir_data/*/token_clouds.sqlite
+benchmark/data/beir_data/*/query_token_clouds.sqlite
+benchmark/data/beir_data/*/clouds.sqlite
+benchmark/data/beir_data/*/sentence_index.json
+benchmark/data/beir_data/*/corpus_vectors.jsonl
+benchmark/data/beir_data/*/corpus_vectors_mc.jsonl
+benchmark/data/beir_data/*/doc_vectors.jsonl
+benchmark/data/beir_data/*/query_vectors.jsonl
+benchmark/data/beir_data/*/bge_*_vectors.jsonl
+benchmark/data/beir_data/*/bm25.sqlite
+
+# Logs / temp
+benchmark/logs/
+benchmark/data/results/largeT/
+outputs/
+*.bak_pre_*
+
+# Editor temps
+*.swp
+.DS_Store
+__pycache__/
+*.pyc

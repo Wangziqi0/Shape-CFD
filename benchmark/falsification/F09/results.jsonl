@@ -1,0 +1,1 @@
+{"falsification_id": "F09", "status": "falsified", "provenance": "complete", "aggregate_metrics": {"nfcorpus": {"recall_1000_delta_pct": -4.2}}, "per_query_data": "preserved", "see_paper_section": "Appendix C \\SF09"}

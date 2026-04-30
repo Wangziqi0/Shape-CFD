@@ -1,0 +1,13 @@
+falsification_id: F12
+short_name: binary_hdc_popcount
+period: V8
+family: numerical_design_pathology
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Binarize embeddings (sign per dim) + Hamming distance gives 32x acceleration.
+protocol_brief: sign(x) in {-1,+1}^4096; bitpack and Hamming-rerank.
+result_summary: No system-level speedup.
+status: falsified
+provenance: reconstructed
+raw_data_source: V8 profiling notes
+appendix_C_section: F12

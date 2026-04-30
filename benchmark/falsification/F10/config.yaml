@@ -1,0 +1,13 @@
+falsification_id: F10
+short_name: global_graph_diffusion
+period: V8
+family: aggregation_bias
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Diffusing over full document graph propagates relevance to multi-hop neighbors.
+protocol_brief: Full graph G with n^2 edges weighted by cosine; T steps of C <- (1-a)C + a P C.
+result_summary: "NDCG@10 -7.6% on NFCorpus."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/global_diffusion_*.json
+appendix_C_section: F10

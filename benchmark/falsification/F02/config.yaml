@@ -1,0 +1,13 @@
+falsification_id: F02
+short_name: allen_cahn_dormant
+period: V5.2
+family: numerical_design_pathology
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Bistable reaction f(C)=gamma*C(1-C)(C-a) sharpens relevance/irrelevance boundary.
+protocol_brief: NFCorpus, gamma in {0.1,1,5}, a in {0.3,0.5}, dt=0.01, 50 steps.
+result_summary: dNDCG@10 <= 5e-4 across all settings. Dormant.
+status: falsified
+provenance: complete
+raw_data_source: walkthrough.md §2.3 V5.2 Allen-Cahn
+appendix_C_section: F02

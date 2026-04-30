@@ -1,0 +1,1 @@
+{"falsification_id": "F04", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"avg_delta_pct": -7.6}, "per_query_data": "not_preserved_in_vV3", "see_paper_section": "Appendix C \\SF04"}

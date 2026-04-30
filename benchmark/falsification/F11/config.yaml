@@ -1,0 +1,13 @@
+falsification_id: F11
+short_name: l3_subspace_cross_visit
+period: V11
+family: numerical_design_pathology
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Cross-subspace token matching exploits unequal info content across Qwen3 dims.
+protocol_brief: Cross-subspace matching with permutation-cost penalty; vs fixed within-subspace.
+result_summary: No measurable gain; latency +3x.
+status: falsified
+provenance: reconstructed
+raw_data_source: V11 LID measurement notes
+appendix_C_section: F11

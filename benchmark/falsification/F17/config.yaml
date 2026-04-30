@@ -1,0 +1,13 @@
+falsification_id: F17
+short_name: procrustes_alignment
+period: V8
+family: numerical_design_pathology
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Procrustes alignment of token clouds before Chamfer corrects rotational nuisance.
+protocol_brief: Iterative orthogonal Procrustes with regularization; per-pair convergence check.
+result_summary: "0% convergence; latency 85.8 ms per document pair."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/procrustes_*.json
+appendix_C_section: F17

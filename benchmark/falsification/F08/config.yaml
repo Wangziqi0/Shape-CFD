@@ -1,0 +1,13 @@
+falsification_id: F08
+short_name: pq_code_reconstruction
+period: V8
+family: aggregation_bias
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: PQ-quantized reconstruction accelerates Chamfer with preserved ranking.
+protocol_brief: 64 subspaces x 256 centroids; x_hat = concat(c_{i_s}); rerank on x_hat instead of x.
+result_summary: "NDCG@10 -34% on NFCorpus."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/pq_recon_*.json
+appendix_C_section: F08

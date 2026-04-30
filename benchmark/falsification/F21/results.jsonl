@@ -1,0 +1,1 @@
+{"falsification_id": "F21", "status": "falsified", "provenance": "complete", "aggregate_metrics": {"recall_1000_delta_pct": 22, "ndcg_10_delta": 0}, "per_query_data": "preserved", "see_paper_section": "Appendix C \\SF21"}

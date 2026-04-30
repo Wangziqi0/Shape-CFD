@@ -1,0 +1,15 @@
+falsification_id: F15
+short_name: mixed_initial_field
+period: V5.2
+family: numerical_design_pathology
+datasets_tested:
+  - nfcorpus
+  - fiqa
+  - scidocs
+hypothesis_brief: Mixing query-aligned mass with uniform prior stabilizes diffusion.
+protocol_brief: C(x,0) = (1-beta)*cos(q,x) + beta*1/n; beta in {0.1,0.3,0.5}.
+result_summary: "Inconsistent: NFCorpus +3.2%, FiQA -1.5%, SCIDOCS +0.3%. No stable improvement."
+status: falsified
+provenance: complete
+raw_data_source: walkthrough.md §3 V5.2 mixed initial
+appendix_C_section: F15

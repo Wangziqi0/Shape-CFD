@@ -1,0 +1,1 @@
+{"falsification_id": "F19", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"ndcg_delta_pct": [-0.3, 0.3], "latency_overhead_ms": 33}, "per_query_data": "not_preserved_in_vV8", "see_paper_section": "Appendix C \\SF19"}

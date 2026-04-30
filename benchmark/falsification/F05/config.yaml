@@ -1,0 +1,15 @@
+falsification_id: F05
+short_name: flow_field_annealing
+period: V3
+family: curse_of_orthogonality
+datasets_tested:
+  - nfcorpus
+  - scifact
+  - fiqa
+hypothesis_brief: Stochastic per-step random advection direction escapes local optima.
+protocol_brief: Per-step random unit vector replacing u; otherwise identical to F1.
+result_summary: Indistinguishable from JL noise (F4) and pure diffusion. No annealing signal.
+status: falsified
+provenance: reconstructed
+raw_data_source: V3 internal experiments
+appendix_C_section: F05

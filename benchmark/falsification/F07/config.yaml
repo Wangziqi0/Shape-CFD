@@ -1,0 +1,15 @@
+falsification_id: F07
+short_name: density_weighted_chamfer
+period: V8
+family: aggregation_bias
+datasets_tested:
+  - nfcorpus
+  - fiqa
+  - scidocs
+hypothesis_brief: Density-weighted Chamfer emphasizes thematic tokens, improves discrimination.
+protocol_brief: w_i ~ density(t_i) via k-NN density (k=10); rerank by sum_i w_i min_j d(t_i,t_j).
+result_summary: "NDCG@10 -0.9% to -1.3% across NFCorpus, FiQA, SCIDOCS."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/density_ablation_*.json
+appendix_C_section: F07

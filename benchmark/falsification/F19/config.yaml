@@ -1,0 +1,13 @@
+falsification_id: F19
+short_name: local_pca_projection
+period: V8
+family: aggregation_bias
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Per-document PCA to top-k components reduces noise.
+protocol_brief: Per-document PCA, retain top-k components (k in {16,32,64}).
+result_summary: "NDCG@10 within +/-0.3% of baseline; latency +33 ms per document."
+status: falsified
+provenance: reconstructed
+raw_data_source: V8 PCA experiments
+appendix_C_section: F19

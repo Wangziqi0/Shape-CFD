@@ -1,0 +1,13 @@
+falsification_id: F14
+short_name: tensor_diffusion
+period: V3
+family: curse_of_orthogonality
+datasets_tested:
+  - fiqa
+hypothesis_brief: Per-edge anisotropic tensor D_ij captures direction-dependent flow.
+protocol_brief: Per-edge D_ij in R^(4096x4096).
+result_summary: Memory infeasible.
+status: falsified
+provenance: reconstructed
+raw_data_source: V3 design notes
+appendix_C_section: F14

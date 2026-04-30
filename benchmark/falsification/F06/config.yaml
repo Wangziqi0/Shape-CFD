@@ -1,0 +1,18 @@
+falsification_id: F06
+short_name: darcy_scalar_potential
+period: V3
+family: curse_of_orthogonality
+datasets_tested:
+  - nfcorpus
+  - scifact
+  - fiqa
+  - scidocs
+  - arguana
+  - quora
+hypothesis_brief: u = -grad(phi) for scalar potential phi gives curl-free advection, resolves F1.
+protocol_brief: phi via query similarity; u = -grad(phi) on KNN graph; otherwise like F1.
+result_summary: NDCG@10 strictly below pure Laplacian on 6/6 datasets.
+status: falsified
+provenance: reconstructed
+raw_data_source: V3 internal experiments
+appendix_C_section: F06

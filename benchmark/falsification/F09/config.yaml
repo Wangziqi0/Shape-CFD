@@ -1,0 +1,13 @@
+falsification_id: F09
+short_name: pq_chamfer_first_stage
+period: V12
+family: aggregation_bias
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: PQ-Chamfer as first-stage retrieval directly captures token-level matches.
+protocol_brief: Inverted index over PQ codes; query = single pooled embedding; rank by PQ-Chamfer.
+result_summary: "Recall@1000 -4.2% on NFCorpus."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/pq_first_stage_*.json
+appendix_C_section: F09

@@ -1,0 +1,14 @@
+falsification_id: F18
+short_name: block_aligned_attention
+period: V11
+family: curse_of_orthogonality
+datasets_tested:
+  - fiqa
+  - scidocs
+hypothesis_brief: Within-block (PQ subspace) attention combines learned and geometric matching.
+protocol_brief: 64-block soft attention; Pe_block = 0.226 analog.
+result_summary: "20% convergence; unstable on FiQA, SCIDOCS."
+status: falsified
+provenance: reconstructed
+raw_data_source: V11 attention experiments
+appendix_C_section: F18

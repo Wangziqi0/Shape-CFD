@@ -1,0 +1,1 @@
+{"falsification_id": "F05", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"vs_f4": "indistinguishable", "vs_pure_diffusion": "indistinguishable"}, "per_query_data": "not_preserved_in_vV3", "see_paper_section": "Appendix C \\SF05"}

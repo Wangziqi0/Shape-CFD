@@ -1,0 +1,12 @@
+falsification_id: F13
+short_name: turing_patterns
+period: V5.2
+family: numerical_design_pathology
+datasets_tested:
+hypothesis_brief: Turing instabilities create spatial patterns, self-organized cluster boundaries.
+protocol_brief: Single-species Allen-Cahn with periodic boundary on document graph.
+result_summary: Mathematically impossible to instantiate.
+status: falsified
+provenance: reconstructed
+raw_data_source: walkthrough.md V5.2 Turing attempt
+appendix_C_section: F13

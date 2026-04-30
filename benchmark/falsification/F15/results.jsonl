@@ -1,0 +1,1 @@
+{"falsification_id": "F15", "status": "falsified", "provenance": "complete", "aggregate_metrics": {"nfcorpus": 3.2, "fiqa": -1.5, "scidocs": 0.3, "unit": "pct_delta"}, "per_query_data": "preserved", "see_paper_section": "Appendix C \\SF15"}

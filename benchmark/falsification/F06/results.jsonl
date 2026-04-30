@@ -1,0 +1,1 @@
+{"falsification_id": "F06", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"all_datasets": "strictly_below_lap"}, "per_query_data": "not_preserved_in_vV3", "see_paper_section": "Appendix C \\SF06"}

@@ -1,0 +1,1 @@
+{"falsification_id": "F07", "status": "falsified", "provenance": "complete", "aggregate_metrics": {"delta_range_pct": [-0.9, -1.3]}, "per_query_data": "preserved", "see_paper_section": "Appendix C \\SF07"}

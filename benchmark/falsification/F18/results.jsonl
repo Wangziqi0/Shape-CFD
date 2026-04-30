@@ -1,0 +1,1 @@
+{"falsification_id": "F18", "status": "falsified", "provenance": "reconstructed", "aggregate_metrics": {"convergence_rate": 0.2, "datasets_unstable": ["fiqa", "scidocs"]}, "per_query_data": "not_preserved_in_vV11", "see_paper_section": "Appendix C \\SF18"}

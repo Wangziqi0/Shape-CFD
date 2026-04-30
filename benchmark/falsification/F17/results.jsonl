@@ -1,0 +1,1 @@
+{"falsification_id": "F17", "status": "falsified", "provenance": "complete", "aggregate_metrics": {"convergence_rate": 0.0, "latency_ms": 85.8}, "per_query_data": "preserved", "see_paper_section": "Appendix C \\SF17"}

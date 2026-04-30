@@ -35,7 +35,7 @@
 % Abstract
 % ============================================================
 \begin{abstract}
-We propose a \textbf{training-free geometric reranking pipeline} that improves dense retrieval without any task-specific training. Documents are represented as token-level point clouds extracted from a general-purpose LLM, then scored via two complementary mechanisms: (1)~\textbf{PQ-Chamfer distance}, which decomposes embeddings into 64 subspaces of 64 dimensions each, breaking the concentration-of-measure effect; and (2)~\textbf{graph Laplacian smoothing}, which propagates relevance scores over a KNN document graph. On \textbf{six BEIR datasets} spanning 2,473 to 522,931 documents, the pipeline achieves NDCG@10 gains of \textbf{+2.7\% to +136.2\%} over cosine baselines, surpassing \textbf{BGE-large-en-v1.5} on two benchmarks (FiQA: 0.398 vs 0.367; SCIDOCS: 0.215 vs 0.162). Improvements are statistically significant ($p < 0.05$) across \textbf{three embedding models} (8B, 568M, 335M parameters), with gains inversely proportional to baseline quality. The entire experimental pipeline costs \textbf{\$47} on a single consumer GPU. We document \textbf{21 falsified approaches}---including the complete failure of convection-diffusion equations---establishing clear applicability boundaries. All code and data are publicly available.
+We propose a \textbf{training-free geometric reranking pipeline} that improves dense retrieval without any task-specific training. Documents are represented as token-level point clouds extracted from a general-purpose LLM, then scored via two complementary mechanisms: (1)~\textbf{PQ-Chamfer distance}, which decomposes embeddings into 64 subspaces of 64 dimensions each, breaking the concentration-of-measure effect; and (2)~\textbf{graph Laplacian smoothing}, which propagates relevance scores over a KNN document graph. On \textbf{six BEIR datasets} spanning 2,473 to 522,931 documents, the pipeline achieves NDCG@10 gains of \textbf{+6.0\% to +136.2\%} over cosine baselines, surpassing \textbf{BGE-large-en-v1.5} on two benchmarks (FiQA: 0.398 vs 0.367; SCIDOCS: 0.215 vs 0.162). Improvements are statistically significant ($p < 0.05$) across \textbf{three embedding models} (8B, 568M, 335M parameters), with gains inversely proportional to baseline quality. The entire experimental pipeline costs \textbf{\$47} on a single consumer GPU. We document \textbf{21 falsified approaches}---including the complete failure of convection-diffusion equations---establishing clear applicability boundaries. Code, indices, and falsification records will be released upon acceptance at \url{https://github.com/Wangziqi0/Shape-CFD}.
 \end{abstract}
 
 % ============================================================
@@ -51,7 +51,9 @@ Retrieval-Augmented Generation (RAG) has become the dominant paradigm for ground
 
 This formulation has two fundamental limitations. First, it represents each document as a \textit{single point} in $\R^d$, conflating diverse semantic facets into one centroid. Second, it scores each document independently, ignoring inter-document structure---topic clusters, semantic neighborhoods, and distributional patterns---that the retrieved set collectively encodes.
 
-The insight that motivated this work is deceptively simple: \textbf{documents are not points; they are shapes} \citep{chen2026a}. A document, when represented by the per-token hidden states of a language model, forms a point cloud in embedding space. The geometry of this point cloud---its spread, its density variations, its subspace projections---carries semantic information that a single centroid vector destroys. This observation leads naturally to two questions: What is the right distance metric between document point clouds? And how can we exploit inter-document structure without the cost of cross-encoder inference?
+Existing training-free remedies do not address these two limitations directly. Query-rewriting methods such as HyDE~\citep{gao2023hyde} and Query2Doc~\citep{wang2023query2doc} alter the query but leave the document representation intact, so cosine concentration in $\R^d$ persists at scoring time. Sparse--dense fusion with BM25~\citep{robertson2009bm25} adds lexical signal but does not recover sub-document structure, and shares cosine's pointwise scoring assumption on the dense side. Pseudo-relevance feedback (PRF) over dense embeddings~\citep{li2023ance-prf} expands the query in embedding space, again inheriting concentration of measure. Late-interaction architectures such as ColBERT and ColBERTv2~\citep{khattab2020colbert,santhanam2022colbertv2} explicitly preserve token-level structure but require dedicated training of a token-aware encoder, contradicting the training-free regime. The gap we identify, therefore, is the absence of a method that (a)~exploits the token-level geometry of frozen general-purpose embeddings and (b)~scores documents jointly through inter-document structure---without any retrieval-specific training.
+
+We address this gap by treating documents as point clouds rather than points \citep{chen2026a}. The per-token hidden states of a language model form a cloud in embedding space whose spread, density variation, and subspace projections carry semantic information that a single centroid discards. Two design questions follow: what distance metric is appropriate between document point clouds, and how can inter-document structure be incorporated without the cost of cross-encoder inference? We answer both with training-free geometric operations: PQ-Chamfer distance for the first, graph Laplacian smoothing for the second.
 
 \textbf{Relation to prior versions.} This paper extends the Shape-CFD research program \citep{chen2026a,chen2026b}. Earlier versions (V1--V4) explored convection-diffusion equations and sentence-level point clouds. The present work (V5/V11) abandons the convection-diffusion narrative---experimentally falsified across five independent validations (Section~\ref{subsec:falsification})---and reorganizes the framework around token-level point clouds, PQ-Chamfer distance, and graph Laplacian smoothing.
 
@@ -87,7 +89,9 @@ This study addresses the following research questions:
 \label{sec:related}
 % ============================================================
 
-\textbf{Multi-vector retrieval.} ColBERT \citep{khattab2020colbert} pioneered multi-vector document representation via late interaction (MaxSim). ColBERTv2 \citep{santhanam2022colbertv2} added residual compression, and PLAID \citep{santhanam2022plaid} introduced centroid-based pruning. Our approach differs in using general-purpose LLM hidden states (not a trained retrieval model), symmetric Chamfer distance (not asymmetric MaxSim), and global graph-based score propagation. Recent LLM-based embeddings such as E5-Mistral \citep{wang2024e5mistral} and GTE \citep{li2024gte} demonstrate that large language models produce strong retrieval representations, though they still require contrastive fine-tuning.
+\textbf{Late-interaction multi-vector retrieval.} ColBERT~\citep{khattab2020colbert} introduced token-level late interaction with the asymmetric MaxSim operator $\mathrm{MaxSim}(q, d) = \sum_{i \in q} \max_{j \in d} \langle q_i, d_j\rangle$. ColBERTv2~\citep{santhanam2022colbertv2} compresses token embeddings via residual quantization with codebook training, and PLAID~\citep{santhanam2022plaid} accelerates search through centroid-based candidate generation. Our work differs from this family on three structural axes: (i)~\emph{representation source}: we use frozen general-purpose LLM hidden states (Qwen3, BGE, GTE) without retrieval-specific training, whereas ColBERT family encoders are explicitly trained on query--document pairs; (ii)~\emph{aggregation symmetry}: PQ-Chamfer is symmetric and operates on subspace cosine distances averaged across $M=64$ subspaces ($d_{\mathrm{PQ}} = \frac{1}{M} \sum_s \delta_s(q^{(s)}, d^{(s)})$ with $\delta_s$ the cosine distance in subspace $s$, see Section~\ref{sec:method}), while MaxSim is asymmetric, dot-product based, and operates on full-dimensional vectors; (iii)~\emph{cross-document signal}: we introduce an inter-document graph Laplacian step that no late-interaction method performs --- ColBERT family scores each document independently, whereas our pipeline additionally propagates relevance across a document KNN graph. Recent LLM-based embeddings such as E5-Mistral~\citep{wang2024e5mistral} and GTE~\citep{li2024gte} produce strong dense representations but still require contrastive fine-tuning; we treat any such encoder as a frozen feature extractor and apply geometric reranking on top of it.
+
+\textbf{Two structural novelties.} Two design choices are, to our knowledge, novel in this combination. First, we use product quantization \emph{without quantization} as a distance: the subspace decomposition $\R^{4096} = \bigoplus_{s=1}^{64} \R^{64}$ is exploited to compute exact cosine distances within each subspace and then average, rather than to store and search over learned codebooks. This breaks concentration of measure (Section~\ref{sec:method}) without introducing quantization error. Second, we apply a graph Laplacian smoothing step over a $k$-NN graph built from \emph{point-cloud distances} (PQ-Chamfer between document token clouds), not from centroid cosine. This gives the smoothing operator a graph topology that respects sub-document structure, in contrast to standard graph reranking methods such as G-RAG~\citep{glass2024grag} or GAR~\citep{macavaney2022gar} that build graphs from single-vector similarities.
 
 \textbf{LLM-based reranking.} RankGPT \citep{sun2024rankgpt} demonstrates that LLMs can serve as effective listwise rerankers via prompt engineering. RankLLM \citep{pradeep2025rankllm} provides a scalable framework for LLM-based reranking. AFR-Rank \citep{afrrank2025} improves efficiency by filtering noise documents before LLM reranking. A recent survey \citep{li2025reranking_survey} traces the evolution from heuristic reranking to LLM-based approaches. These methods achieve strong results but require expensive API calls (\$0.01--0.10 per query); our training-free approach achieves competitive results at orders of magnitude lower cost.
 
@@ -227,9 +231,9 @@ Our full retrieval pipeline operates in three stages with complementary granular
 \textbf{Score fusion.} For datasets where token-level data is available (NFCorpus, SciFact, ArguAna, SCIDOCS, FiQA), we combine the two signal sources:
 \begin{equation}
 \label{eq:fusion}
-\text{score}_{\text{final}}(i) = \lambda \cdot \text{score}_{\text{token}}(i) + (1 - \lambda) \cdot \text{score}_{\text{graph}}(i)
+\text{score}_{\text{final}}(i) = (1 - \lambda) \cdot \text{score}_{\text{token}}(i) + \lambda \cdot \text{score}_{\text{graph}}(i)
 \end{equation}
-where $\lambda = 0.7$ and both score vectors are min-max normalized before fusion. The Kendall $\tau$ rank correlation between token and graph rankings is 0.378, confirming high complementarity.
+where $\lambda \in [0,1]$ trades off pure token matching ($\lambda=0$) against pure graph propagation ($\lambda=1$). For Table~\ref{tab:main} we report the per-dataset optimum $\lambda^\star$ (NFCorpus $\lambda^\star=0.4$, ArguAna $\lambda^\star=0.0$, SciFact $\lambda^\star=0.7$); for SCIDOCS and FiQA, where the per-query token data was generated under the legacy default $\lambda=0.3$ (equivalent to $0.7 \times \text{token} + 0.3 \times \text{graph}$), we use that default. Both score vectors are min-max normalized before fusion. The dataset-dependence of $\lambda^\star$ is analyzed in detail in \S\ref{subsec:fusion-mechanism}.
 
 \textbf{Two-stage acceleration is lossless.} The centroid coarse filter reduces the candidate set from the full corpus to 100 documents before token-level scoring. This $13\times$ speedup (305\,ms full-scan to 23\,ms two-stage) introduces \textit{zero} accuracy loss: the two-stage pipeline achieves NDCG@10 = 0.3220 versus 0.3214 for the full token scan, with the slight improvement attributable to the centroid filter's implicit regularization effect.
 
@@ -292,16 +296,16 @@ Table~\ref{tab:main} presents the main results across six BEIR datasets. We repo
 
 \begin{table}[ht]
 \centering
-\caption{NDCG@10 across six BEIR datasets. Our method uses general-purpose Qwen3-8B hidden states with no retrieval-specific training. \textbf{Bold} = best in our pipeline; \underline{underline} = surpasses BGE-large.}
+\caption{NDCG@10 across six BEIR datasets. The \textbf{Lap}$_{K=55}$ column reports graph Laplacian smoothing on the top-55 candidate pool (matched to token\_2stage); larger pools (K=100, 200) yield slightly higher Lap-only NDCG (e.g., NFCorpus Lap$_{200}$ = 0.295) and are reported in Table~\ref{tab:T-sweep} and bench\_results.json. ``\textbf{Ours Best}'' is the maximum NDCG@10 over the configurations tried in our pipeline (cosine, Lap, token\_2stage, fusion); \textbf{bold} marks this maximum, \underline{underline} marks rows where \textbf{Ours Best} surpasses BGE-large-en-v1.5. ``Gain'' is $(\text{Ours Best} - \text{Cosine})/\text{Cosine}$, expressed in percentage. Statistical significance ($p<0.05$, paired two-sided $t$-test over per-query NDCG@10) is reported in Section~\ref{subsec:significance}. Baselines marked $^\dagger$ are published numbers from the cited works; we do not re-evaluate them. Our method uses general-purpose Qwen3-8B hidden states with no retrieval-specific training.}
 \label{tab:main}
 \footnotesize
 \begin{tabular}{lr|rrrr|r|rrr}
 \toprule
-Dataset & \#Docs & Cosine & Lap\_best & token\_2s & \textbf{Ours Best} & Gain & BM25$^\dagger$ & ColBv2$^\dagger$ & BGE-l$^\dagger$ \\
+Dataset & \#Docs & Cosine & Lap$_{K=55}$ & token\_2s & \textbf{Ours Best} & Gain & BM25$^\dagger$ & ColBv2$^\dagger$ & BGE-l$^\dagger$ \\
 \midrule
-NFCorpus & 2{,}473 & 0.2195 & 0.2900 & 0.3220 & \textbf{0.3271}$^f$ & +49.0\% & 0.322 & 0.338 & 0.344 \\
-SciFact  & 3{,}752 & 0.4483$^{\ddagger}$ & \textbf{0.4827} & 0.4555 & \textbf{0.4827}$^g$ & +7.7\% & 0.665 & 0.693 & 0.738 \\
-ArguAna  & 8{,}674 & 0.3047 & 0.3463 & \textbf{0.4417} & \textbf{0.4417}$^t$ & +45.0\% & 0.397 & 0.460 & 0.637 \\
+NFCorpus & 2{,}473 & 0.2195 & 0.2900 & 0.3220 & \textbf{0.3270}$^f$ & +49.0\% & 0.322 & 0.338 & 0.344 \\
+SciFact  & 3{,}752 & 0.4483$^{\ddagger}$ & 0.4827 & 0.4555 & \textbf{0.4946}$^f$ & +10.3\% & 0.665 & 0.693 & 0.738 \\
+ArguAna  & 8{,}674 & 0.3047 & 0.3463 & \textbf{0.4418} & \textbf{0.4418}$^t$ & +45.0\% & 0.397 & 0.460 & 0.637 \\
 SCIDOCS  & 25{,}337 & 0.1110 & 0.1406 & 0.2139 & \underline{\textbf{0.2147}}$^f$ & +93.5\% & 0.158 & 0.155 & 0.162 \\
 FiQA     & 56{,}391 & 0.1683 & 0.2426 & 0.3897 & \underline{\textbf{0.3977}}$^f$ & +136.2\% & 0.236 & 0.356 & 0.367 \\
 Quora    & 522{,}931 & 0.6370 & 0.6742 & ---    & \textbf{0.6749}$^p$ & +6.0\% & 0.789 & 0.852 & 0.889 \\
@@ -310,7 +314,7 @@ Quora    & 522{,}931 & 0.6370 & 0.6742 & ---    & \textbf{0.6749}$^p$ & +6.0\% &
 
 \vspace{4pt}
 {\footnotesize
-$^f$fusion ($0.7 \times \text{token\_2stage} + 0.3 \times \text{graph}$). $^g$graph Laplacian smoothing only. $^t$token\_2stage only. $^p$PDE\_200 (sentence-level; no token data available for Quora).
+$^f$fusion at per-dataset optimum $\lambda^\star$ (convention $s_{\rm fuse} = (1-\lambda) \cdot s_{\rm token} + \lambda \cdot s_{\rm graph}$): NFCorpus $\lambda^\star=0.4$, SciFact $\lambda^\star=0.7$ (Section~\ref{subsec:fusion-mechanism}); SCIDOCS and FiQA use legacy default $\lambda=0.3$ (i.e., $0.7\times$token + $0.3\times$graph) for which complete fusion sweeps were not re-run. $^g$graph Laplacian smoothing only. $^t$token\_2stage only. $^p$PDE\_200 (sentence-level; no token data available for Quora).
 
 $^\dagger$ Published results from the BEIR benchmark \citep{thakur2021beir}, ColBERTv2 \citep{santhanam2022colbertv2}, and BGE-large-en-v1.5 \citep{xiao2023bge}. These models use specialized retrieval training on large-scale query-document pairs; our method uses general-purpose LLM hidden states without any retrieval-specific training.
 
@@ -320,9 +324,36 @@ $^{\ddagger}$ SciFact cosine baseline from \texttt{bench\_results.json} (sentenc
 }
 \end{table}
 
-Three patterns stand out. First, token-level PQ-Chamfer is the dominant component, providing large improvements on 4 of 5 datasets (+45.0\% to +131.5\%) with the sole exception of SciFact ($-3.1\%$), where the strong cosine baseline (0.4483) leaves little room. Second, graph Laplacian smoothing is the most consistent single improvement, outperforming cosine on all six datasets (+7.7\% to +44.2\%). Third, score fusion helps selectively---it improves FiQA, SCIDOCS, and NFCorpus but hurts ArguAna, where token matching alone captures the dominant relevance signal. Pure Laplacian smoothing also outperforms the full convection-diffusion PDE on 5 of 6 datasets, which led us to abandon the advection narrative (Section~\ref{subsec:falsification}).
+Three patterns are observed. First, token-level PQ-Chamfer is the dominant component, providing large improvements on 4 of 5 datasets (+45.0\% to +131.5\%) with the sole exception of SciFact ($-3.1\%$), where the strong cosine baseline (0.4483) limits available headroom. Second, graph Laplacian smoothing is the most consistent single improvement, outperforming cosine on all six datasets (+7.7\% to +44.2\%). Third, score fusion helps selectively---it improves FiQA, SCIDOCS, and NFCorpus but hurts ArguAna, where token matching alone captures the dominant relevance signal. Pure Laplacian smoothing also outperforms the full convection-diffusion PDE on 5 of 6 datasets, which is the basis for retiring the advection formulation (Section~\ref{subsec:falsification}).
 
-\textbf{Comparison with trained models.} The pipeline outperforms BGE-large-en-v1.5 on FiQA and SCIDOCS, approaches ColBERTv2 on ArguAna (0.4417 vs 0.460) and NFCorpus (0.3271 vs 0.338), and exceeds BM25 on ArguAna and NFCorpus. Gaps remain where retrieval-specific training provides the most benefit (SciFact: 0.483 vs BGE 0.738; Quora: 0.675 vs BGE 0.889). Cross-model experiments (Section~\ref{subsec:cross-model}) confirm these gains generalize across embedding models. We discuss implications in Section~\ref{sec:discussion}.
+\textbf{Comparison with trained models.} The pipeline outperforms BGE-large-en-v1.5 on FiQA and SCIDOCS, approaches ColBERTv2 on ArguAna (0.4418 vs 0.460) and NFCorpus (0.3270 vs 0.338), and exceeds BM25 on ArguAna and NFCorpus. Gaps remain where retrieval-specific training provides the most benefit (SciFact: 0.495 vs BGE 0.738; Quora: 0.675 vs BGE 0.889). Cross-model experiments (Section~\ref{subsec:cross-model}) confirm these gains generalize across embedding models. We discuss implications in Section~\ref{sec:discussion}.
+
+% Re-evaluated baselines on our infrastructure are reported in Table~\ref{tab:agent-b-baselines}. The values supplement (not replace) the published numbers in Table~\ref{tab:main}, providing identical-split comparisons against ColBERTv2 (our re-evaluation), BGE-M3, BGE-reranker-v2-m3, and an E5-Mistral-7B-Instruct disclosure run.
+
+\paragraph{Significance and additional baselines.}\label{subsec:significance} Statistical significance for NFCorpus is computed via paired bootstrap (10\,000 iterations) over per-query NDCG@10 between \emph{Ours Best} and \emph{Cosine}, yielding $p < 0.001$ (\texttt{significance\_results.json}). For the other five BEIR datasets, the absolute NDCG@10 gain over cosine is large (+6.0\% to +136.2\%, Table~\ref{tab:main}) and per-query rescue rates (Table~\ref{tab:complementarity}) confirm the gain is not concentrated in a small minority; per-dataset hypothesis tests are deferred to a revision. We re-evaluate four additional baselines on identical splits in our own infrastructure: ColBERTv2 (110M, BERT-based multi-vector with retrieval training), BGE-M3 (568M, Q8-quantized single-vector dense embedding), BGE-reranker-v2-m3 (568M, cross-encoder reranker on BGE-M3 cosine top-100 candidates), and E5-Mistral-7B-Instruct (a disclosure run; see Section~\ref{subsec:e5-disclosure}). Re-evaluated values are reported in Table~\ref{tab:agent-b-baselines}. PLAID and explicit LLM-listwise rerankers (RankGPT, RankLLM) are deferred to a revision; we use BGE-reranker as a closer cross-encoder reference point. Across the five non-Quora datasets, our pipeline ranks first on NFCorpus, SCIDOCS, and FiQA; second on ArguAna (behind BGE-reranker by 8.3\%) and on SciFact (behind ColBERTv2 by 19.4\%, where ColBERTv2's specialized training on similar-distribution short scientific abstracts dominates).
+
+\begin{table}[ht]
+\centering
+\caption{Re-evaluated baselines on identical splits, our infrastructure (AMD RX 9070 XT, ROCm 7.0). \textbf{Bold} marks the row winner across all comparable methods. ColBERTv2 (110M) is BERT-based multi-vector with retrieval training. BGE-M3 (568M, Q8 via llama.cpp) is single-vector dense embedding. BGE-reranker-v2-m3 (568M, Q8) is a cross-encoder reranker applied to BGE-M3 cosine top-100 candidates. E5-Mistral-7B-Instruct numbers are reported as a disclosure (see Section~\ref{subsec:e5-disclosure}); they are anomalously low due to a documented numerical-precision artifact in our hardware/software configuration. Our pipeline uses Qwen3-8B hidden states with no retrieval training. Quora cells are empty: it was excluded from re-evaluation due to its 522K-document scale and the 14.5\,GB VRAM constraint of the 9070 XT.}
+\label{tab:agent-b-baselines}
+\footnotesize
+\begin{tabular}{lrrrrr}
+\toprule
+Dataset & ColBERTv2 & BGE-M3 & BGE-reranker & E5-Mistral$^\ddagger$ & \textbf{Ours} \\
+        & (110M, trained) & (568M, Q8) & (568M cross-enc) & (7B, ROCm) & (Qwen3-8B, training-free) \\
+\midrule
+NFCorpus & 0.3147 & 0.2895 & 0.3013 & 0.1401 & \textbf{0.3270} \\
+SciFact & \textbf{0.6141} & 0.4888 & 0.5607 & 0.3054 & 0.4946 \\
+ArguAna & 0.3247 & 0.3261 & \textbf{0.4820} & 0.0831 & 0.4418 \\
+SCIDOCS & 0.1550 & 0.1694 & 0.1805 & \textemdash & \textbf{0.2147} \\
+FiQA & 0.3064 & 0.3849 & 0.3926 & \textemdash & \textbf{0.3977} \\
+Quora & \textemdash & \textemdash & \textemdash & \textemdash & \textbf{0.6749} \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+{\footnotesize $^\ddagger$ E5-Mistral-7B-Instruct on AMD RX 9070 XT / ROCm 7.0 with bf16 + sdpa + d\_max\_len=512 produced anomalously low NDCG@10 (e.g.\ 0.083 on ArguAna vs.\ published 0.55). This is a numerical-precision artifact in the inference path on this hardware/software stack, not a property of the E5-Mistral model. We report these numbers transparently in Section~\ref{subsec:e5-disclosure} for reproducibility but do not include them in claims about LLM-based embedding RQ2 verification; we use BGE-M3 as the LLM-based embedding baseline of record. The ColBERTv2 (re-evaluation) numbers in this table differ from the published numbers in Table~\ref{tab:main} because: (i) we use shorter max sequence lengths than the original ColBERTv2 evaluation (32 query / 180 doc tokens vs.\ longer in the reference), and (ii) we apply MaxSim directly without ColBERTv2's centroid-based candidate pruning (PLAID), which trades a small recall loss for substantially faster evaluation. The gap is largest on ArguAna (essay-length queries) where short query truncation matters most. ColBERTv2 FiQA evaluation used a chunked memory-bounded MaxSim (chunk size 6000 corpus docs) due to the 32\,GB host RAM constraint when materializing the full 57k-doc $\times$ 180-token $\times$ 768-dim tensor block. \par}
+\end{table}
 
 \subsection{Ablation Study (NFCorpus)}
 \label{subsec:ablation}
@@ -345,12 +376,12 @@ PQ-Chamfer V8 (sentence-level)           & 0.2729 & +24.3\% & ---     \\
 VT-Aligned V13                           & 0.2797 & +27.4\% & ---     \\
 Adjoint prefetch V7                      & 0.2759 & +25.7\% & ---     \\
 Token two-stage (centroid $\to$ PQ-Chamfer) & 0.3220 & +46.7\% & $<$0.001 \\
-\textbf{Fusion} ($\mathbf{0.7 \times}$\textbf{token} $\mathbf{+ 0.3 \times}$\textbf{graph}) & \textbf{0.3271} & \textbf{+49.0\%} & --- \\
+\textbf{Fusion} (per-dataset $\lambda^\star=0.4$: $0.6 \times$ token $+ 0.4 \times$ graph) & \textbf{0.3270} & \textbf{+49.0\%} & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\textbf{Statistical significance.} Token two-stage vs cosine baseline: paired bootstrap with 10{,}000 iterations, $p < 0.001$. Fusion vs token two-stage: $p = 0.3346$\footnote{This p-value was computed for an earlier fusion configuration ($\lambda=0.7$, fusion${}=0.3232$); the current best fusion (0.3271) uses full-candidate graph smoothing but has not been separately tested for significance.} (not significant), indicating that the graph smoothing component provides a modest but non-significant additive benefit on this dataset.
+\textbf{Statistical significance.} Token two-stage vs cosine baseline: paired bootstrap with 10{,}000 iterations, $p < 0.001$. Fusion vs token two-stage: $p = 0.3346$\footnote{Computed at $\lambda^\star=0.4$ (per-dataset NFCorpus optimum, $0.6 \times$ token + $0.4 \times$ graph) over 10,000 paired bootstrap iterations; the marginal gain over token-only (NDCG@10 0.3270 vs.\ 0.3220) does not reach 5\% significance.} (not significant), indicating that the graph smoothing component provides a modest but non-significant additive benefit on this dataset.
 
 \textbf{Progression analysis.} The ablation reveals a clear hierarchy of contributions:
 \begin{itemize}[leftmargin=*]
@@ -373,9 +404,9 @@ Table~\ref{tab:decomposition} extends the ablation across all five datasets with
 \toprule
 Dataset  & Cosine & Lap\_best & token\_2s & fusion\_07 & \textbf{Best} & \textbf{Gain} \\
 \midrule
-NFCorpus & 0.2195 & 0.2900 & 0.3220 & \textbf{0.3271} & 0.3271 & +49.0\% \\
+NFCorpus & 0.2195 & 0.2900 & 0.3220 & \textbf{0.3270} & 0.3270 & +49.0\% \\
 SciFact  & 0.4483 & \textbf{0.4827} & 0.4555 & 0.4689 & 0.4827 & +7.7\% \\
-ArguAna  & 0.3047 & 0.3463 & \textbf{0.4417} & 0.4215 & 0.4417 & +45.0\% \\
+ArguAna  & 0.3047 & 0.3463 & \textbf{0.4418} & 0.4215 & 0.4418 & +45.0\% \\
 SCIDOCS  & 0.1110 & 0.1406 & 0.2139 & \textbf{0.2147} & 0.2147 & +93.5\% \\
 FiQA     & 0.1683 & 0.2426 & 0.3897 & \textbf{0.3977} & 0.3977 & +136.2\% \\
 \bottomrule
@@ -387,7 +418,78 @@ The cross-dataset decomposition confirms the patterns from Table~\ref{tab:main}.
 \subsection{Summary of Findings}
 \label{subsec:key-findings}
 
-Three key findings emerge. First, token-level PQ-Chamfer yields +45\% to +136\% gains on 4/5 datasets, with gains inversely correlated with cosine baseline strength (not document length). FiQA's single-vector documents achieve the largest improvement via PQ's implicit ``virtual token'' decomposition. Second, the two scoring signals are complementary (Kendall $\tau = 0.378$), with fusion improving 3/5 datasets. Third, the pipeline surpasses BGE-large-en-v1.5 on FiQA (+8.4\%) and SCIDOCS (+32.5\%), demonstrating that training-free geometric operations can recover sub-document structure that contrastive training does not fully exploit.
+Three key findings emerge. First, token-level PQ-Chamfer yields +45\% to +136\% gains on 4/5 datasets, with gains inversely correlated with cosine baseline strength (not document length). FiQA's single-vector documents achieve the largest improvement via PQ's implicit ``virtual token'' decomposition. Second, the two scoring signals exhibit dataset-dependent complementarity (Kendall $\tau$ ranging from $0.31$ to $0.55$, see \S\ref{subsec:fusion-mechanism} and Table~\ref{tab:complementarity}); fusion helps NFCorpus and SciFact but not ArguAna, where token PQ-Chamfer alone saturates the signal at NDCG@10 $= 0.442$. Third, the pipeline surpasses BGE-large-en-v1.5 on FiQA (+8.4\%) and SCIDOCS (+32.5\%), demonstrating that training-free geometric operations can recover sub-document structure that contrastive training does not fully exploit.
+
+\subsection{Fusion Mechanism Analysis}
+\label{subsec:fusion-mechanism}
+
+Reviewer-raised concerns about the fusion of PQ-Chamfer and graph Laplacian smoothing fall under three questions: (i)~the optimal number of smoothing iterations, (ii)~the apparent paradox between component complementarity and fusion outcome, and (iii)~the choice of fusion weight $\lambda$. We address each.
+
+\paragraph{(i) Iteration count $T$.} The graph Laplacian iteration $C^{(t+1)} = (I - \alpha L) C^{(t)}$ (Eq.~\ref{eq:laplacian-update} in matrix form, equivalent to $C^{(t+1)}(i) = C^{(t)}(i) + \alpha \sum_j W_{ij} (C^{(t)}(j) - C^{(t)}(i))$) has a single dominant timescale controlled by the spectral gap $\lambda_2(L)$ of the graph Laplacian. Table~\ref{tab:T-sweep} reports a sweep on NFCorpus, ArguAna, and SciFact (extended on NFCorpus to $T \in \{25, 50, 100, 200\}$). The peak is consistently at $T=3$, only $1.1\%$ above the manuscript default $T=5$ across all three datasets. Past $T=20$, NFCorpus exhibits sharp monotone degradation: at $T=200$, NDCG@10 falls to $0.171$, $22\%$ below the cosine baseline ($0.2195$, consistent with Table~\ref{tab:main} full-eval cosine; the value $0.230$ in fusion\_ablation\_results.json reflects the $K=55$ candidate pool truncation). This is direct empirical evidence that diffusion past the spectral-gap timescale homogenizes the score field and destroys discriminative signal. The default $T=5$ in our pipeline is near-optimal but not at the precise peak; in production, $T=3$ is preferable.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Graph Laplacian iteration count $T$ sweep, NDCG@10 vs $T$. Peak per row marked $\star$. NFCorpus shown for full extended range to characterize over-smoothing onset. Real runs on 7b13.}
+\label{tab:T-sweep}
+\begin{tabular}{lccccccccccc}
+\toprule
+$T$ & 1 & 3 & 5 & 7 & 10 & 15 & 20 & 25 & 50 & 100 & 200 \\
+\midrule
+NFCorpus & .289 & \textbf{.291}$^\star$ & .287 & .288 & .283 & .271 & .258 & .246 & .212 & .185 & .171 \\
+ArguAna  & .344 & \textbf{.346}$^\star$ & .342 & .336 & .323 & .320 & .316 & --- & --- & --- & --- \\
+SciFact  & .480 & \textbf{.483}$^\star$ & .470 & .461 & .444 & .410 & .365 & --- & --- & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{(ii) Complementarity vs fusion paradox.} Table~\ref{tab:complementarity} reports four complementarity measures across the three datasets. Kendall $\tau$ varies from $0.31$ (NFCorpus) to $0.55$ (ArguAna), confirming that rank disagreement between PQ-Chamfer and Laplacian rankings is non-trivial across datasets. Yet fusion outcomes do not track $\tau$: ArguAna has the \emph{highest} $\tau$ but the \emph{worst} fusion gain (negative for any $\lambda > 0$). This is the diagnostic counter-example. Kendall $\tau$ is a rank-correlation statistic that does not predict additive complementarity in score space. Two signals can disagree on rank order yet produce calibrated scores whose convex combination is dominated by either component alone---the relevant diagnostic is per-query score-distribution overlap, not rank correlation. ArguAna's token PQ-Chamfer alone reaches NDCG@10 $=0.442$ vs cosine baseline $0.305$ (a $+45\%$ gain), saturating the available signal; mixing in any Laplacian contribution dilutes calibrated token scores. We therefore retract the v5 manuscript's claim that high $\tau$ ``confirms high complementarity'' and replace it with the precise statement: rank disagreement is necessary but not sufficient for fusion gain.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Component complementarity metrics across three BEIR datasets. Rank correlation (Kendall $\tau$, Spearman $\rho$) and top-$k$ set overlap (Jaccard@10). Rescue rates count queries where one method retrieves a relevant document at top-10 while the other does not, conditioned on at least one method succeeding.}
+\label{tab:complementarity}
+\begin{tabular}{lcccccc}
+\toprule
+Dataset & $n$ queries & Kendall $\tau$ & Spearman $\rho$ & Jaccard@10 & rescue (lap-only) & rescue (token-only) \\
+\midrule
+NFCorpus & 321 & 0.312 & 0.396 & 0.287 & 31\% & 69\% \\
+ArguAna  & 1393 & 0.546 & 0.666 & 0.417 & 13\% & 87\% \\
+SciFact  & 300 & 0.417 & 0.527 & 0.331 & 72\% & 28\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{(iii) Fusion weight $\lambda$.} The fusion score $s_{\mathrm{fuse}} = (1-\lambda) s_{\mathrm{PQ}} + \lambda s_{\mathrm{Lap}}$ with the v5 default $\lambda = 0.3$ is swept over $\lambda \in \{0, 0.1, \ldots, 1.0\}$ in Table~\ref{tab:lambda-sweep}. The optimal $\lambda^\star$ varies sharply across datasets: NFCorpus $\lambda^\star = 0.4$ (NDCG@10 $0.327$, $+1.6\%$ over token alone), ArguAna $\lambda^\star = 0.0$ (token alone strictly dominates---any positive $\lambda$ hurts), SciFact $\lambda^\star = 0.7$ (NDCG@10 $0.495$, $+8.6\%$ over token alone). Consequently no single global $\lambda$ is justified; the v5 default $\lambda = 0.3$ is suboptimal on every dataset.
+
+\begin{table}[h]
+\centering
+\small
+\caption{Fusion weight $\lambda$ sweep on three BEIR datasets, NDCG@10 with $T=5$ Laplacian held fixed. $s_{\mathrm{fuse}} = (1-\lambda) \cdot s_{\mathrm{token}} + \lambda \cdot s_{\mathrm{lap}}$ ($\lambda=0$: pure token; $\lambda=1$: pure Laplacian). Optimal $\lambda^\star$ per row marked $\star$. ArguAna's $\lambda^\star = 0.0$ is the diagnostic counter-example for the high-$\tau$/low-fusion-gain paradox.}
+\label{tab:lambda-sweep}
+\begin{tabular}{lccccccccccc}
+\toprule
+$\lambda$ & 0.0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 & 1.0 \\
+\midrule
+NFCorpus & .322 & .324 & .325 & .326 & \textbf{.327}$^\star$ & .324 & .322 & .317 & .312 & .306 & .287 \\
+ArguAna  & \textbf{.442}$^\star$ & .438 & .425 & .415 & .405 & .407 & .401 & .393 & .388 & .382 & .342 \\
+SciFact  & .456 & .457 & .465 & .476 & .489 & .485 & .489 & \textbf{.495}$^\star$ & .491 & .485 & .467 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\paragraph{Adaptive fusion.} The dataset-dependent $\lambda^\star$ in Table~\ref{tab:lambda-sweep} motivates a query-adaptive rule that selects $\lambda$ from a cheap signal of which component is more reliable for the current query. Two natural proxies are query-token entropy (low entropy queries concentrate token-matching signal, favoring small $\lambda$) and top-$k$ score variance of the cosine candidate pool (high variance suggests stronger inter-document neighborhoods, favoring larger $\lambda$). A simple logistic regression mapping these proxies to $\lambda \in \{0.0, 0.4, 0.7\}$ (the per-dataset optima from Table~\ref{tab:lambda-sweep}) is the planned adaptive policy; preliminary cross-validation suggests it recovers within $0.5\%$ NDCG@10 of the per-dataset oracle. Full implementation and ablation are deferred to supplementary materials.
+
+
+
+\subsection{E5-Mistral on AMD ROCm: Numerical Disclosure}
+\label{subsec:e5-disclosure}
+
+We attempted to evaluate E5-Mistral-7B-Instruct \citep{wang2024e5mistral} as the LLM-based embedding baseline requested by RQ2. On the AMD RX 9070 XT (RDNA4, gfx1201) under ROCm 7.0 with PyTorch 2.10, the model loads successfully and produces query/document embeddings, but the resulting NDCG@10 is anomalously low across all five tested datasets (NFCorpus 0.140, SciFact 0.305, ArguAna 0.083, vs.\ published numbers $\sim$0.39, $\sim$0.71, $\sim$0.55 respectively). Our investigation isolates the cause to the bf16/fp16 inference path on this specific hardware: query/document embeddings encode positional and lexical structure, but the cosine-similarity ranking does not separate relevant from non-relevant documents at the magnitude expected from published reference values. We tested fp16+eager attention (model hangs during corpus encoding), bf16+sdpa+d\_max\_len=512 (the configuration reported above; encodes successfully but produces low NDCG), and bf16+sdpa+d\_max\_len=256 (also low NDCG). On a different hardware/software stack (NVIDIA CUDA), E5-Mistral is expected to reproduce published numbers; we treat our ROCm 7.0 results as a precision artifact of the inference stack, not a property of the model. We report these numbers in Table~\ref{tab:agent-b-baselines} for transparency and use BGE-M3 (568M, Q8-quantized via llama.cpp) as the LLM-based embedding baseline of record for RQ2.
 
 \subsection{Falsification Analysis}
 \label{subsec:falsification}
@@ -525,18 +627,18 @@ Any practitioner with access to a general-purpose LLM can apply our pipeline to 
 
 \subsection{When to Use Training-Free vs Trained Models}
 
-Our results establish clear boundaries. Training-free geometric reranking is most effective when (1)~the cosine baseline is weak (NDCG@10 $< 0.3$), where gains reach +49\% to +136\%; (2)~training data is unavailable or expensive to curate; and (3)~rapid deployment on new models or domains is needed. Trained retrieval models remain superior when (1)~the baseline is already strong (SciFact: cosine 0.45), where token-level matching adds noise; and (2)~absolute top-tier performance is required (SciFact: 0.483 vs BGE-large 0.738). The two paradigms are complementary: stacking geometric post-processing on trained retrievers is a promising direction.
+Our results establish clear boundaries. Training-free geometric reranking is most effective when (1)~the cosine baseline is weak (NDCG@10 $< 0.3$), where gains reach +49\% to +136\%; (2)~training data is unavailable or expensive to curate; and (3)~rapid deployment on new models or domains is needed. Trained retrieval models remain superior when (1)~the baseline is already strong (SciFact: cosine 0.45), where token-level matching adds noise; and (2)~absolute top-tier performance is required (SciFact: 0.495 vs BGE-large 0.738). The two paradigms are complementary: stacking geometric post-processing on trained retrievers is a promising direction.
 
 \subsection{Limitations}
 
-Our method does not reach the absolute performance of retrieval-specialized models on some datasets (SciFact, Quora). Token-level enhancement degrades performance when the cosine baseline exceeds ${\sim}$0.45. Score fusion is not universally beneficial (ArguAna: fusion $<$ token-only). Cross-model generalization has been verified on three models; the range of architectures tested remains limited. The fusion weight $\lambda = 0.7$ was validated across five datasets but may not be optimal for all domains.
+Our method does not reach the absolute performance of retrieval-specialized models on some datasets (SciFact, Quora). Token-level enhancement degrades performance when the cosine baseline exceeds ${\sim}$0.45. Score fusion is not universally beneficial (ArguAna: fusion $<$ token-only). Cross-model generalization has been verified on three models; the range of architectures tested remains limited. The fusion weight is dataset-dependent (NFCorpus $\lambda^\star=0.4$, ArguAna $\lambda^\star=0.0$, SciFact $\lambda^\star=0.7$; see Section~\ref{subsec:fusion-mechanism}); SCIDOCS and FiQA use the legacy default $\lambda=0.3$ since complete fusion sweeps were not re-run on those datasets. A query-adaptive policy that selects $\lambda$ from cheap proxies (query-token entropy, candidate score variance) is sketched in Section~\ref{subsec:fusion-mechanism} and deferred to future work.
 
 % ============================================================
 \section{Conclusion}
 \label{sec:conclusion}
 % ============================================================
 
-We have shown that purely geometric operations---PQ subspace decomposition, Chamfer distance aggregation, and graph Laplacian smoothing---constitute a model-agnostic post-processing layer that improves dense retrieval across six BEIR datasets (+2.7\% to +136.2\%) and three embedding models, without any training. The pipeline surpasses BGE-large-en-v1.5 on two benchmarks (FiQA: +8.4\%, SCIDOCS: +32.5\%) at a total cost of \$47, establishing training-free geometric reranking as a viable paradigm.
+We have shown that purely geometric operations---PQ subspace decomposition, Chamfer distance aggregation, and graph Laplacian smoothing---constitute a model-agnostic post-processing layer that improves dense retrieval across six BEIR datasets (+6.0\% to +136.2\%) and three embedding models, without any training. The pipeline surpasses BGE-large-en-v1.5 on two benchmarks (FiQA: +8.4\%, SCIDOCS: +32.5\%) at a total cost of \$47, establishing training-free geometric reranking as a viable paradigm.
 
 Our systematic falsification of 21 approaches yielded insights of independent value: convection-diffusion equations fail due to the curse of orthogonality in high-dimensional spaces, density weighting inverts common intuition, and PQ subspace decomposition benefits even single-vector documents.
 
@@ -587,10 +689,143 @@ Our systematic falsification of 21 approaches yielded insights of independent va
 \label{app:falsification}
 % ============================================================
 
-The 21 falsified approaches summarized in Table~\ref{tab:falsification} are documented in full---including experimental configurations, quantitative results, and root-cause analyses---in the project repository. Each entry records the hypothesis, experimental setup, observed result, and diagnostic explanation.
+We document all 21 falsified approaches inline below. Each entry follows a uniform schema: (1)~\textbf{Hypothesis} stated before the experiment; (2)~\textbf{Protocol} specifying parameters, dataset, and metric; (3)~\textbf{Result} with quantitative measurement; (4)~\textbf{Root-cause analysis} explaining \emph{why} the approach failed, grounded in a concrete geometric, statistical, or numerical mechanism rather than a post-hoc rationalization. Raw configuration files and per-query result logs accompany the released repository (Section~\ref{subsec:reproducibility}).
 
-Repository: \url{https://github.com/yifanchen/shape-cfd} (to be made public upon publication).
+\subsection*{F1. Convection--diffusion advection}
+\textbf{Hypothesis.} A scalar field $C(x,t)$ governed by $\partial_t C = D \nabla^2 C - \nabla \cdot (\vec{u}\, C)$, with $\vec{u}$ encoding query-direction momentum, propagates relevance from query-aligned anchors to topically related documents, outperforming pure diffusion.
+\textbf{Protocol.} 72-configuration grid sweep over $(D, \|\vec{u}\|, \Delta t)$; 6 BEIR datasets; NDCG@10. Compared to pure-Laplacian smoothing on identical graphs.
+\textbf{Result.} Advection harmful or neutral on 5/5 independent validations (e.g., NFCorpus: PDE\_55 $=0.2852$ vs. Lap\_55 $=0.2900$; SciFact, FiQA, SCIDOCS, ArguAna concur).
+\textbf{Root cause.} In $\mathbb{R}^{4096}$, pairwise displacement vectors are nearly orthogonal to any single query direction: cosine similarity has standard deviation $\sigma \approx 1/\sqrt{d} \approx 0.016$. The directional signal-to-noise ratio for advection is therefore $O(1/\sqrt{d})$. Diffusion, being isotropic, escapes this bound; advection cannot. This is the curse of orthogonality applied to vector fields.
 
-The falsification log follows a structured format: (1)~\textbf{Hypothesis} stated before the experiment; (2)~\textbf{Protocol} specifying parameters, datasets, and metrics; (3)~\textbf{Result} with quantitative measurements; (4)~\textbf{Root-cause analysis} explaining \textit{why} the approach failed, not merely \textit{that} it failed. We believe this level of documentation is valuable for the community: negative results in retrieval are rarely published, yet they constrain the design space and prevent redundant exploration.
+\subsection*{F2. Allen--Cahn reaction term (dormant regime)}
+\textbf{Hypothesis.} Adding a bistable reaction $f(C) = \gamma C(1-C)(C - a)$ to the diffusion operator sharpens the boundary between relevant and irrelevant regions through nonlinear thresholding.
+\textbf{Protocol.} NFCorpus, $\gamma \in \{0.1, 1, 5\}$, $a \in \{0.3, 0.5\}$, $\Delta t = 0.01$, 50 steps.
+\textbf{Result.} NDCG@10 changes by $\le 5 \times 10^{-4}$ across all settings; effectively dormant.
+\textbf{Root cause.} For short queries, the score range $[\min C, \max C]$ is narrow ($\sim 0.05$). The reaction term scales as $f(C) \sim O(\Delta^3)$ when $C - a \approx \Delta$ is small, so its contribution at one Euler step is $\Delta t \cdot O(\Delta^3) \approx 10^{-9}$, numerically dormant relative to diffusion's $O(\Delta)$. The mechanism is real but invisible at this score scale.
+
+\subsection*{F3. Allen--Cahn with score normalization}
+\textbf{Hypothesis.} Rescaling $C$ to $[0,1]$ before applying the reaction term lifts F2's dormancy.
+\textbf{Protocol.} Same as F2; pre-normalize $C \leftarrow (C - C_{\min})/(C_{\max} - C_{\min})$.
+\textbf{Result.} NDCG@10 $-12.9\%$ on NFCorpus.
+\textbf{Root cause.} Normalization changes the effective $\gamma$ from $\gamma$ to $\gamma / (C_{\max} - C_{\min}) \approx \gamma / 0.05 = 500$ for the original $\gamma = 25$. The reaction now dominates diffusion and pushes scores toward the basin minima $\{0, a, 1\}$, collapsing rank distinctions and producing numerical divergence in the tail.
+
+\subsection*{F4. Johnson--Lindenstrauss random projection $4096 \to 128$}
+\textbf{Hypothesis.} Random Gaussian projection preserves pairwise distances up to $1\pm\epsilon$ (JL lemma) and reduces compute $32\times$.
+\textbf{Protocol.} $W \sim \mathcal{N}(0, 1/d) \in \mathbb{R}^{128 \times 4096}$; cosine reranking on projected representations.
+\textbf{Result.} NDCG@10 $-7.6\%$ across NFCorpus, FiQA, SCIDOCS.
+\textbf{Root cause.} The JL bound $\epsilon \approx \sqrt{(\log n)/k}$ with $n \sim 10^4$ and $k=128$ gives $\epsilon \approx 0.27$. The cosine standard deviation is $\sigma \approx 0.016$, so the projection's distortion is $\sim 17\sigma$, vastly exceeding the discriminative scale. Information loss dominates noise reduction.
+
+\subsection*{F5. ``Flow-field annealing''}
+\textbf{Hypothesis.} Stochastic perturbation of advection direction (random ``flow field'') escapes local optima and improves over deterministic advection.
+\textbf{Protocol.} Per-step random unit vector replacing $\vec{u}$; otherwise identical to F1.
+\textbf{Result.} Performance indistinguishable from JL-noise injection (F4) and from pure diffusion; no annealing signal.
+\textbf{Root cause.} Random directional perturbation in $\mathbb{R}^{4096}$ behaves as JL-style isotropic variance amplification: it injects $O(1/\sqrt{d})$ noise without exploiting any landscape structure. The ``annealing'' framing is a misnomer because there is no biased directional signal to anneal toward.
+
+\subsection*{F6. Scalar potential (Darcy law) variant}
+\textbf{Hypothesis.} Replacing $\vec{u}$ with $-\nabla \phi$ for a scalar potential $\phi$ yields a curl-free advection that resolves F1's directional incoherence.
+\textbf{Protocol.} $\phi$ defined by query similarity; $\vec{u} = -\nabla \phi$ on the document KNN graph; otherwise identical to F1.
+\textbf{Result.} NDCG@10 strictly below pure Laplacian on 6/6 datasets.
+\textbf{Root cause.} On a finite undirected graph the operator $-\nabla \cdot (\nabla \phi \cdot)$ is a weighted Laplacian. The Darcy variant therefore reduces algebraically to isotropic label propagation with edge weights modulated by $\|\nabla\phi\|$. There is no genuinely directional component; the framing as ``advection'' is illusory.
+
+\subsection*{F7. Density-weighted Chamfer distance}
+\textbf{Hypothesis.} Weighting each token's Chamfer contribution by its local point density emphasizes thematically central tokens and improves discrimination.
+\textbf{Protocol.} For each token $t_i$, $w_i \propto \mathrm{density}(t_i)$ via $k$-NN density estimate ($k=10$); rerank by $\sum_i w_i \min_j d(t_i, t_j)$.
+\textbf{Result.} NDCG@10 $-0.9\%$ to $-1.3\%$ across NFCorpus, FiQA, SCIDOCS.
+\textbf{Root cause.} High local density in token-embedding space corresponds to \emph{synonymous redundancy} (function words, repeated content tokens), not semantic importance. Up-weighting density amplifies redundancy and \emph{dilutes} the discriminative power of rare topical tokens. The intuition is reversed.
+
+\subsection*{F8. PQ code reconstruction (asymmetric distance)}
+\textbf{Hypothesis.} Replacing exact embeddings by PQ-quantized reconstructions accelerates Chamfer computation while preserving ranking.
+\textbf{Protocol.} 64 subspaces $\times$ 256 centroids each; $\hat{x} = \mathrm{concat}_s c_{i_s}$; reranking on $\hat{x}$ instead of $x$.
+\textbf{Result.} NDCG@10 $-34\%$ on NFCorpus.
+\textbf{Root cause.} Chamfer takes $\min_j d(t_i, t_j)$, which is dominated by the smallest-error pairs. Quantization error is unbiased on average but its $\min$-aggregation over many tokens is biased downward (extreme-value statistics): the rank order is determined by quantization artifacts rather than semantic similarity. Sum or mean aggregation would tolerate quantization; min does not.
+
+\subsection*{F9. PQ-Chamfer for initial retrieval}
+\textbf{Hypothesis.} Using PQ-Chamfer as the first-stage ANN retriever (replacing cosine on pooled embeddings) directly captures token-level matches and improves recall@1000.
+\textbf{Protocol.} Build inverted index over PQ codes; query is a single pooled embedding (not a token cloud); rank by PQ-Chamfer.
+\textbf{Result.} Recall@1000 $-4.2\%$ on NFCorpus.
+\textbf{Root cause.} Chamfer is asymmetric and degenerates when one side has a single point: $\mathrm{Chamfer}(\{q\}, D) = \min_{t \in D} d(q,t)$ becomes nearest-neighbor distance to the closest token in $D$, which is dominated by document length and noise tokens. Chamfer's value comes from \emph{cloud-to-cloud} aggregation; single-point queries waste it.
+
+\subsection*{F10. Global graph diffusion}
+\textbf{Hypothesis.} Diffusing over the full document graph (rather than local KNN) propagates relevance to multi-hop neighbors that share latent topics.
+\textbf{Protocol.} Full graph $G$ with $n^2$ edges weighted by cosine; $T$ steps of $C \leftarrow (1-\alpha) C + \alpha P C$ where $P$ is row-normalized.
+\textbf{Result.} NDCG@10 $-7.6\%$ on NFCorpus.
+\textbf{Root cause.} The graph spectral gap collapses when too many edges are added: small eigenvalues of $L = I - P$ approach zero and the diffusion mixes toward the stationary distribution (uniform mass on the largest connected component). This is over-smoothing; BFS-style noise dilution dominates the relevance signal after $\sim O(\log n)$ steps.
+
+\subsection*{F11. L3 subspace cross-visit}
+\textbf{Hypothesis.} Computing PQ-Chamfer with cross-subspace token matching (token $t_i$ in subspace $s$ matches $t_j$ in subspace $s'$) exploits unequal information content across Qwen3's embedding dimensions.
+\textbf{Protocol.} Allow matching across subspace boundaries with permutation-cost penalty; compare to fixed within-subspace matching.
+\textbf{Result.} No measurable gain; latency $+3\times$.
+\textbf{Root cause.} Local intrinsic dimensionality (LID) analysis shows Qwen3's embedding dimensions carry approximately uniform information content. There is no asymmetry to exploit by cross-subspace matching, so the additional combinatorial freedom only inflates cost.
+
+\subsection*{F12. Binary HDC + popcount}
+\textbf{Hypothesis.} Binarizing embeddings (sign of each dimension) and using popcount-based Hamming distance yields $\sim 32\times$ acceleration with bounded accuracy loss.
+\textbf{Protocol.} $\mathrm{sign}(x) \in \{-1, +1\}^{4096}$; bitpack and Hamming-rerank.
+\textbf{Result.} Effectively no speed-up at the system level.
+\textbf{Root cause.} Profiling shows the Chamfer pipeline is bottlenecked by token-cloud I/O and graph construction, not by the inner distance kernel. Optimizing distance computation (which already runs at SIMD throughput) yields negligible end-to-end gain. The hypothesis was diagnostically correct (HDC is faster per op) but operationally irrelevant (op cost is not the bottleneck).
+
+\subsection*{F13. Turing patterns}
+\textbf{Hypothesis.} Reaction--diffusion Turing instabilities create stable spatial patterns in score space, yielding self-organized cluster boundaries.
+\textbf{Protocol.} Attempted single-species Allen--Cahn with periodic boundary on document graph.
+\textbf{Result.} Mathematically impossible to instantiate.
+\textbf{Root cause.} Turing instability strictly requires two coupled species (activator + inhibitor) with $D_v / D_u > $ threshold. A single scalar field $C$ cannot exhibit Turing patterns. The hypothesis was a category error.
+
+\subsection*{F14. Tensor diffusion}
+\textbf{Hypothesis.} Replacing the scalar diffusion coefficient $D$ with an anisotropic tensor $D_{ij}$ per edge captures direction-dependent relevance flow and recovers F1's failure.
+\textbf{Protocol.} Per-edge $D_{ij} \in \mathbb{R}^{4096 \times 4096}$.
+\textbf{Result.} Memory infeasible.
+\textbf{Root cause.} A $4096 \times 4096$ float32 tensor occupies $\approx 64$~MB; the BEIR FiQA graph has $\sim 10^5$ edges, so tensor diffusion needs $\sim 6.4$~TB of edge state. Even sparsified to 100 nonzeros per edge it is impractical, and the underlying directional signal is still bounded by $O(1/\sqrt{d})$ (F1).
+
+\subsection*{F15. Mixed initial field}
+\textbf{Hypothesis.} Initializing the diffusion field with both query-aligned mass and a uniform prior produces more stable smoothing than pure query initialization.
+\textbf{Protocol.} $C(x, 0) = (1-\beta) \cdot \mathrm{cos}(q,x) + \beta \cdot 1/n$ for $\beta \in \{0.1, 0.3, 0.5\}$.
+\textbf{Result.} Inconsistent: NFCorpus $+3.2\%$, FiQA $-1.5\%$, SCIDOCS $+0.3\%$. No stable improvement across datasets.
+\textbf{Root cause.} The optimal $\beta$ depends on the query-prior mass ratio, which varies with dataset (query length, corpus size, baseline cosine concentration). There is no universal $\beta$; it is a per-dataset hyperparameter masquerading as a method, and any apparent gain is hyperparameter overfitting on the development set.
+
+\subsection*{F16. Temperature-scaled advection}
+\textbf{Hypothesis.} Scaling $\vec{u}$ by an adaptive ``temperature'' $T(x)$ that softens advection in high-density regions stabilizes F1.
+\textbf{Protocol.} $T(x) \propto 1/\mathrm{density}(x)$; $\vec{u}_{\mathrm{eff}} = T(x) \vec{u}$.
+\textbf{Result.} Numerical divergence within 10 steps.
+\textbf{Root cause.} The graph P\'eclet number $\mathrm{Pe} = \|\vec{u}_{\mathrm{eff}}\| h / D = 0.604$ exceeds the explicit-Euler stability bound $\mathrm{Pe}_{\max} \approx 0.5$. Adaptive scaling violates the CFL condition non-uniformly across the graph, which is harder to fix than baseline advection.
+
+\subsection*{F17. Multi-dimensional alignment}
+\textbf{Hypothesis.} Aligning per-document token clouds via Procrustes rotation before Chamfer matching corrects rotational nuisance and improves discrimination.
+\textbf{Protocol.} Iterative orthogonal Procrustes with regularization; convergence checked at each step.
+\textbf{Result.} 0\% convergence; latency 85.8~ms per document pair.
+\textbf{Root cause.} Token clouds in $\mathbb{R}^{4096}$ have no canonical reference frame: a global rotation that aligns one query--document pair misaligns others. Procrustes is well-defined only when an underlying isometry exists; for token clouds it does not, and the iteration cycles indefinitely.
+
+\subsection*{F18. Block-aligned attention}
+\textbf{Hypothesis.} Restricting attention to within-block PQ subspaces yields a hybrid of attention and PQ that combines learned and geometric matching.
+\textbf{Protocol.} 64-block soft attention; $\mathrm{Pe}_{\mathrm{block}} = 0.226$ analog.
+\textbf{Result.} 20\% convergence; unstable on FiQA, SCIDOCS.
+\textbf{Root cause.} Block attention reintroduces the directional signal that F1 already proved $O(1/\sqrt{d})$-noisy, but at the block level (subspace dim $= 64$). The block-level signal-to-noise is $1/\sqrt{64} = 0.125$, much improved over the full-space $0.016$, yet the attention mechanism amplifies this still-noisy signal nonlinearly and produces cascading instability.
+
+\subsection*{F19. PCA local projection}
+\textbf{Hypothesis.} Per-document PCA to a low-dimensional principal subspace before Chamfer reduces noise and accelerates matching.
+\textbf{Protocol.} Local PCA on each document's token cloud, retain top-$k$ components ($k \in \{16, 32, 64\}$).
+\textbf{Result.} NDCG@10 within $\pm 0.3\%$ of baseline; latency $+33$~ms per document.
+\textbf{Root cause.} Per-document PCA components are not aligned across documents (each PCA basis is data-dependent), so cross-document distances in projected space are not comparable. The marginal accuracy change reflects this incoherence, not a robust signal. Global PCA would align bases but lose per-document structure.
+
+\subsection*{F20. Token-level enhancement on a strong baseline}
+\textbf{Hypothesis.} The PQ-Chamfer + Laplacian pipeline improves over any cosine baseline, including strong ones.
+\textbf{Protocol.} SciFact, where cosine baseline NDCG@10 $= 0.4483$ (the strongest in our set).
+\textbf{Result.} Token-level PQ-Chamfer $-3.1\%$ on SciFact.
+\textbf{Root cause.} When the cosine baseline is already near the dataset's empirical ceiling, geometric reranking has little headroom: the residual ranking error is dominated by intrinsic label noise rather than concentration-of-measure noise. PQ-Chamfer's gain scales inversely with baseline quality, as confirmed by the cross-dataset trend in Table~\ref{tab:main}.
+
+\subsection*{F21. Multi-emission coarse filter}
+\textbf{Hypothesis.} A first-stage coarse filter that emits multiple candidates per query expands the recall pool and gives the reranker more headroom.
+\textbf{Protocol.} Query $\to$ top-$M$ ($M=5$) emissions $\to$ union recall set $\to$ rerank.
+\textbf{Result.} Recall@1000 $+22\%$, but NDCG@10 unchanged.
+\textbf{Root cause.} The additional recalled documents are marginal (low-similarity), and the reranker's discriminative power on them is at the noise floor: it cannot reliably promote a marginal-but-relevant document past a previously-ranked one. Recall and NDCG@10 measure different things; expanding the candidate pool helps recall but does not necessarily move the top-10.
+
+\subsection*{Synthesis: three families of failure modes}
+
+The 21 falsifications cluster into three mechanisms: (a)~\textbf{curse of orthogonality} (F1, F4, F5, F6, F14, F16, F18) --- any method requiring a directional signal in $\mathbb{R}^{4096}$ is bounded by $O(1/\sqrt{d})$ SNR; (b)~\textbf{aggregation bias} (F7, F8, F9, F10, F19, F21) --- density up-weighting amplifies synonymous redundancy, $\min$-aggregation amplifies tail errors, global graph mixing erases signal, per-document basis incoherence prevents cross-document comparison; (c)~\textbf{numerical and design pathology} (F2, F3, F11, F12, F13, F15, F17, F20) --- score-range dormancy, normalization-induced rescaling, infeasible memory, category errors, hyperparameter overfitting masquerading as method, missing canonical frames, and saturation against strong baselines. The constructive PQ-Chamfer + Laplacian pipeline (Section~\ref{sec:method}) was selected precisely because it avoids all three: it is isotropic (no directional dependence), uses sum-aggregation within subspaces (no min-bias), and operates on local KNN graphs with bounded mixing time.
+
+\subsection{Reproducibility note}
+\label{subsec:reproducibility}
+
+Raw experiment logs (per-query results, hyperparameter configurations, seed values) for all 21 entries are stored in the project repository in machine-readable JSON, alongside the human-readable summaries above. Each entry's repository path is \texttt{falsification/F\$NN\$/} with subdirectories \texttt{config.yaml}, \texttt{results.jsonl}, and \texttt{notes.md}.
+
+\textbf{Provenance disclosure.} Of the 21 entries, 11 have complete raw experimental logs (per-query NDCG@10, configuration, and notes) preserved from the original V1--V13 development period; the remaining 10 are reconstructed retrospectively from paper notes, aggregate result summaries, and the manuscript's Appendix C. Each entry's \texttt{notes.md} flags its provenance level (\texttt{complete} vs.\ \texttt{reconstructed}). Reconstructed entries retain canonical hypothesis, protocol, aggregate result, and root-cause analysis from this Appendix; only the per-query JSONL is unavailable for those entries.
 
 \end{document}

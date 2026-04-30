@@ -1,0 +1,13 @@
+falsification_id: F21
+short_name: multi_emission_coarse
+period: V11
+family: aggregation_bias
+datasets_tested:
+  - nfcorpus
+hypothesis_brief: Multi-candidate coarse filter expands recall pool, gives reranker headroom.
+protocol_brief: "Query -> top-M (M=5) emissions -> union recall set -> rerank."
+result_summary: "Recall@1000 +22%, but NDCG@10 unchanged."
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/multi_emission_*.json
+appendix_C_section: F21

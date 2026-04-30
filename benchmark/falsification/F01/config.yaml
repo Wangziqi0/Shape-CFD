@@ -1,0 +1,18 @@
+falsification_id: F01
+short_name: advection_diffusion
+period: V1-V3
+family: curse_of_orthogonality
+datasets_tested:
+  - nfcorpus
+  - scifact
+  - fiqa
+  - scidocs
+  - arguana
+  - quora
+hypothesis_brief: Convection-diffusion PDE with query-aligned advection u outperforms pure diffusion.
+protocol_brief: "72-config grid over (D, |u|, dt); 6 BEIR datasets; NDCG@10. Compare PDE vs Lap on identical KNN graphs."
+result_summary: Advection harmful/neutral on 5/5 validations. NFCorpus PDE_55=0.2852 vs Lap_55=0.2900.
+status: falsified
+provenance: complete
+raw_data_source: benchmark/data/results/, walkthrough.md V1-V3 logs
+appendix_C_section: F01
