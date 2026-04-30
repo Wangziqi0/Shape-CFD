@@ -1,42 +1,82 @@
-\documentclass[11pt,a4paper]{article}
-\usepackage[utf8]{inputenc}
-\usepackage{amsmath,amssymb,amsfonts}
-\usepackage{graphicx}
-\graphicspath{{figures/}}
-\usepackage{booktabs}
-\usepackage{hyperref}
-\usepackage{natbib}
-\usepackage{xcolor}
-\usepackage{multirow}
-\usepackage[margin=1in]{geometry}
-\usepackage{enumitem}
-\usepackage{url}
+\documentclass[acmsmall, screen]{acmart}
 
-% ---------- hyperref 配置 ----------
-\hypersetup{
-  colorlinks=true,
-  linkcolor=blue!70!black,
-  citecolor=green!50!black,
-  urlcolor=blue!70!black,
-}
+% ---------- ACM journal info (TOIS) ----------
+\acmJournal{TOIS}
+\acmVolume{1}
+\acmNumber{1}
+\acmArticle{1}
+\acmYear{2026}
+\acmMonth{1}
+\acmDOI{10.1145/XXXXXXX.XXXXXXX}
+
+% ---------- citation style: author-year (compatible with existing \citep) ----------
+\citestyle{acmauthoryear}
+\settopmatter{printacmref=false}
+
+% ---------- 通用包（acmart 已自带 amsmath/graphicx/hyperref/booktabs/xcolor/url）----------
+% acmart 默认主字体 Libertine 系统未装 → fallback Computer Modern (lmodern, scalable)
+\usepackage{lmodern}
+\usepackage{multirow}
+\usepackage{enumitem}
+\graphicspath{{figures/}}
 
 % ---------- 自定义命令 ----------
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\bv}{\bar{v}}
 
-\title{Point Cloud Retrieval with PQ-Chamfer Distance\\and Graph Regularization: A Training-Free Approach}
-\author{Yifan Chen\\Independent Researcher}
-\date{April 2026}
-
 \begin{document}
-\maketitle
 
-% ============================================================
-% Abstract
-% ============================================================
+% ---------- Title ----------
+\title{Point Cloud Retrieval with PQ-Chamfer Distance and Graph Regularization: A Training-Free Approach}
+
+% ---------- Author ----------
+\author{Yifan Chen}
+\affiliation{%
+  \institution{Independent Researcher}
+  \country{China}
+}
+\email{contact-via-github@github.com}
+
+% ---------- Abstract ----------
 \begin{abstract}
 We propose a \textbf{training-free geometric reranking pipeline} that improves dense retrieval without any task-specific training. Documents are represented as token-level point clouds extracted from a general-purpose LLM, then scored via two complementary mechanisms: (1)~\textbf{PQ-Chamfer distance}, which decomposes embeddings into 64 subspaces of 64 dimensions each, breaking the concentration-of-measure effect; and (2)~\textbf{graph Laplacian smoothing}, which propagates relevance scores over a KNN document graph. On \textbf{six BEIR datasets} spanning 2,473 to 522,931 documents, the pipeline achieves NDCG@10 gains of \textbf{+6.0\% to +136.2\%} over cosine baselines, surpassing \textbf{BGE-large-en-v1.5} on two benchmarks (FiQA: 0.398 vs 0.367; SCIDOCS: 0.215 vs 0.162). Improvements are statistically significant ($p < 0.05$) across \textbf{three embedding models} (8B, 568M, 335M parameters), with gains inversely proportional to baseline quality. The entire experimental pipeline costs \textbf{\$47} on a single consumer GPU. We document \textbf{21 falsified approaches}---including the complete failure of convection-diffusion equations---establishing clear applicability boundaries. Code, indices, and falsification records will be released upon acceptance at \url{https://github.com/Wangziqi0/Shape-CFD}.
 \end{abstract}
+
+% ---------- CCS Concepts ----------
+\begin{CCSXML}
+<ccs2012>
+   <concept>
+       <concept_id>10002951.10003317.10003318.10003323</concept_id>
+       <concept_desc>Information systems~Retrieval models and ranking</concept_desc>
+       <concept_significance>500</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10002951.10003317.10003331</concept_id>
+       <concept_desc>Information systems~Information retrieval query processing</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10002951.10003317.10003338</concept_id>
+       <concept_desc>Information systems~Top-k retrieval in databases</concept_desc>
+       <concept_significance>300</concept_significance>
+   </concept>
+   <concept>
+       <concept_id>10010147.10010178.10010187</concept_id>
+       <concept_desc>Computing methodologies~Information extraction</concept_desc>
+       <concept_significance>100</concept_significance>
+   </concept>
+</ccs2012>
+\end{CCSXML}
+
+\ccsdesc[500]{Information systems~Retrieval models and ranking}
+\ccsdesc[300]{Information systems~Information retrieval query processing}
+\ccsdesc[300]{Information systems~Top-k retrieval in databases}
+\ccsdesc[100]{Computing methodologies~Information extraction}
+
+% ---------- Keywords ----------
+\keywords{dense retrieval, training-free retrieval, PQ-Chamfer, graph Laplacian smoothing, BEIR benchmark, point cloud distance, falsification analysis}
+
+\maketitle
 
 % ============================================================
 \section{Introduction}
@@ -680,7 +720,7 @@ Our systematic falsification of 21 approaches yielded insights of independent va
 % ============================================================
 % References
 % ============================================================
-\bibliographystyle{apalike}
+\bibliographystyle{ACM-Reference-Format}
 \bibliography{references}
 
 % ============================================================
