@@ -230,7 +230,7 @@ VT-Aligned reverses the aggregation order (``min-then-average''): the minimizati
 d_{\mathrm{VT}}(\mathcal{A}, \mathcal{B}) = \frac{1}{2}\left[\frac{1}{|\mathcal{A}|}\sum_{a \in \mathcal{A}} \frac{1}{M}\sum_{s=1}^{M} \min_{b \in \mathcal{B}} \delta_s(a, b) + \frac{1}{|\mathcal{B}|}\sum_{b \in \mathcal{B}} \frac{1}{M}\sum_{s=1}^{M} \min_{a \in \mathcal{A}} \delta_s(b, a)\right]
 \end{equation}
 
-This captures finer-grained matching patterns than standard PQ-Chamfer, where a single globally nearest neighbor is used across all subspaces. In practice, VT-Aligned yields +2.5\% over standard PQ-Chamfer at zero additional cost.
+This captures finer-grained matching patterns than standard PQ-Chamfer, where a single globally nearest neighbor is used across all subspaces. In practice, VT-Aligned yields $+2.5\%$ over standard PQ-Chamfer at zero additional cost (NFCorpus aggregate; per-query paired bootstrap on the VT-Aligned vs.\ standard PQ-Chamfer contrast is deferred --- the 2.5\% gain is an aggregate-level observation across NFCorpus / SciFact / ArguAna in early ablation, not a hypothesis-tested effect).
 
 \begin{figure}[ht]
 \centering
@@ -272,7 +272,7 @@ C_{t+1} = (I - \alpha L)\, C_t
 \end{equation}
 where $L = D_{\mathrm{deg}} - W$ is the graph Laplacian and $D_{\mathrm{deg}}$ is the degree matrix.
 
-\textbf{Stability condition.} The smoothing coefficient $\alpha$ must satisfy $\alpha < 1/d_{\max}$ where $d_{\max}$ is the maximum weighted degree $\max_i \sum_j W_{ij}$, bounded above by the unweighted degree (here $\leq 6$), ensuring eigenvalues of the update matrix $(I - \alpha L)$ lie in $[0,1]$. With $K = 3$ (bidirectional, $d_{\max} \leq 6$), our choice of $\alpha = 0.15$ satisfies this condition ($0.15 < 1/6 \approx 0.167$).
+\textbf{Stability condition.} The eigenvalues of the update matrix $(I - \alpha L)$ lie in $[0,1]$ iff $\alpha \le 2/\lambda_{\max}(L)$, where $L = D - W$ is the graph Laplacian. For weighted graphs, $\lambda_{\max}(L) \le 2 d_{\max}^{(W)}$ where $d_{\max}^{(W)} = \max_i \sum_j W_{ij}$ is the maximum weighted degree (this is tight for bipartite graphs; otherwise loose). The sufficient condition $\alpha \le 1/d_{\max}^{(W)}$ follows from $\lambda_{\max}(L) \le 2 d_{\max}^{(W)}$. Since edge weights $W_{ij} = \exp(-\beta d_{ij}) \in (0, 1]$, we have $d_{\max}^{(W)} \le d_{\max}^{(\text{unweighted})}$, the unweighted degree. For $K = 3$ with bidirectional symmetrization, the unweighted degree is at most $2K = 6$, so $\alpha \le 1/6 \approx 0.167$ suffices. Our choice $\alpha = 0.15$ satisfies this sufficient condition. Empirically the tighter bound $\alpha \le 2/\lambda_{\max}(L)$ is rarely binding because $\lambda_{\max}(L) < 2 d_{\max}^{(W)}$ on most KNN graphs we observed.
 
 \textbf{Effect.} Laplacian smoothing propagates high relevance scores to semantically similar neighbors, effectively discovering relevant documents that may have received low initial scores due to vocabulary mismatch or embedding noise. Unlike cross-encoder reranking, this propagation is training-free and operates in milliseconds.
 
@@ -338,7 +338,7 @@ These six datasets test our pipeline under systematically varying conditions: co
 
 \textbf{Token-level data availability.} Token-level embeddings were extracted for five of six datasets. Quora token-level extraction was not performed due to storage constraints: 522{,}931 documents $\times$ ${\sim}$170 tokens/doc $\times$ 4096 dimensions $\times$ 4 bytes $\approx$ 1.3\,TB, exceeding available storage. Quora results use sentence-level graph smoothing only.
 
-\textbf{Embedding model.} Qwen3-8B (Q4\_K\_M quantization) via llama.cpp with \texttt{--pooling none} for token-level hidden states and \texttt{--pooling mean} for centroid vectors. Embedding dimension $d = 4096$.
+\textbf{Embedding model.} Qwen3-8B (Q4\_K\_M quantization) via llama.cpp with \texttt{--pooling none} for token-level hidden states and \texttt{--pooling mean} for centroid vectors. Embedding dimension $d = 4096$. Q4\_K\_M quantization was used for VRAM efficiency (8\,GB usage vs.\ $\sim$16\,GB for fp16); a full-precision (fp16) sanity check on the same model and data to bound the quantization-induced NDCG@10 deviation is deferred to a follow-up. Documented Q4\_K\_M perplexity overhead on standard benchmarks is $\sim$1--3\% over fp16 (per llama.cpp's published benchmarks at \url{https://github.com/ggerganov/llama.cpp/blob/master/examples/quantize/README.md}), which is small relative to the +6.0\% to +136.2\% NDCG@10 gains reported in Table~\ref{tab:main}; we therefore expect the quantization to be a second-order effect on the retrieval-quality conclusions of this paper but acknowledge that a directly measured fp16-vs-Q4 contrast is not yet available.
 
 \textbf{PQ parameters.} $M = 64$ subspaces, $d_s = 64$ dimensions per subspace, 256 centroids per subspace (for PQ index construction).
 
@@ -617,7 +617,7 @@ We tested and rejected 21 approaches during development. We detail two represent
 
 \subsubsection{Convection-Diffusion Equations: Complete Failure}
 
-The original Shape-CFD framework employed the convection-diffusion equation $\partial C / \partial t = D \nabla^2 C - \nabla \cdot (\vec{u}\, C)$, where advection encodes query-directed momentum. Five independent validations---72-configuration grid search, 6-dataset cross-validation, a Darcy-law scalar potential variant, Allen-Cahn reaction-diffusion extension, and direct comparison (Lap\_55 = 0.2900 vs PDE\_55 = 0.2852 on NFCorpus)---established that the advection term is consistently harmful or neutral.
+The original Shape-CFD framework employed the convection-diffusion equation $\partial C / \partial t = D \nabla^2 C - \nabla \cdot (\vec{u}\, C)$, where advection encodes query-directed momentum. On the discrete KNN graph, the operators are realized as: $\nabla^2 C \mapsto -L\, C$ where $L = D - W$ is the (unnormalized) graph Laplacian; and $\nabla \cdot (\vec{u}\, C) \mapsto \sum_{j \in \mathcal{N}(i)} u_{ij} (C_j - C_i)$ where $u_{ij}$ is the edge-aligned advection coefficient (project the query direction onto the edge $i \to j$ in the embedding space). Full discretization, sign convention, and time-stepping (forward Euler, $\Delta t = 1$) are specified in the released configuration \texttt{benchmark/falsification/F01/config.yaml}. Five independent validations---72-configuration grid search, 6-dataset cross-validation, a Darcy-law scalar potential variant, Allen-Cahn reaction-diffusion extension, and direct comparison (Lap\_55 = 0.2900 vs PDE\_55 = 0.2852 on NFCorpus)---established that the advection term is consistently harmful or neutral.
 
 \textbf{Root cause.} In $\R^{4096}$, inter-document displacement vectors are approximately orthogonal to the query direction ($\sigma \approx 0.016$). The \textit{curse of orthogonality} ensures directed transport is ineffective when the directional signal-to-noise ratio is $O(1/\sqrt{d})$.
 
@@ -688,7 +688,7 @@ All three models show statistically significant improvement from graph smoothing
 
 \textbf{Implementation note.} BGE-large and BGE-M3 embeddings were extracted using llama.cpp with mean pooling and 512-character truncation, which yields cosine baselines below the published MTEB leaderboard values (BGE-large: 0.2975 vs.\ published 0.344). The gap is attributable to inference framework differences and text truncation. Our claim is about \textbf{relative improvement} over the same embedding baseline, not absolute scores.
 
-\textbf{Parameter sensitivity across models.} Stronger models prefer conservative smoothing ($\alpha = 0.02$, 20 iterations) while weaker models tolerate more aggressive smoothing ($\alpha = 0.1$, 10 iterations). KNN graph degree $K = 3$ is universally optimal across all models.
+\textbf{Parameter sensitivity across models.} The Table~\ref{tab:cross-model} numbers above are reported with each model using its \emph{own} per-model tuned $(\alpha, T)$: Qwen3-Embed-8B at $(\alpha = 0.15, T = 5)$, BGE-large-en-v1.5 at $(\alpha = 0.02, T = 20)$, BGE-M3 at $(\alpha = 0.10, T = 10)$. The $K = 3$ KNN degree is universally optimal across all three models. We acknowledge that the cross-model claim is therefore reported under per-model tuning rather than under a single fixed configuration; verifying that the unified default $(\alpha = 0.15, T = 5)$ from \S\ref{subsec:setup} also yields positive gain on BGE-large and BGE-M3 (and reporting that controlled comparison) is deferred to a follow-up. The per-model tuned values are used in Table~\ref{tab:cross-model} because they reflect best-case practitioner deployment.
 
 % ============================================================
 \section{Analysis}
