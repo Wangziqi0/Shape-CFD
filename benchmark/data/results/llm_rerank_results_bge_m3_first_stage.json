@@ -1,0 +1,38 @@
+{
+  "args": {
+    "datasets": "nfcorpus,scifact,arguana",
+    "methods": "listwise",
+    "max_queries": 0,
+    "candidates": 100,
+    "top_k": 10,
+    "pairwise_prerank": 20,
+    "setwise_window": 10,
+    "setwise_step": 5,
+    "beir_dir": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/beir_data",
+    "output_dir": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results",
+    "vectors_prefix": "bge_m3_",
+    "results_suffix": "bge_m3_first_stage"
+  },
+  "results": {
+    "nfcorpus": {
+      "dataset": "nfcorpus",
+      "n_queries": 323,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.30154130095505827,
+          "n_completed": 323,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_nfcorpus_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.2590960443354077
+    },
+    "scifact": {
+      "error": "[Errno 2] No such file or directory: '/home/amd/HEZIMENG/Shape-CFD/benchmark/data/beir_data/scifact/bge_m3_corpus_vectors.jsonl'"
+    },
+    "arguana": {
+      "error": "[Errno 2] No such file or directory: '/home/amd/HEZIMENG/Shape-CFD/benchmark/data/beir_data/arguana/bge_m3_corpus_vectors.jsonl'"
+    }
+  }
+}
