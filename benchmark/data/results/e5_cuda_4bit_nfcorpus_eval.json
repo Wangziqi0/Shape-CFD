@@ -1,0 +1,9 @@
+{
+  "dataset": "nfcorpus",
+  "method": "E5-Mistral nf4 (bitsandbytes 4-bit)",
+  "n_test_queries": 323,
+  "ndcg_at_10": 0.1289029271596538,
+  "hardware": "NVIDIA RTX 5060 Laptop 8GB, CUDA 13.1, torch 2.11+cu130",
+  "compute_dtype": "fp16",
+  "quant_type": "nf4 (double quant)"
+}
