@@ -1,0 +1,66 @@
+{
+  "n_iter": 10000,
+  "seed": 42,
+  "datasets": {
+    "nfcorpus": {
+      "n_queries": 323,
+      "mean_cosine": 0.22999690104136786,
+      "mean_ours": 0.3270199394959823,
+      "abs_diff": 0.09702303845461444,
+      "rel_diff_pct": 42.18449814554832,
+      "cohen_d": 0.5519600260692122,
+      "p_value_two_sided": 0.0001,
+      "ci_95_low": 0.07817809517035114,
+      "ci_95_high": 0.11650684586566641,
+      "ours_key": "fusion_T5_lam0.4"
+    },
+    "arguana": {
+      "n_queries": 1398,
+      "mean_cosine": 0.304703773264588,
+      "mean_ours": 0.44170392208214115,
+      "abs_diff": 0.13700014881755326,
+      "rel_diff_pct": 44.961750013705895,
+      "cohen_d": 0.44264071241135755,
+      "p_value_two_sided": 0.0001,
+      "ci_95_low": 0.1209178441594567,
+      "ci_95_high": 0.15301816514789104,
+      "ours_key": "token_2stage"
+    },
+    "scifact": {
+      "n_queries": 300,
+      "mean_cosine": 0.44832120041751816,
+      "mean_ours": 0.4945651316055703,
+      "abs_diff": 0.0462439311880521,
+      "rel_diff_pct": 10.314910636611756,
+      "cohen_d": 0.19701102495484962,
+      "p_value_two_sided": 0.0006,
+      "ci_95_low": 0.019820642204972174,
+      "ci_95_high": 0.07284038362596333,
+      "ours_key": "fusion_T5_lam0.7"
+    },
+    "scidocs": {
+      "n_queries": 1000,
+      "mean_cosine": 0.1109738959456436,
+      "mean_ours": 0.21822125009790364,
+      "abs_diff": 0.10724735415226004,
+      "rel_diff_pct": 96.641965426528,
+      "cohen_d": 0.5622053304509474,
+      "p_value_two_sided": 0.0001,
+      "ci_95_low": 0.09505436468345435,
+      "ci_95_high": 0.11911857064791917,
+      "ours_key": "fusion_T5_lam0.2"
+    },
+    "fiqa": {
+      "n_queries": 648,
+      "mean_cosine": 0.16833076267500716,
+      "mean_ours": 0.3976108967854011,
+      "abs_diff": 0.2292801341103939,
+      "rel_diff_pct": 136.20810032986097,
+      "cohen_d": 0.7174677861639228,
+      "p_value_two_sided": 0.0001,
+      "ci_95_low": 0.20454462330899378,
+      "ci_95_high": 0.2537826196703099,
+      "ours_key": "fusion_T5_lam0.2"
+    }
+  }
+}
