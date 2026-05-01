@@ -1,0 +1,18 @@
+{
+  "model": "colbertv2",
+  "dataset": "nfcorpus",
+  "n_queries": 323,
+  "K": 10,
+  "rerank_top_n": 200,
+  "mean_pool_ndcg10": 0.14409549642605288,
+  "mean_pool_ndcg10_std": 0.21295501581760765,
+  "maxsim_ndcg10": 0.28220532225396966,
+  "maxsim_ndcg10_std": 0.2933458724000294,
+  "bootstrap_maxsim_vs_mean": {
+    "mean_diff": 0.13810982582791678,
+    "ci_low": 0.11641606249800368,
+    "ci_high": 0.1608915651680334,
+    "p_value": 0.0,
+    "n_queries": 323
+  }
+}

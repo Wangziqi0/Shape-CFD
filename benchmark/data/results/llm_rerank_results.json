@@ -1,0 +1,58 @@
+{
+  "args": {
+    "datasets": "nfcorpus,scifact,arguana",
+    "methods": "listwise",
+    "max_queries": 0,
+    "candidates": 100,
+    "top_k": 10,
+    "pairwise_prerank": 20,
+    "setwise_window": 10,
+    "setwise_step": 5,
+    "beir_dir": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/beir_data",
+    "output_dir": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results"
+  },
+  "results": {
+    "nfcorpus": {
+      "dataset": "nfcorpus",
+      "n_queries": 323,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.2728093617468563,
+          "n_completed": 323,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_nfcorpus_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.2194977334341188
+    },
+    "scifact": {
+      "dataset": "scifact",
+      "n_queries": 300,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.46599889753002305,
+          "n_completed": 300,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_scifact_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.47014381669931243
+    },
+    "arguana": {
+      "dataset": "arguana",
+      "n_queries": 1398,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.25233579211613244,
+          "n_completed": 1398,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_arguana_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.3043461194734578
+    }
+  }
+}

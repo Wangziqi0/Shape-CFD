@@ -37,14 +37,17 @@ import numpy as np
 from tqdm import tqdm
 
 # ---------- config ----------
-API_BASE = "http://192.168.31.22:3000/v1/chat/completions"
-LLM_MODEL = "Qwen/Qwen3-8B"
-DEFAULT_BEIR_DIR = "/home/amd/HEZIMENG/legal-assistant/beir_data"
+# 默认指向 9070XT 本地 llama-server (Qwen3-8B-Q4_K_M, 端口 8082)
+API_BASE = "http://192.168.31.22:8082/v1/chat/completions"
+LLM_MODEL = "qwen3-8b"
+DEFAULT_BEIR_DIR = "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/beir_data"
 DEFAULT_OUT_DIR = "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results"
+# Qwen3 thinking 默认开，会消耗 max_tokens 在 reasoning 上；listwise 不需要 thinking
+QWEN_NO_THINK_PREFIX = "/no_think "
 
 
 def load_api_key():
-    """优先读 .env，回退环境变量。"""
+    """优先读 .env，回退环境变量。本地 llama-server 不验证 key，返回 dummy 即可。"""
     for p in [Path("/home/amd/HEZIMENG/legal-assistant/.env"),
               Path("/home/amd/HEZIMENG/Shape-CFD/benchmark/.env")]:
         if p.exists():
@@ -53,7 +56,8 @@ def load_api_key():
                     return line.split("=", 1)[1].strip()
                 if line.startswith("SILICONFLOW_API_KEY="):
                     return line.split("=", 1)[1].strip()
-    return os.environ.get("LOCAL_EMBED_KEY") or os.environ.get("SILICONFLOW_API_KEY")
+    return (os.environ.get("LOCAL_EMBED_KEY") or os.environ.get("SILICONFLOW_API_KEY")
+            or "no-key-needed-for-local-llama-server")
 
 
 # ---------- helpers ----------
@@ -114,18 +118,23 @@ def compute_ndcg(ranked_ids, qrel, k=10):
 
 
 # ---------- LLM API call ----------
-def call_llm(prompt, api_key, max_tokens=512, temperature=0.0, timeout=60, max_retries=3):
+def call_llm(prompt, api_key, max_tokens=512, temperature=0.0, timeout=60, max_retries=3,
+             api_base=None, model=None):
+    """支持运行时 override api_base / model，且 Qwen3 thinking 默认禁用。"""
+    base = api_base or API_BASE
+    mdl = model or LLM_MODEL
+    full_prompt = QWEN_NO_THINK_PREFIX + prompt if "qwen" in mdl.lower() else prompt
     headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
     body = {
-        "model": LLM_MODEL,
-        "messages": [{"role": "user", "content": prompt}],
+        "model": mdl,
+        "messages": [{"role": "user", "content": full_prompt}],
         "max_tokens": max_tokens,
         "temperature": temperature,
         "stream": False,
     }
     for attempt in range(max_retries):
         try:
-            r = requests.post(API_BASE, json=body, headers=headers, timeout=timeout)
+            r = requests.post(base, json=body, headers=headers, timeout=timeout)
             if r.status_code == 429:
                 time.sleep(2 * (attempt + 1)); continue
             if r.status_code >= 500:
