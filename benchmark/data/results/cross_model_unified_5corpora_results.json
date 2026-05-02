@@ -14,10 +14,10 @@
           "T": 5,
           "K_pool": 100,
           "n_test_queries": 323,
-          "cosine_ndcg10": 0.28929050398745576,
-          "laplacian_unified_ndcg10": 0.27674630683717294,
-          "relative_gain_pct": -4.336193887244486,
-          "elapsed_seconds": 2.454573631286621
+          "cosine_ndcg10": 0.3113311739233876,
+          "laplacian_unified_ndcg10": 0.30616447529442326,
+          "relative_gain_pct": -1.6595506848394732,
+          "elapsed_seconds": 2.665701389312744
         },
         "BGE-large-en-v1.5": {
           "model": "BGE-large-en-v1.5",
@@ -25,10 +25,10 @@
           "T": 5,
           "K_pool": 100,
           "n_test_queries": 323,
-          "cosine_ndcg10": 0.29750178247654174,
-          "laplacian_unified_ndcg10": 0.29493044691940706,
-          "relative_gain_pct": -0.8643092944619353,
-          "elapsed_seconds": 1.9977037906646729
+          "cosine_ndcg10": 0.36011869604273294,
+          "laplacian_unified_ndcg10": 0.3431385855776672,
+          "relative_gain_pct": -4.715142715903546,
+          "elapsed_seconds": 2.544788122177124
         }
       }
     },
@@ -43,10 +43,21 @@
           "T": 5,
           "K_pool": 100,
           "n_test_queries": 300,
-          "cosine_ndcg10": 0.48875675634109117,
-          "laplacian_unified_ndcg10": 0.3486484445490222,
-          "relative_gain_pct": -28.666265984933176,
-          "elapsed_seconds": 3.790147542953491
+          "cosine_ndcg10": 0.640556520903065,
+          "laplacian_unified_ndcg10": 0.4685996806062787,
+          "relative_gain_pct": -26.84491292889491,
+          "elapsed_seconds": 3.61161470413208
+        },
+        "BGE-large-en-v1.5": {
+          "model": "BGE-large-en-v1.5",
+          "alpha": 0.15,
+          "T": 5,
+          "K_pool": 100,
+          "n_test_queries": 300,
+          "cosine_ndcg10": 0.7292475449348852,
+          "laplacian_unified_ndcg10": 0.4503225625435629,
+          "relative_gain_pct": -38.24832655641338,
+          "elapsed_seconds": 3.9872000217437744
         }
       }
     },
@@ -61,10 +72,21 @@
           "T": 5,
           "K_pool": 100,
           "n_test_queries": 1406,
-          "cosine_ndcg10": 0.32536702862853883,
-          "laplacian_unified_ndcg10": 0.38938926805866014,
-          "relative_gain_pct": 19.67692906683961,
-          "elapsed_seconds": 29.57612109184265
+          "cosine_ndcg10": 0.3297592705659545,
+          "laplacian_unified_ndcg10": 0.4070788322169863,
+          "relative_gain_pct": 23.447274588620637,
+          "elapsed_seconds": 29.87787652015686
+        },
+        "BGE-large-en-v1.5": {
+          "model": "BGE-large-en-v1.5",
+          "alpha": 0.15,
+          "T": 5,
+          "K_pool": 100,
+          "n_test_queries": 1406,
+          "cosine_ndcg10": 0.4010621359245876,
+          "laplacian_unified_ndcg10": 0.45137309881678883,
+          "relative_gain_pct": 12.544430996014361,
+          "elapsed_seconds": 28.49403190612793
         }
       }
     },
@@ -79,10 +101,21 @@
           "T": 5,
           "K_pool": 100,
           "n_test_queries": 1000,
-          "cosine_ndcg10": 0.16944738123486713,
-          "laplacian_unified_ndcg10": 0.1507097954218776,
-          "relative_gain_pct": -11.058055708171612,
-          "elapsed_seconds": 53.694140672683716
+          "cosine_ndcg10": 0.16755668172036284,
+          "laplacian_unified_ndcg10": 0.14961002966585407,
+          "relative_gain_pct": -10.710794622001483,
+          "elapsed_seconds": 56.71778845787048
+        },
+        "BGE-large-en-v1.5": {
+          "model": "BGE-large-en-v1.5",
+          "alpha": 0.15,
+          "T": 5,
+          "K_pool": 100,
+          "n_test_queries": 1000,
+          "cosine_ndcg10": 0.2065291877860523,
+          "laplacian_unified_ndcg10": 0.17822450255202854,
+          "relative_gain_pct": -13.704932236185986,
+          "elapsed_seconds": 54.58288526535034
         }
       }
     },
@@ -97,10 +130,21 @@
           "T": 5,
           "K_pool": 100,
           "n_test_queries": 648,
-          "cosine_ndcg10": 0.38492394764261495,
-          "laplacian_unified_ndcg10": 0.2864461057395131,
-          "relative_gain_pct": -25.58371400537911,
-          "elapsed_seconds": 79.35098934173584
+          "cosine_ndcg10": 0.40375669427499555,
+          "laplacian_unified_ndcg10": 0.26710877341296124,
+          "relative_gain_pct": -33.84412513764155,
+          "elapsed_seconds": 82.87078809738159
+        },
+        "BGE-large-en-v1.5": {
+          "model": "BGE-large-en-v1.5",
+          "alpha": 0.15,
+          "T": 5,
+          "K_pool": 100,
+          "n_test_queries": 648,
+          "cosine_ndcg10": 0.432405369604139,
+          "laplacian_unified_ndcg10": 0.21960946165869621,
+          "relative_gain_pct": -49.21213354502383,
+          "elapsed_seconds": 77.87835264205933
         }
       }
     }

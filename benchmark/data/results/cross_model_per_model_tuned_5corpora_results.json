@@ -1,0 +1,179 @@
+{
+  "per_corpus": {
+    "nfcorpus": {
+      "BGE-M3": {
+        "alpha": 0.1,
+        "T": 10,
+        "model": "BGE-M3",
+        "K_pool": 100,
+        "n_test_queries": 323,
+        "cosine_ndcg10": 0.3113311739233876,
+        "laplacian_unified_ndcg10": 0.3066515738646787,
+        "relative_gain_pct": -1.503093956103634,
+        "elapsed_seconds": 2.526031970977783
+      },
+      "BGE-large": {
+        "alpha": 0.02,
+        "T": 20,
+        "model": "BGE-large",
+        "K_pool": 100,
+        "n_test_queries": 323,
+        "cosine_ndcg10": 0.36011869604273294,
+        "laplacian_unified_ndcg10": 0.3702299584694801,
+        "relative_gain_pct": 2.8077582580014977,
+        "elapsed_seconds": 2.524531602859497
+      },
+      "Qwen3-8B": {
+        "alpha": 0.15,
+        "T": 5,
+        "model": "Qwen3-8B",
+        "K_pool": 100,
+        "n_test_queries": 323,
+        "cosine_ndcg10": 0.2194977334341188,
+        "laplacian_unified_ndcg10": 0.1716810069649746,
+        "relative_gain_pct": -21.78461058391574,
+        "elapsed_seconds": 8.53749966621399
+      }
+    },
+    "scifact": {
+      "BGE-M3": {
+        "alpha": 0.1,
+        "T": 10,
+        "model": "BGE-M3",
+        "K_pool": 100,
+        "n_test_queries": 300,
+        "cosine_ndcg10": 0.640556520903065,
+        "laplacian_unified_ndcg10": 0.44550930576473413,
+        "relative_gain_pct": -30.449649449099475,
+        "elapsed_seconds": 3.3680214881896973
+      },
+      "BGE-large": {
+        "alpha": 0.02,
+        "T": 20,
+        "model": "BGE-large",
+        "K_pool": 100,
+        "n_test_queries": 300,
+        "cosine_ndcg10": 0.7292475449348852,
+        "laplacian_unified_ndcg10": 0.6065452186170832,
+        "relative_gain_pct": -16.82588130327653,
+        "elapsed_seconds": 3.6216375827789307
+      },
+      "Qwen3-8B": {
+        "alpha": 0.15,
+        "T": 5,
+        "model": "Qwen3-8B",
+        "K_pool": 100,
+        "n_test_queries": 300,
+        "cosine_ndcg10": 0.47014381669931243,
+        "laplacian_unified_ndcg10": 0.3002951152077439,
+        "relative_gain_pct": -36.126966995760334,
+        "elapsed_seconds": 10.278916120529175
+      }
+    },
+    "arguana": {
+      "BGE-M3": {
+        "alpha": 0.1,
+        "T": 10,
+        "model": "BGE-M3",
+        "K_pool": 100,
+        "n_test_queries": 1406,
+        "cosine_ndcg10": 0.3297592705659545,
+        "laplacian_unified_ndcg10": 0.4043244926336626,
+        "relative_gain_pct": 22.612016923659002,
+        "elapsed_seconds": 29.082552194595337
+      },
+      "BGE-large": {
+        "alpha": 0.02,
+        "T": 20,
+        "model": "BGE-large",
+        "K_pool": 100,
+        "n_test_queries": 1406,
+        "cosine_ndcg10": 0.4010621359245876,
+        "laplacian_unified_ndcg10": 0.4506023932653599,
+        "relative_gain_pct": 12.352264874509972,
+        "elapsed_seconds": 29.70335865020752
+      },
+      "Qwen3-8B": {
+        "alpha": 0.15,
+        "T": 5,
+        "model": "Qwen3-8B",
+        "K_pool": 100,
+        "n_test_queries": 1398,
+        "cosine_ndcg10": 0.3043461194734578,
+        "laplacian_unified_ndcg10": 0.26962164149979734,
+        "relative_gain_pct": -11.40953531253708,
+        "elapsed_seconds": 103.80362820625305
+      }
+    },
+    "scidocs": {
+      "BGE-M3": {
+        "alpha": 0.1,
+        "T": 10,
+        "model": "BGE-M3",
+        "K_pool": 100,
+        "n_test_queries": 1000,
+        "cosine_ndcg10": 0.16755668172036284,
+        "laplacian_unified_ndcg10": 0.1539537846623598,
+        "relative_gain_pct": -8.118385323901958,
+        "elapsed_seconds": 55.89924740791321
+      },
+      "BGE-large": {
+        "alpha": 0.02,
+        "T": 20,
+        "model": "BGE-large",
+        "K_pool": 100,
+        "n_test_queries": 1000,
+        "cosine_ndcg10": 0.2065291877860523,
+        "laplacian_unified_ndcg10": 0.19646787129838267,
+        "relative_gain_pct": -4.8716196463680275,
+        "elapsed_seconds": 54.1294150352478
+      },
+      "Qwen3-8B": {
+        "alpha": 0.15,
+        "T": 5,
+        "model": "Qwen3-8B",
+        "K_pool": 100,
+        "n_test_queries": 1000,
+        "cosine_ndcg10": 0.1109738959456436,
+        "laplacian_unified_ndcg10": 0.09119134596259115,
+        "relative_gain_pct": -17.82630934462478,
+        "elapsed_seconds": 193.4617955684662
+      }
+    },
+    "fiqa": {
+      "BGE-M3": {
+        "alpha": 0.1,
+        "T": 10,
+        "model": "BGE-M3",
+        "K_pool": 100,
+        "n_test_queries": 648,
+        "cosine_ndcg10": 0.40375669427499555,
+        "laplacian_unified_ndcg10": 0.29391708375907877,
+        "relative_gain_pct": -27.204406037935776,
+        "elapsed_seconds": 73.40574407577515
+      },
+      "BGE-large": {
+        "alpha": 0.02,
+        "T": 20,
+        "model": "BGE-large",
+        "K_pool": 100,
+        "n_test_queries": 648,
+        "cosine_ndcg10": 0.432405369604139,
+        "laplacian_unified_ndcg10": 0.4252849568266466,
+        "relative_gain_pct": -1.64669850978286,
+        "elapsed_seconds": 72.79600477218628
+      },
+      "Qwen3-8B": {
+        "alpha": 0.15,
+        "T": 5,
+        "model": "Qwen3-8B",
+        "K_pool": 100,
+        "n_test_queries": 648,
+        "cosine_ndcg10": 0.16833076267500716,
+        "laplacian_unified_ndcg10": 0.08870877384207015,
+        "relative_gain_pct": -47.30091372939454,
+        "elapsed_seconds": 288.50892424583435
+      }
+    }
+  }
+}

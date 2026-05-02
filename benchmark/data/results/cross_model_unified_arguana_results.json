@@ -9,10 +9,21 @@
       "T": 5,
       "K_pool": 100,
       "n_test_queries": 1406,
-      "cosine_ndcg10": 0.32536702862853883,
-      "laplacian_unified_ndcg10": 0.38938926805866014,
-      "relative_gain_pct": 19.67692906683961,
-      "elapsed_seconds": 29.57612109184265
+      "cosine_ndcg10": 0.3297592705659545,
+      "laplacian_unified_ndcg10": 0.4070788322169863,
+      "relative_gain_pct": 23.447274588620637,
+      "elapsed_seconds": 29.87787652015686
+    },
+    "BGE-large-en-v1.5": {
+      "model": "BGE-large-en-v1.5",
+      "alpha": 0.15,
+      "T": 5,
+      "K_pool": 100,
+      "n_test_queries": 1406,
+      "cosine_ndcg10": 0.4010621359245876,
+      "laplacian_unified_ndcg10": 0.45137309881678883,
+      "relative_gain_pct": 12.544430996014361,
+      "elapsed_seconds": 28.49403190612793
     }
   }
 }

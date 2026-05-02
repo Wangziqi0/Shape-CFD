@@ -1,0 +1,172 @@
+{
+  "datasets": {
+    "nfcorpus": {
+      "dataset": "nfcorpus",
+      "n_queries": 323,
+      "n_seeds": 5,
+      "n_features": 11,
+      "strategies": {
+        "fixed_lam_0.3": {
+          "ndcg_mean": 0.31156207095178523,
+          "ndcg_std": 0.013835587727651437
+        },
+        "per_corpus_lam_star": {
+          "ndcg_mean": 0.3092625611644597,
+          "ndcg_std": 0.014013518509387342
+        },
+        "learned_ridge_4feat": {
+          "ndcg_mean": 0.31317322356646604,
+          "ndcg_std": 0.013664158254333774
+        },
+        "learned_ridge_11feat": {
+          "ndcg_mean": 0.3294098522498866,
+          "ndcg_std": 0.01660085938642912
+        },
+        "learned_gbm_11feat": {
+          "ndcg_mean": 0.32967905397774877,
+          "ndcg_std": 0.015597746266401109
+        },
+        "oracle_upper": {
+          "ndcg_mean": 0.34694005226033003,
+          "ndcg_std": 0.01640158572372785
+        }
+      }
+    },
+    "arguana": {
+      "dataset": "arguana",
+      "n_queries": 1398,
+      "n_seeds": 5,
+      "n_features": 11,
+      "strategies": {
+        "fixed_lam_0.3": {
+          "ndcg_mean": 0.4155156106108481,
+          "ndcg_std": 0.004856155613981762
+        },
+        "per_corpus_lam_star": {
+          "ndcg_mean": 0.44107485057752227,
+          "ndcg_std": 0.0038486659018357712
+        },
+        "learned_ridge_4feat": {
+          "ndcg_mean": 0.459350927625636,
+          "ndcg_std": 0.0031868670918941285
+        },
+        "learned_ridge_11feat": {
+          "ndcg_mean": 0.48478978188777366,
+          "ndcg_std": 0.0040204715170226064
+        },
+        "learned_gbm_11feat": {
+          "ndcg_mean": 0.4862037882814477,
+          "ndcg_std": 0.0038479952771995774
+        },
+        "oracle_upper": {
+          "ndcg_mean": 0.505805252034506,
+          "ndcg_std": 0.005103169570147794
+        }
+      }
+    },
+    "scifact": {
+      "dataset": "scifact",
+      "n_queries": 300,
+      "n_seeds": 5,
+      "n_features": 11,
+      "strategies": {
+        "fixed_lam_0.3": {
+          "ndcg_mean": 0.47705092305651664,
+          "ndcg_std": 0.012641425960433836
+        },
+        "per_corpus_lam_star": {
+          "ndcg_mean": 0.480856444422344,
+          "ndcg_std": 0.014887559075537033
+        },
+        "learned_ridge_4feat": {
+          "ndcg_mean": 0.4724318841622813,
+          "ndcg_std": 0.014449987596039526
+        },
+        "learned_ridge_11feat": {
+          "ndcg_mean": 0.5445935253167973,
+          "ndcg_std": 0.014562611004567138
+        },
+        "learned_gbm_11feat": {
+          "ndcg_mean": 0.541751052219418,
+          "ndcg_std": 0.01624629520077047
+        },
+        "oracle_upper": {
+          "ndcg_mean": 0.5647691516779834,
+          "ndcg_std": 0.017793973802098215
+        }
+      }
+    },
+    "scidocs": {
+      "dataset": "scidocs",
+      "n_queries": 1000,
+      "n_seeds": 5,
+      "n_features": 11,
+      "strategies": {
+        "fixed_lam_0.3": {
+          "ndcg_mean": 0.2185579762747778,
+          "ndcg_std": 0.004972599801407624
+        },
+        "per_corpus_lam_star": {
+          "ndcg_mean": 0.22208149776387068,
+          "ndcg_std": 0.006066499258700686
+        },
+        "learned_ridge_4feat": {
+          "ndcg_mean": 0.22770408720670474,
+          "ndcg_std": 0.006004113065278656
+        },
+        "learned_ridge_11feat": {
+          "ndcg_mean": 0.24300260380502184,
+          "ndcg_std": 0.0053018427997146116
+        },
+        "learned_gbm_11feat": {
+          "ndcg_mean": 0.24514627970317787,
+          "ndcg_std": 0.005200057863124587
+        },
+        "oracle_upper": {
+          "ndcg_mean": 0.26102511564535524,
+          "ndcg_std": 0.0056477276808616075
+        }
+      }
+    },
+    "fiqa": {
+      "dataset": "fiqa",
+      "n_queries": 648,
+      "n_seeds": 5,
+      "n_features": 11,
+      "strategies": {
+        "fixed_lam_0.3": {
+          "ndcg_mean": 0.40398515409452485,
+          "ndcg_std": 0.018922521647866904
+        },
+        "per_corpus_lam_star": {
+          "ndcg_mean": 0.402296304400763,
+          "ndcg_std": 0.017532789999567856
+        },
+        "learned_ridge_4feat": {
+          "ndcg_mean": 0.4120406854368592,
+          "ndcg_std": 0.019025166293285736
+        },
+        "learned_ridge_11feat": {
+          "ndcg_mean": 0.42990259461866476,
+          "ndcg_std": 0.01755422566426735
+        },
+        "learned_gbm_11feat": {
+          "ndcg_mean": 0.4331016405590743,
+          "ndcg_std": 0.016899476902572867
+        },
+        "oracle_upper": {
+          "ndcg_mean": 0.4517606863619271,
+          "ndcg_std": 0.0178402591211772
+        }
+      }
+    }
+  },
+  "macro_avg": {
+    "fixed_lam_0.3": 0.3653343469976905,
+    "per_corpus_lam_star": 0.37111433166579194,
+    "learned_ridge_4feat": 0.37694016159958943,
+    "learned_ridge_11feat": 0.4063396715756289,
+    "learned_gbm_11feat": 0.40717636294817333,
+    "oracle_upper": 0.42606005159602034
+  }
+}

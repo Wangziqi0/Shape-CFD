@@ -1,0 +1,29 @@
+{
+  "alpha": 0.15,
+  "T": 5,
+  "K_pool": 100,
+  "models": {
+    "BGE-M3": {
+      "model": "BGE-M3",
+      "alpha": 0.15,
+      "T": 5,
+      "K_pool": 100,
+      "n_test_queries": 323,
+      "cosine_ndcg10": 0.28929050398745576,
+      "laplacian_unified_ndcg10": 0.27674630683717294,
+      "relative_gain_pct": -4.336193887244486,
+      "elapsed_seconds": 2.390240430831909
+    },
+    "BGE-large-en-v1.5": {
+      "model": "BGE-large-en-v1.5",
+      "alpha": 0.15,
+      "T": 5,
+      "K_pool": 100,
+      "n_test_queries": 323,
+      "cosine_ndcg10": 0.29750178247654174,
+      "laplacian_unified_ndcg10": 0.29493044691940706,
+      "relative_gain_pct": -0.8643092944619353,
+      "elapsed_seconds": 1.7378270626068115
+    }
+  }
+}

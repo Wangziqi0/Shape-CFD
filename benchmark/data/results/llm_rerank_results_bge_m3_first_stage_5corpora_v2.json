@@ -1,0 +1,88 @@
+{
+  "args": {
+    "datasets": "nfcorpus,scifact,arguana,scidocs,fiqa",
+    "methods": "listwise",
+    "max_queries": 0,
+    "candidates": 100,
+    "top_k": 10,
+    "pairwise_prerank": 20,
+    "setwise_window": 10,
+    "setwise_step": 5,
+    "beir_dir": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/beir_data",
+    "output_dir": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results",
+    "vectors_prefix": "bge_m3_",
+    "results_suffix": "bge_m3_first_stage_5corpora_v2"
+  },
+  "results": {
+    "nfcorpus": {
+      "dataset": "nfcorpus",
+      "n_queries": 323,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.33302126164554635,
+          "n_completed": 323,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_nfcorpus_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.3113311739233876
+    },
+    "scifact": {
+      "dataset": "scifact",
+      "n_queries": 300,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.6552214494919983,
+          "n_completed": 300,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_scifact_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.640556520903065
+    },
+    "arguana": {
+      "dataset": "arguana",
+      "n_queries": 1406,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.26538049100556804,
+          "n_completed": 1406,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_arguana_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.3297592705659545
+    },
+    "scidocs": {
+      "dataset": "scidocs",
+      "n_queries": 1000,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.18962285349500493,
+          "n_completed": 1000,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_scidocs_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.16755668172036284
+    },
+    "fiqa": {
+      "dataset": "fiqa",
+      "n_queries": 648,
+      "candidates": 100,
+      "top_k": 10,
+      "methods": {
+        "listwise": {
+          "ndcg10_mean": 0.3802631374524934,
+          "n_completed": 648,
+          "per_query_jsonl": "/home/amd/HEZIMENG/Shape-CFD/benchmark/data/results/llm_rerank_fiqa_listwise.jsonl"
+        }
+      },
+      "cosine_ndcg10_mean": 0.40375669427499555
+    }
+  }
+}
