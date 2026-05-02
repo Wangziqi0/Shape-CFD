@@ -1,0 +1,19 @@
+{
+  "model": "intfloat/e5-mistral-7b-instruct",
+  "dataset": "nfcorpus",
+  "pooling": "last-token",
+  "normalized": true,
+  "q_max_len": 128,
+  "d_max_len": 512,
+  "batch_q": 1,
+  "batch_d": 2,
+  "n_queries": 3237,
+  "n_corpus": 3633,
+  "n_shards": 8,
+  "dtype": "bf16 (native inference, vectors stored as fp16)",
+  "embedding_dim": 4096,
+  "device": "AMD Radeon RX 9070 XT",
+  "torch": "2.10.0+rocm7.2.0.gitb6ee5fde",
+  "hip": "7.2.26015",
+  "query_instruct": "Instruct: Given a search query, retrieve relevant passages that answer the query.\nQuery: "
+}

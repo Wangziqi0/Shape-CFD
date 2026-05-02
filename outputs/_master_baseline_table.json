@@ -1,0 +1,45 @@
+{
+  "table": {
+    "BGE-M3": {
+      "nfcorpus": 0.2895,
+      "scifact": 0.4888,
+      "arguana": 0.3261,
+      "scidocs": 0.1694,
+      "fiqa": 0.3849
+    },
+    "BGE-reranker-v2-m3": {
+      "nfcorpus": 0.3013,
+      "scifact": 0.5608,
+      "arguana": 0.482,
+      "scidocs": 0.1805,
+      "fiqa": 0.3926
+    },
+    "ColBERTv2": {
+      "nfcorpus": 0.3147,
+      "scifact": 0.6141,
+      "arguana": 0.3247,
+      "scidocs": 0.155,
+      "fiqa": 0.3064
+    },
+    "E5-Mistral (ROCm)": {
+      "nfcorpus": 0.1401,
+      "scifact": 0.3054,
+      "arguana": 0.0831,
+      "scidocs": 0.0439,
+      "fiqa": null
+    }
+  },
+  "datasets": [
+    "nfcorpus",
+    "scifact",
+    "arguana",
+    "scidocs",
+    "fiqa"
+  ],
+  "models": [
+    "BGE-M3",
+    "BGE-reranker-v2-m3",
+    "ColBERTv2",
+    "E5-Mistral (ROCm)"
+  ]
+}
