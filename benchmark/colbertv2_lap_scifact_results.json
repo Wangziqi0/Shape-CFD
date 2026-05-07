@@ -1,0 +1,22 @@
+{
+  "corpus": "scifact",
+  "n_queries": 300,
+  "n_docs": 5183,
+  "config": {
+    "model": "colbert-ir/colbertv2.0",
+    "q_max_len": 32,
+    "d_max_len": 180,
+    "batch_size": 8,
+    "knn_k": 10,
+    "lap_alpha": 0.15,
+    "lap_iter": 5
+  },
+  "ndcg10": {
+    "colbertv2_only": 0.598922556597217,
+    "colbertv2_plus_lap": 0.5969708540949458,
+    "delta_abs": -0.001951702502271142,
+    "delta_rel_pct": -0.32586892591919636
+  },
+  "p_value_paired_bootstrap": 0.6646,
+  "verdict": "NEGATIVE_OR_ZERO"
+}

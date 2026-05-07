@@ -1,0 +1,22 @@
+{
+  "corpus": "nfcorpus",
+  "n_queries": 323,
+  "n_docs": 3633,
+  "config": {
+    "model": "colbert-ir/colbertv2.0",
+    "q_max_len": 32,
+    "d_max_len": 180,
+    "batch_size": 8,
+    "knn_k": 10,
+    "lap_alpha": 0.15,
+    "lap_iter": 5
+  },
+  "ndcg10": {
+    "colbertv2_only": 0.275445502954252,
+    "colbertv2_plus_lap": 0.2852542088623571,
+    "delta_abs": 0.009808705908105127,
+    "delta_rel_pct": 3.561033236303817
+  },
+  "p_value_paired_bootstrap": 0.0001,
+  "verdict": "POSITIVE_AND_SIGNIFICANT"
+}

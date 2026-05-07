@@ -1,0 +1,22 @@
+{
+  "corpus": "arguana",
+  "n_queries": 1406,
+  "n_docs": 8674,
+  "config": {
+    "model": "colbert-ir/colbertv2.0",
+    "q_max_len": 32,
+    "d_max_len": 180,
+    "batch_size": 8,
+    "knn_k": 10,
+    "lap_alpha": 0.15,
+    "lap_iter": 5
+  },
+  "ndcg10": {
+    "colbertv2_only": 0.31953688397226804,
+    "colbertv2_plus_lap": 0.34033713085695005,
+    "delta_abs": 0.020800246884682072,
+    "delta_rel_pct": 6.509497941554467
+  },
+  "p_value_paired_bootstrap": 0.0001,
+  "verdict": "POSITIVE_AND_SIGNIFICANT"
+}

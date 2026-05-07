@@ -1,0 +1,22 @@
+{
+  "corpus": "scidocs",
+  "n_queries": 1000,
+  "n_docs": 25657,
+  "config": {
+    "model": "colbert-ir/colbertv2.0",
+    "q_max_len": 32,
+    "d_max_len": 180,
+    "batch_size": 8,
+    "knn_k": 10,
+    "lap_alpha": 0.15,
+    "lap_iter": 5
+  },
+  "ndcg10": {
+    "colbertv2_only": 0.15488612937644006,
+    "colbertv2_plus_lap": 0.15721832724825624,
+    "delta_abs": 0.002332197871816119,
+    "delta_rel_pct": 1.5057499862675714
+  },
+  "p_value_paired_bootstrap": 0.0852,
+  "verdict": "POSITIVE_BUT_NOT_SIGNIFICANT"
+}

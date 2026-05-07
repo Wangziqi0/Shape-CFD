@@ -5,7 +5,7 @@ edition = "2021"
 description = "法律向量检索引擎 — Rust HNSW 核心 + NAPI-RS 桥接"
 
 [lib]
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 # NAPI-RS 核心依赖
@@ -55,3 +55,8 @@ opt-level = 1
 [[bin]]
 name = "extract_tokens"
 path = "src/bin/extract_tokens.rs"
+
+
+[[bin]]
+name = "train_pq_codebook"
+path = "src/bin/train_pq_codebook.rs"

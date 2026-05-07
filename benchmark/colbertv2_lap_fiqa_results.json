@@ -1,0 +1,25 @@
+{
+  "corpus": "fiqa",
+  "n_queries": 648,
+  "n_docs": 57638,
+  "config": {
+    "model": "colbert-ir/colbertv2.0",
+    "q_max_len": 32,
+    "d_max_len": 180,
+    "batch_size": 16,
+    "knn_k": 10,
+    "lap_alpha": 0.15,
+    "lap_iter": 5,
+    "device": "cpu",
+    "num_threads": 32,
+    "host": "7B13"
+  },
+  "ndcg10": {
+    "colbertv2_only": 0.2991880909974648,
+    "colbertv2_plus_lap": 0.29789178890990614,
+    "delta_abs": -0.001296302087558642,
+    "delta_rel_pct": -0.433273290804087
+  },
+  "p_value_paired_bootstrap": 0.524,
+  "verdict": "NEGATIVE_OR_ZERO"
+}
