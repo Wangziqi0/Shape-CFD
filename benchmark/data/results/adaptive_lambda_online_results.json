@@ -1,0 +1,87 @@
+{
+  "config": {
+    "n_seeds_train": 5,
+    "eta": 0.005,
+    "cusum_threshold": 2.0,
+    "seed": 42
+  },
+  "per_corpus": {
+    "nfcorpus": {
+      "n_queries": 323,
+      "ndcg_mean": {
+        "fixed_lam_0.3": 0.3264479853938022,
+        "gbm_11": 0.3563913114898895,
+        "online_sgd_replay": 0.3563913114898895,
+        "oracle": 0.3629853458421769
+      },
+      "ndcg_std": {
+        "online_sgd_replay": 0.33510145579316575
+      },
+      "drift_events": 0,
+      "lambda_mean_online": 0.2220144484976814
+    },
+    "arguana": {
+      "n_queries": 1398,
+      "ndcg_mean": {
+        "fixed_lam_0.3": 0.41540108034951523,
+        "gbm_11": 0.48927314283210693,
+        "online_sgd_replay": 0.48927314283210693,
+        "oracle": 0.5065801645109234
+      },
+      "ndcg_std": {
+        "online_sgd_replay": 0.2012639944988466
+      },
+      "drift_events": 4,
+      "lambda_mean_online": 0.10426007144830682
+    },
+    "scifact": {
+      "n_queries": 300,
+      "ndcg_mean": {
+        "fixed_lam_0.3": 0.47604045386551547,
+        "gbm_11": 0.5578996903402795,
+        "online_sgd_replay": 0.5578996903402795,
+        "oracle": 0.5671540534746903
+      },
+      "ndcg_std": {
+        "online_sgd_replay": 0.4410653495118996
+      },
+      "drift_events": 0,
+      "lambda_mean_online": 0.12587318990156257
+    },
+    "scidocs": {
+      "n_queries": 1000,
+      "ndcg_mean": {
+        "fixed_lam_0.3": 0.21521218064517939,
+        "gbm_11": 0.2456512356268803,
+        "online_sgd_replay": 0.2456512356268803,
+        "oracle": 0.25732847947732523
+      },
+      "ndcg_std": {
+        "online_sgd_replay": 0.23985796236770676
+      },
+      "drift_events": 2,
+      "lambda_mean_online": 0.17577747670360663
+    },
+    "fiqa": {
+      "n_queries": 648,
+      "ndcg_mean": {
+        "fixed_lam_0.3": 0.3976358510122238,
+        "gbm_11": 0.432621377791757,
+        "online_sgd_replay": 0.432621377791757,
+        "oracle": 0.4468579944612715
+      },
+      "ndcg_std": {
+        "online_sgd_replay": 0.358725194684611
+      },
+      "drift_events": 2,
+      "lambda_mean_online": 0.1304756699496477
+    }
+  },
+  "macro_summary": {
+    "fixed_lam_0.3": 0.3661475102532472,
+    "gbm_11": 0.41636735161618266,
+    "online_sgd_replay": 0.41636735161618266,
+    "oracle": 0.42818120755327743
+  },
+  "wall_time_sec": 5.046361446380615
+}

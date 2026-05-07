@@ -1,0 +1,2188 @@
+{
+  "config": {
+    "n_iter_per_seed": 10000,
+    "n_seeds": 51,
+    "seeds": [
+      42,
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20,
+      21,
+      22,
+      23,
+      24,
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49
+    ],
+    "corpora": [
+      "nfcorpus",
+      "scifact",
+      "arguana",
+      "scidocs",
+      "fiqa"
+    ]
+  },
+  "per_corpus": {
+    "nfcorpus": {
+      "n_queries": 323,
+      "per_seed": [
+        {
+          "seed": 42,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078178,
+          "ci_high": 0.116507,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 0,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078008,
+          "ci_high": 0.116711,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 1,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078217,
+          "ci_high": 0.11648,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 2,
+          "delta_mean": 0.097023,
+          "ci_low": 0.07834,
+          "ci_high": 0.116397,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 3,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078118,
+          "ci_high": 0.116778,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 4,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077925,
+          "ci_high": 0.116367,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 5,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078193,
+          "ci_high": 0.116322,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 6,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078497,
+          "ci_high": 0.116568,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 7,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078239,
+          "ci_high": 0.117029,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 8,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078072,
+          "ci_high": 0.116577,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 9,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078327,
+          "ci_high": 0.116972,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 10,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078211,
+          "ci_high": 0.116436,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 11,
+          "delta_mean": 0.097023,
+          "ci_low": 0.07857,
+          "ci_high": 0.116827,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 12,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078329,
+          "ci_high": 0.115666,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 13,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078267,
+          "ci_high": 0.116182,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 14,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077899,
+          "ci_high": 0.116716,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 15,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077911,
+          "ci_high": 0.116711,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 16,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078531,
+          "ci_high": 0.116474,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 17,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078608,
+          "ci_high": 0.116634,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 18,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078485,
+          "ci_high": 0.11676,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 19,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078006,
+          "ci_high": 0.116509,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 20,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078099,
+          "ci_high": 0.116666,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 21,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078557,
+          "ci_high": 0.116592,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 22,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078275,
+          "ci_high": 0.11651,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 23,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078364,
+          "ci_high": 0.116296,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 24,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078208,
+          "ci_high": 0.116324,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 25,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077997,
+          "ci_high": 0.116607,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 26,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078162,
+          "ci_high": 0.116725,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 27,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077948,
+          "ci_high": 0.116595,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 28,
+          "delta_mean": 0.097023,
+          "ci_low": 0.07822,
+          "ci_high": 0.116525,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 29,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078012,
+          "ci_high": 0.116289,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 30,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078287,
+          "ci_high": 0.116404,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 31,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078435,
+          "ci_high": 0.116637,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 32,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078018,
+          "ci_high": 0.116856,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 33,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078833,
+          "ci_high": 0.116844,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 34,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078283,
+          "ci_high": 0.116668,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 35,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078217,
+          "ci_high": 0.116552,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 36,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077803,
+          "ci_high": 0.1167,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 37,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078184,
+          "ci_high": 0.116333,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 38,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078615,
+          "ci_high": 0.116027,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 39,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078363,
+          "ci_high": 0.116934,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 40,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078595,
+          "ci_high": 0.116461,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 41,
+          "delta_mean": 0.097023,
+          "ci_low": 0.07853,
+          "ci_high": 0.116281,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 42,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078178,
+          "ci_high": 0.116507,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 43,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078433,
+          "ci_high": 0.11667,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 44,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078315,
+          "ci_high": 0.116176,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 45,
+          "delta_mean": 0.097023,
+          "ci_low": 0.077914,
+          "ci_high": 0.116095,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 46,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078192,
+          "ci_high": 0.116696,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 47,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078437,
+          "ci_high": 0.116581,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 48,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078247,
+          "ci_high": 0.116664,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        },
+        {
+          "seed": 49,
+          "delta_mean": 0.097023,
+          "ci_low": 0.078091,
+          "ci_high": 0.116526,
+          "p_value": 0.0001,
+          "cohen_d": 0.552
+        }
+      ],
+      "summary": {
+        "delta_mean_across_seeds": 0.097023,
+        "delta_std_across_seeds": 0.0,
+        "ci_width_mean": 0.038286686274509804,
+        "p_value_max_across_seeds": 0.0001,
+        "p_value_mean": 0.00010000000000000002,
+        "cohen_d_mean": 0.552,
+        "cohen_d_std": 0.0
+      }
+    },
+    "scifact": {
+      "n_queries": 300,
+      "per_seed": [
+        {
+          "seed": 42,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019821,
+          "ci_high": 0.07284,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 0,
+          "delta_mean": 0.046244,
+          "ci_low": 0.02031,
+          "ci_high": 0.072743,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 1,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020153,
+          "ci_high": 0.07363,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 2,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019804,
+          "ci_high": 0.073594,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 3,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020203,
+          "ci_high": 0.073781,
+          "p_value": 0.0014,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 4,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020176,
+          "ci_high": 0.073458,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 5,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019427,
+          "ci_high": 0.073107,
+          "p_value": 0.0001,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 6,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020749,
+          "ci_high": 0.074211,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 7,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020295,
+          "ci_high": 0.073092,
+          "p_value": 0.0001,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 8,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020043,
+          "ci_high": 0.072343,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 9,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020036,
+          "ci_high": 0.072946,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 10,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020144,
+          "ci_high": 0.072992,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 11,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019853,
+          "ci_high": 0.073534,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 12,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019893,
+          "ci_high": 0.073397,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 13,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020149,
+          "ci_high": 0.072675,
+          "p_value": 0.001,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 14,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019785,
+          "ci_high": 0.073103,
+          "p_value": 0.0006,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 15,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019978,
+          "ci_high": 0.073324,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 16,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019558,
+          "ci_high": 0.072884,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 17,
+          "delta_mean": 0.046244,
+          "ci_low": 0.01976,
+          "ci_high": 0.073029,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 18,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019828,
+          "ci_high": 0.073498,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 19,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020085,
+          "ci_high": 0.073207,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 20,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019353,
+          "ci_high": 0.073646,
+          "p_value": 0.0001,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 21,
+          "delta_mean": 0.046244,
+          "ci_low": 0.02055,
+          "ci_high": 0.072573,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 22,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020465,
+          "ci_high": 0.072769,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 23,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019907,
+          "ci_high": 0.072704,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 24,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019901,
+          "ci_high": 0.072249,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 25,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019284,
+          "ci_high": 0.073381,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 26,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020342,
+          "ci_high": 0.073271,
+          "p_value": 0.0001,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 27,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020034,
+          "ci_high": 0.072633,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 28,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019644,
+          "ci_high": 0.073033,
+          "p_value": 0.0006,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 29,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020042,
+          "ci_high": 0.07311,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 30,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020271,
+          "ci_high": 0.073205,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 31,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020203,
+          "ci_high": 0.073397,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 32,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019582,
+          "ci_high": 0.073006,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 33,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020243,
+          "ci_high": 0.073464,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 34,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019901,
+          "ci_high": 0.073468,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 35,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020083,
+          "ci_high": 0.073444,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 36,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020055,
+          "ci_high": 0.072911,
+          "p_value": 0.0006,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 37,
+          "delta_mean": 0.046244,
+          "ci_low": 0.018993,
+          "ci_high": 0.073203,
+          "p_value": 0.0006,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 38,
+          "delta_mean": 0.046244,
+          "ci_low": 0.02035,
+          "ci_high": 0.073152,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 39,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020227,
+          "ci_high": 0.073007,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 40,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019902,
+          "ci_high": 0.073316,
+          "p_value": 0.0006,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 41,
+          "delta_mean": 0.046244,
+          "ci_low": 0.02014,
+          "ci_high": 0.072852,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 42,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019821,
+          "ci_high": 0.07284,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 43,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020047,
+          "ci_high": 0.073281,
+          "p_value": 0.0008,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 44,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020627,
+          "ci_high": 0.072722,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 45,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019917,
+          "ci_high": 0.073069,
+          "p_value": 0.0006,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 46,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019783,
+          "ci_high": 0.072746,
+          "p_value": 0.0002,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 47,
+          "delta_mean": 0.046244,
+          "ci_low": 0.019736,
+          "ci_high": 0.073573,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 48,
+          "delta_mean": 0.046244,
+          "ci_low": 0.02016,
+          "ci_high": 0.072923,
+          "p_value": 0.0012,
+          "cohen_d": 0.197
+        },
+        {
+          "seed": 49,
+          "delta_mean": 0.046244,
+          "ci_low": 0.020074,
+          "ci_high": 0.0729,
+          "p_value": 0.0004,
+          "cohen_d": 0.197
+        }
+      ],
+      "summary": {
+        "delta_mean_across_seeds": 0.04624400000000001,
+        "delta_std_across_seeds": 7.007939324928157e-18,
+        "ci_width_mean": 0.05312841176470589,
+        "p_value_max_across_seeds": 0.0014,
+        "p_value_mean": 0.0004313725490196079,
+        "cohen_d_mean": 0.19699999999999998,
+        "cohen_d_std": 2.803175729971263e-17
+      }
+    },
+    "arguana": {
+      "n_queries": 1398,
+      "per_seed": [
+        {
+          "seed": 42,
+          "delta_mean": 0.137,
+          "ci_low": 0.120918,
+          "ci_high": 0.153018,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 0,
+          "delta_mean": 0.137,
+          "ci_low": 0.120552,
+          "ci_high": 0.152872,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 1,
+          "delta_mean": 0.137,
+          "ci_low": 0.120564,
+          "ci_high": 0.153529,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 2,
+          "delta_mean": 0.137,
+          "ci_low": 0.120573,
+          "ci_high": 0.153309,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 3,
+          "delta_mean": 0.137,
+          "ci_low": 0.120906,
+          "ci_high": 0.153708,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 4,
+          "delta_mean": 0.137,
+          "ci_low": 0.120949,
+          "ci_high": 0.152966,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 5,
+          "delta_mean": 0.137,
+          "ci_low": 0.120428,
+          "ci_high": 0.152942,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 6,
+          "delta_mean": 0.137,
+          "ci_low": 0.120944,
+          "ci_high": 0.153575,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 7,
+          "delta_mean": 0.137,
+          "ci_low": 0.121098,
+          "ci_high": 0.153459,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 8,
+          "delta_mean": 0.137,
+          "ci_low": 0.120677,
+          "ci_high": 0.153296,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 9,
+          "delta_mean": 0.137,
+          "ci_low": 0.120524,
+          "ci_high": 0.152825,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 10,
+          "delta_mean": 0.137,
+          "ci_low": 0.120803,
+          "ci_high": 0.153092,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 11,
+          "delta_mean": 0.137,
+          "ci_low": 0.121111,
+          "ci_high": 0.153427,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 12,
+          "delta_mean": 0.137,
+          "ci_low": 0.120796,
+          "ci_high": 0.153159,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 13,
+          "delta_mean": 0.137,
+          "ci_low": 0.120641,
+          "ci_high": 0.15315,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 14,
+          "delta_mean": 0.137,
+          "ci_low": 0.120528,
+          "ci_high": 0.153328,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 15,
+          "delta_mean": 0.137,
+          "ci_low": 0.120822,
+          "ci_high": 0.153401,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 16,
+          "delta_mean": 0.137,
+          "ci_low": 0.120661,
+          "ci_high": 0.153274,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 17,
+          "delta_mean": 0.137,
+          "ci_low": 0.120728,
+          "ci_high": 0.153594,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 18,
+          "delta_mean": 0.137,
+          "ci_low": 0.120885,
+          "ci_high": 0.153195,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 19,
+          "delta_mean": 0.137,
+          "ci_low": 0.120843,
+          "ci_high": 0.153404,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 20,
+          "delta_mean": 0.137,
+          "ci_low": 0.120773,
+          "ci_high": 0.153227,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 21,
+          "delta_mean": 0.137,
+          "ci_low": 0.120601,
+          "ci_high": 0.153257,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 22,
+          "delta_mean": 0.137,
+          "ci_low": 0.120833,
+          "ci_high": 0.15308,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 23,
+          "delta_mean": 0.137,
+          "ci_low": 0.120586,
+          "ci_high": 0.153328,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 24,
+          "delta_mean": 0.137,
+          "ci_low": 0.120352,
+          "ci_high": 0.153036,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 25,
+          "delta_mean": 0.137,
+          "ci_low": 0.120815,
+          "ci_high": 0.15299,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 26,
+          "delta_mean": 0.137,
+          "ci_low": 0.120782,
+          "ci_high": 0.153352,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 27,
+          "delta_mean": 0.137,
+          "ci_low": 0.120402,
+          "ci_high": 0.153175,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 28,
+          "delta_mean": 0.137,
+          "ci_low": 0.120627,
+          "ci_high": 0.153287,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 29,
+          "delta_mean": 0.137,
+          "ci_low": 0.121014,
+          "ci_high": 0.153176,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 30,
+          "delta_mean": 0.137,
+          "ci_low": 0.121203,
+          "ci_high": 0.153381,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 31,
+          "delta_mean": 0.137,
+          "ci_low": 0.120715,
+          "ci_high": 0.153107,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 32,
+          "delta_mean": 0.137,
+          "ci_low": 0.121134,
+          "ci_high": 0.153505,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 33,
+          "delta_mean": 0.137,
+          "ci_low": 0.120465,
+          "ci_high": 0.153199,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 34,
+          "delta_mean": 0.137,
+          "ci_low": 0.121019,
+          "ci_high": 0.153509,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 35,
+          "delta_mean": 0.137,
+          "ci_low": 0.121074,
+          "ci_high": 0.153102,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 36,
+          "delta_mean": 0.137,
+          "ci_low": 0.121029,
+          "ci_high": 0.153046,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 37,
+          "delta_mean": 0.137,
+          "ci_low": 0.120723,
+          "ci_high": 0.153631,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 38,
+          "delta_mean": 0.137,
+          "ci_low": 0.120708,
+          "ci_high": 0.153296,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 39,
+          "delta_mean": 0.137,
+          "ci_low": 0.12043,
+          "ci_high": 0.153333,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 40,
+          "delta_mean": 0.137,
+          "ci_low": 0.120773,
+          "ci_high": 0.153371,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 41,
+          "delta_mean": 0.137,
+          "ci_low": 0.120757,
+          "ci_high": 0.153423,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 42,
+          "delta_mean": 0.137,
+          "ci_low": 0.120918,
+          "ci_high": 0.153018,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 43,
+          "delta_mean": 0.137,
+          "ci_low": 0.120953,
+          "ci_high": 0.153184,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 44,
+          "delta_mean": 0.137,
+          "ci_low": 0.120554,
+          "ci_high": 0.153115,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 45,
+          "delta_mean": 0.137,
+          "ci_low": 0.121226,
+          "ci_high": 0.152922,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 46,
+          "delta_mean": 0.137,
+          "ci_low": 0.120868,
+          "ci_high": 0.153087,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 47,
+          "delta_mean": 0.137,
+          "ci_low": 0.12078,
+          "ci_high": 0.153302,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 48,
+          "delta_mean": 0.137,
+          "ci_low": 0.120541,
+          "ci_high": 0.152992,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        },
+        {
+          "seed": 49,
+          "delta_mean": 0.137,
+          "ci_low": 0.121031,
+          "ci_high": 0.15295,
+          "p_value": 0.0001,
+          "cohen_d": 0.4426
+        }
+      ],
+      "summary": {
+        "delta_mean_across_seeds": 0.13700000000000004,
+        "delta_std_across_seeds": 2.803175729971263e-17,
+        "ci_width_mean": 0.032456215686274506,
+        "p_value_max_across_seeds": 0.0001,
+        "p_value_mean": 0.00010000000000000002,
+        "cohen_d_mean": 0.44259999999999994,
+        "cohen_d_std": 5.606351459942526e-17
+      }
+    },
+    "scidocs": {
+      "n_queries": 1000,
+      "per_seed": [
+        {
+          "seed": 42,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095054,
+          "ci_high": 0.119119,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 0,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095596,
+          "ci_high": 0.11916,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 1,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095392,
+          "ci_high": 0.119158,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 2,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095663,
+          "ci_high": 0.119008,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 3,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095498,
+          "ci_high": 0.119338,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 4,
+          "delta_mean": 0.107247,
+          "ci_low": 0.09528,
+          "ci_high": 0.11899,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 5,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095599,
+          "ci_high": 0.11931,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 6,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095876,
+          "ci_high": 0.119278,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 7,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095494,
+          "ci_high": 0.119026,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 8,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095493,
+          "ci_high": 0.119106,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 9,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095413,
+          "ci_high": 0.119199,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 10,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095355,
+          "ci_high": 0.119376,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 11,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095742,
+          "ci_high": 0.119417,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 12,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095634,
+          "ci_high": 0.119049,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 13,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095484,
+          "ci_high": 0.119221,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 14,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095348,
+          "ci_high": 0.118926,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 15,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095731,
+          "ci_high": 0.119137,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 16,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095509,
+          "ci_high": 0.119385,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 17,
+          "delta_mean": 0.107247,
+          "ci_low": 0.09585,
+          "ci_high": 0.119239,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 18,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095466,
+          "ci_high": 0.119468,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 19,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095748,
+          "ci_high": 0.119218,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 20,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095452,
+          "ci_high": 0.118891,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 21,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095124,
+          "ci_high": 0.119099,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 22,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095706,
+          "ci_high": 0.118901,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 23,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095618,
+          "ci_high": 0.118736,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 24,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095524,
+          "ci_high": 0.119082,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 25,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095504,
+          "ci_high": 0.119036,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 26,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095999,
+          "ci_high": 0.119005,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 27,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095622,
+          "ci_high": 0.119319,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 28,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095732,
+          "ci_high": 0.119229,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 29,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095547,
+          "ci_high": 0.119158,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 30,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095678,
+          "ci_high": 0.119367,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 31,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095225,
+          "ci_high": 0.119227,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 32,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095382,
+          "ci_high": 0.119282,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 33,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095246,
+          "ci_high": 0.119092,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 34,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095637,
+          "ci_high": 0.118954,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 35,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095559,
+          "ci_high": 0.119304,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 36,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095605,
+          "ci_high": 0.119036,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 37,
+          "delta_mean": 0.107247,
+          "ci_low": 0.0956,
+          "ci_high": 0.119195,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 38,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095473,
+          "ci_high": 0.119338,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 39,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095154,
+          "ci_high": 0.118971,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 40,
+          "delta_mean": 0.107247,
+          "ci_low": 0.09539,
+          "ci_high": 0.119339,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 41,
+          "delta_mean": 0.107247,
+          "ci_low": 0.09574,
+          "ci_high": 0.119212,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 42,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095054,
+          "ci_high": 0.119119,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 43,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095383,
+          "ci_high": 0.119204,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 44,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095465,
+          "ci_high": 0.119094,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 45,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095578,
+          "ci_high": 0.119241,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 46,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095313,
+          "ci_high": 0.119193,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 47,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095212,
+          "ci_high": 0.118995,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 48,
+          "delta_mean": 0.107247,
+          "ci_low": 0.09544,
+          "ci_high": 0.119177,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        },
+        {
+          "seed": 49,
+          "delta_mean": 0.107247,
+          "ci_low": 0.095461,
+          "ci_high": 0.11922,
+          "p_value": 0.0001,
+          "cohen_d": 0.5622
+        }
+      ],
+      "summary": {
+        "delta_mean_across_seeds": 0.10724700000000001,
+        "delta_std_across_seeds": 1.4015878649856315e-17,
+        "ci_width_mean": 0.02365678431372549,
+        "p_value_max_across_seeds": 0.0001,
+        "p_value_mean": 0.00010000000000000002,
+        "cohen_d_mean": 0.5622,
+        "cohen_d_std": 0.0
+      }
+    },
+    "fiqa": {
+      "n_queries": 648,
+      "per_seed": [
+        {
+          "seed": 42,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204545,
+          "ci_high": 0.253783,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 0,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204548,
+          "ci_high": 0.254854,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 1,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205388,
+          "ci_high": 0.254403,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 2,
+          "delta_mean": 0.22928,
+          "ci_low": 0.203854,
+          "ci_high": 0.253924,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 3,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204616,
+          "ci_high": 0.254441,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 4,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204606,
+          "ci_high": 0.254282,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 5,
+          "delta_mean": 0.22928,
+          "ci_low": 0.20474,
+          "ci_high": 0.254412,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 6,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205139,
+          "ci_high": 0.254107,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 7,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204762,
+          "ci_high": 0.253585,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 8,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205199,
+          "ci_high": 0.254737,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 9,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204933,
+          "ci_high": 0.253919,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 10,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205032,
+          "ci_high": 0.253914,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 11,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204909,
+          "ci_high": 0.25404,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 12,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205167,
+          "ci_high": 0.254279,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 13,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205536,
+          "ci_high": 0.254194,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 14,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205284,
+          "ci_high": 0.253255,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 15,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204919,
+          "ci_high": 0.253799,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 16,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205007,
+          "ci_high": 0.253544,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 17,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205422,
+          "ci_high": 0.254086,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 18,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204401,
+          "ci_high": 0.253707,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 19,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204749,
+          "ci_high": 0.253872,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 20,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204693,
+          "ci_high": 0.254329,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 21,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204667,
+          "ci_high": 0.253492,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 22,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204953,
+          "ci_high": 0.253852,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 23,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204998,
+          "ci_high": 0.253669,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 24,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205211,
+          "ci_high": 0.25395,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 25,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204553,
+          "ci_high": 0.253782,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 26,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204482,
+          "ci_high": 0.254241,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 27,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205445,
+          "ci_high": 0.253916,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 28,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204837,
+          "ci_high": 0.254098,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 29,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204814,
+          "ci_high": 0.254566,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 30,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204705,
+          "ci_high": 0.25404,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 31,
+          "delta_mean": 0.22928,
+          "ci_low": 0.20451,
+          "ci_high": 0.254035,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 32,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204383,
+          "ci_high": 0.253982,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 33,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204778,
+          "ci_high": 0.254088,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 34,
+          "delta_mean": 0.22928,
+          "ci_low": 0.203988,
+          "ci_high": 0.254432,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 35,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204635,
+          "ci_high": 0.253604,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 36,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204847,
+          "ci_high": 0.253244,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 37,
+          "delta_mean": 0.22928,
+          "ci_low": 0.20433,
+          "ci_high": 0.253742,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 38,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204697,
+          "ci_high": 0.254605,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 39,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204452,
+          "ci_high": 0.253859,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 40,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204693,
+          "ci_high": 0.254049,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 41,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205328,
+          "ci_high": 0.254171,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 42,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204545,
+          "ci_high": 0.253783,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 43,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204505,
+          "ci_high": 0.253578,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 44,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204594,
+          "ci_high": 0.253471,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 45,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204508,
+          "ci_high": 0.253972,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 46,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205358,
+          "ci_high": 0.254023,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 47,
+          "delta_mean": 0.22928,
+          "ci_low": 0.204246,
+          "ci_high": 0.254239,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 48,
+          "delta_mean": 0.22928,
+          "ci_low": 0.205076,
+          "ci_high": 0.253593,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        },
+        {
+          "seed": 49,
+          "delta_mean": 0.22928,
+          "ci_low": 0.20541,
+          "ci_high": 0.254489,
+          "p_value": 0.0001,
+          "cohen_d": 0.7175
+        }
+      ],
+      "summary": {
+        "delta_mean_across_seeds": 0.22927999999999996,
+        "delta_std_across_seeds": 5.606351459942526e-17,
+        "ci_width_mean": 0.04919674509803921,
+        "p_value_max_across_seeds": 0.0001,
+        "p_value_mean": 0.00010000000000000002,
+        "cohen_d_mean": 0.7175000000000001,
+        "cohen_d_std": 1.1212702919885052e-16
+      }
+    }
+  },
+  "macro_summary": {
+    "macro_delta": 0.12335879999999999,
+    "macro_ci_width": 0.039344968627450974,
+    "all_p_under_001": false,
+    "all_seeds_consistent": true
+  },
+  "verdict": {
+    "robustness": "stable"
+  },
+  "wall_time_sec": 38.908337354660034
+}

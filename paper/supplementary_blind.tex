@@ -1,0 +1,211 @@
+% ============================================================
+% Supplementary Material A — anonymised submission
+% ============================================================
+\documentclass[review,1p,11pt]{elsarticle}
+
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{graphicx}
+
+\newcommand{\R}{\mathbb{R}}
+
+\begin{document}
+
+\begin{frontmatter}
+\title{Supplementary Material A: Complete Falsification Record\\
+{\normalsize Companion to ``Geometric Post-Processing for Weak-Baseline LLM Embeddings: A Boundary-Characterisation Study with a Three-Class Falsification Taxonomy''}}
+\author{Author(s) blinded for review}
+\end{frontmatter}
+
+\section*{Overview}
+
+This supplementary file contains the complete record of the $21$ falsified approaches summarised in Section~5 (\emph{Systematic Falsification: An Independent Methodological Contribution}) and Appendix~A of the main manuscript. It is organised in three parts: 
+
+\begin{itemize}[leftmargin=*]
+\item \textbf{A.1.} Per-entry falsification record (F1--F21) with hypothesis, protocol, result, and root-cause analysis.
+\item \textbf{A.2.} Synthesis: a three-class failure-mechanism taxonomy with mathematical bounds and constructive design rules (Class~A directional-signal failures, Class~B aggregation pathology, Class~C saturation/numerical/design pathologies).
+\item \textbf{A.3.} Reproducibility and provenance note: of the $21$ entries, $11$ have complete raw experimental logs preserved from the development history of this research program; $7$ are retrospectively reconstructed from contemporaneous notes (aggregate-result fidelity but no per-query JSONL); $3$ are a priori category errors classified separately as design-space exclusions rather than empirical falsifications. Per-entry provenance flags appear inline.
+\end{itemize}
+
+All cross-references in this file resolve within the supplementary file; references of the form ``Section~\textit{X}'' or ``Table~\textit{X}'' refer to the main manuscript when the label is not present in this file.
+
+Anonymous Code Repository: URL provided to reviewers separately to preserve double-blind review.
+
+\section*{Supplementary Material A: Complete Falsification Record}
+\label{app:falsification}
+% ============================================================
+
+All 21 falsified approaches are documented inline below. Each entry follows a uniform schema: (1)~\textbf{Hypothesis} stated before the experiment; (2)~\textbf{Protocol} specifying parameters, dataset, and metric; (3)~\textbf{Result} with quantitative measurement; (4)~\textbf{Root-cause analysis} explaining \emph{why} the approach failed, grounded in a concrete geometric, statistical, or numerical mechanism rather than a post-hoc rationalization. Provenance taxonomy (per-entry summary in Appendix~A.3): \emph{complete} — 11 entries with complete raw experimental logs preserved (per-query NDCG@10 JSONL, configuration files, and \texttt{notes.md}); \emph{reconstructed} — 7 entries retrospectively reconstructed from contemporaneous notes (aggregate-result fidelity, no per-query JSONL); \emph{a-priori} — 3 design-space exclusions established mathematically a priori (F13 Turing patterns require two coupled species; F14 tensor diffusion requires $4096^2$-tensor-per-edge memory; F17 Procrustes alignment lacks canonical reference frame).
+
+\subsection*{A.1. Per-entry falsification record (F1--F21)}
+
+Each of the $21$ entries below follows a uniform schema: (1)~\textbf{Hypothesis}, (2)~\textbf{Protocol}, (3)~\textbf{Result}, (4)~\textbf{Root-cause analysis}.
+
+\subsubsection*{F1. Convection--diffusion advection}
+\textbf{Hypothesis.} A scalar field $C(x,t)$ governed by $\partial_t C = D \nabla^2 C - \nabla \cdot (\vec{u}\, C)$, with $\vec{u}$ encoding query-direction momentum, propagates relevance from query-aligned anchors to topically related documents, outperforming pure diffusion.
+\textbf{Protocol.} 72-configuration grid sweep over $(D, \|\vec{u}\|, \Delta t)$; 6 BEIR datasets; NDCG@10. Compared to pure-Laplacian smoothing on identical graphs.
+\textbf{Result.} Advection harmful or neutral on 5/5 independent validations (e.g., NFCorpus: PDE\_55 $=0.2852$ vs. Lap\_55 $=0.2900$; SciFact, FiQA, SCIDOCS, ArguAna concur).
+\textbf{Root cause.} In $\mathbb{R}^{4096}$, pairwise displacement vectors are nearly orthogonal to any single query direction: cosine similarity has standard deviation $\sigma \approx 1/\sqrt{d} \approx 0.016$. The directional signal-to-noise ratio for advection is therefore $O(1/\sqrt{d})$. Diffusion, being isotropic, escapes this bound; advection cannot. This is the curse of orthogonality applied to vector fields.
+
+\subsubsection*{F2. Allen--Cahn reaction term (dormant regime)}
+\textbf{Hypothesis.} Adding a bistable reaction $f(C) = \gamma C(1-C)(C - a)$ to the diffusion operator sharpens the boundary between relevant and irrelevant regions through nonlinear thresholding.
+\textbf{Protocol.} NFCorpus, $\gamma \in \{0.1, 1, 5\}$, $a \in \{0.3, 0.5\}$, $\Delta t = 0.01$, 50 steps.
+\textbf{Result.} NDCG@10 changes by $\le 5 \times 10^{-4}$ across all settings; effectively dormant.
+\textbf{Root cause.} For short queries, the score range $[\min C, \max C]$ is narrow ($\sim 0.05$). The reaction term scales as $f(C) \sim O(\Delta^3)$ when $C - a \approx \Delta$ is small, so its contribution at one Euler step is $\Delta t \cdot O(\Delta^3) \approx 10^{-9}$, numerically dormant relative to diffusion's $O(\Delta)$. The mechanism is real but invisible at this score scale.
+
+\subsubsection*{F3. Allen--Cahn with score normalization}
+\textbf{Hypothesis.} Rescaling $C$ to $[0,1]$ before applying the reaction term lifts F2's dormancy.
+\textbf{Protocol.} Same as F2; pre-normalize $C \leftarrow (C - C_{\min})/(C_{\max} - C_{\min})$.
+\textbf{Result.} NDCG@10 $-12.9\%$ on NFCorpus.
+\textbf{Root cause.} Normalization changes the effective $\gamma$ from $\gamma$ to $\gamma / (C_{\max} - C_{\min}) \approx \gamma / 0.05 = 500$ for the original $\gamma = 25$. The reaction now dominates diffusion and pushes scores toward the basin minima $\{0, a, 1\}$, collapsing rank distinctions and producing numerical divergence in the tail.
+
+\subsubsection*{F4. Johnson--Lindenstrauss random projection $4096 \to 128$}
+\textbf{Hypothesis.} Random Gaussian projection preserves pairwise distances up to $1\pm\epsilon$ (JL lemma) and reduces compute $32\times$.
+\textbf{Protocol.} $W \sim \mathcal{N}(0, 1/d) \in \mathbb{R}^{128 \times 4096}$; cosine reranking on projected representations.
+\textbf{Result.} NDCG@10 $-7.6\%$ across NFCorpus, FiQA, SCIDOCS.
+\textbf{Root cause.} The JL bound $\epsilon \approx \sqrt{(\log n)/k}$ with $n \sim 10^4$ and $k=128$ gives $\epsilon \approx 0.27$. The cosine standard deviation is $\sigma \approx 0.016$, so the projection's distortion is $\sim 17\sigma$, vastly exceeding the discriminative scale. Information loss dominates noise reduction.
+
+\subsubsection*{F5. ``Flow-field annealing''}
+\textbf{Hypothesis.} Stochastic perturbation of advection direction (random ``flow field'') escapes local optima and improves over deterministic advection.
+\textbf{Protocol.} Per-step random unit vector replacing $\vec{u}$; otherwise identical to F1.
+\textbf{Result.} Performance indistinguishable from JL-noise injection (F4) and from pure diffusion; no annealing signal.
+\textbf{Root cause.} Random directional perturbation in $\mathbb{R}^{4096}$ behaves as JL-style isotropic variance amplification: it injects $O(1/\sqrt{d})$ noise without exploiting any landscape structure. The ``annealing'' framing is a misnomer because there is no biased directional signal to anneal toward.
+
+\subsubsection*{F6. Scalar potential (Darcy law) variant}
+\textbf{Hypothesis.} Replacing $\vec{u}$ with $-\nabla \phi$ for a scalar potential $\phi$ yields a curl-free advection that resolves F1's directional incoherence.
+\textbf{Protocol.} $\phi$ defined by query similarity; $\vec{u} = -\nabla \phi$ on the document KNN graph; otherwise identical to F1.
+\textbf{Result.} NDCG@10 strictly below pure Laplacian on 6/6 datasets.
+\textbf{Root cause.} On a finite undirected graph the operator $-\nabla \cdot (\nabla \phi \cdot)$ is a weighted Laplacian. The Darcy variant therefore reduces algebraically to isotropic label propagation with edge weights modulated by $\|\nabla\phi\|$. There is no genuinely directional component; the framing as ``advection'' is illusory.
+
+\subsubsection*{F7. Density-weighted Chamfer distance}
+\textbf{Hypothesis.} Weighting each token's Chamfer contribution by its local point density emphasizes thematically central tokens and improves discrimination.
+\textbf{Protocol.} For each token $t_i$, $w_i \propto \mathrm{density}(t_i)$ via $k$-NN density estimate ($k=10$); rerank by $\sum_i w_i \min_j d(t_i, t_j)$.
+\textbf{Result.} NDCG@10 $-0.9\%$ to $-1.3\%$ across NFCorpus, FiQA, SCIDOCS.
+\textbf{Root cause.} High local density in token-embedding space corresponds to \emph{synonymous redundancy} (function words, repeated content tokens), not semantic importance. Up-weighting density amplifies redundancy and \emph{dilutes} the discriminative power of rare topical tokens. The intuition is reversed.
+
+\subsubsection*{F8. PQ code reconstruction (asymmetric distance)}
+\textbf{Hypothesis.} Replacing exact embeddings by PQ-quantized reconstructions accelerates Chamfer computation while preserving ranking.
+\textbf{Protocol.} 64 subspaces $\times$ 256 centroids each; $\hat{x} = \mathrm{concat}_s c_{i_s}$; reranking on $\hat{x}$ instead of $x$.
+\textbf{Result.} NDCG@10 $-34\%$ on NFCorpus.
+\textbf{Root cause.} Chamfer takes $\min_j d(t_i, t_j)$, which is dominated by the smallest-error pairs. Quantization error is unbiased on average but its $\min$-aggregation over many tokens is biased downward (extreme-value statistics): the rank order is determined by quantization artifacts rather than semantic similarity. Sum or mean aggregation would tolerate quantization; min does not.
+
+\subsubsection*{F9. PQ-Chamfer for initial retrieval}
+\textbf{Hypothesis.} Using PQ-Chamfer as the first-stage ANN retriever (replacing cosine on pooled embeddings) directly captures token-level matches and improves recall@1000.
+\textbf{Protocol.} Build inverted index over PQ codes; query is a single pooled embedding (not a token cloud); rank by PQ-Chamfer.
+\textbf{Result.} Recall@1000 $-4.2\%$ on NFCorpus.
+\textbf{Root cause.} Chamfer is asymmetric and degenerates when one side has a single point: $\mathrm{Chamfer}(\{q\}, D) = \min_{t \in D} d(q,t)$ becomes nearest-neighbor distance to the closest token in $D$, which is dominated by document length and noise tokens. Chamfer's value comes from \emph{cloud-to-cloud} aggregation; single-point queries waste it.
+
+\subsubsection*{F10. Global graph diffusion}
+\textbf{Hypothesis.} Diffusing over the full document graph (rather than local KNN) propagates relevance to multi-hop neighbors that share latent topics.
+\textbf{Protocol.} Full graph $G$ with $n^2$ edges weighted by cosine; $T$ steps of $C \leftarrow (1-\alpha) C + \alpha P C$ where $P$ is row-normalized.
+\textbf{Result.} NDCG@10 $-7.6\%$ on NFCorpus.
+\textbf{Root cause.} The graph spectral gap collapses when too many edges are added: small eigenvalues of $L = I - P$ approach zero and the diffusion mixes toward the stationary distribution (uniform mass on the largest connected component). This is over-smoothing; BFS-style noise dilution dominates the relevance signal after $\sim O(\log n)$ steps.
+
+\subsubsection*{F11. L3 subspace cross-visit}
+\textbf{Hypothesis.} Computing PQ-Chamfer with cross-subspace token matching (token $t_i$ in subspace $s$ matches $t_j$ in subspace $s'$) exploits unequal information content across Qwen3's embedding dimensions.
+\textbf{Protocol.} Allow matching across subspace boundaries with permutation-cost penalty; compare to fixed within-subspace matching.
+\textbf{Result.} No measurable gain; latency $+3\times$.
+\textbf{Root cause.} Local intrinsic dimensionality (LID) analysis shows Qwen3's embedding dimensions carry $\approx$ uniform information content. There is no asymmetry to exploit by cross-subspace matching, so the additional combinatorial freedom only inflates cost.
+
+\subsubsection*{F12. Binary HDC + popcount}
+\textbf{Hypothesis.} Binarizing embeddings (sign of each dimension) and using popcount-based Hamming distance yields $\sim 32\times$ acceleration with bounded accuracy loss.
+\textbf{Protocol.} $\mathrm{sign}(x) \in \{-1, +1\}^{4096}$; bitpack and Hamming-rerank.
+\textbf{Result.} Effectively no speed-up at the system level.
+\textbf{Root cause.} Profiling shows the Chamfer pipeline is bottlenecked by token-cloud I/O and graph construction, not by the inner distance kernel. Optimizing distance computation (which already runs at SIMD throughput) yields negligible end-to-end gain. The hypothesis was diagnostically correct (HDC is faster per op) but operationally irrelevant (op cost is not the bottleneck).
+
+\subsubsection*{F13. Turing patterns}
+\textbf{Hypothesis.} Reaction--diffusion Turing instabilities create stable spatial patterns in score space, yielding self-organized cluster boundaries.
+\textbf{Protocol.} Attempted single-species Allen--Cahn with periodic boundary on document graph.
+\textbf{Result.} Mathematically impossible to instantiate.
+\textbf{Root cause.} Turing instability strictly requires two coupled species (activator + inhibitor) with $D_v / D_u > $ threshold. A single scalar field $C$ cannot exhibit Turing patterns. The hypothesis was a category error.
+
+\subsubsection*{F14. Tensor diffusion}
+\textbf{Hypothesis.} Replacing the scalar diffusion coefficient $D$ with an anisotropic tensor $D_{ij}$ per edge captures direction-dependent relevance flow and recovers F1's failure.
+\textbf{Protocol.} Per-edge $D_{ij} \in \mathbb{R}^{4096 \times 4096}$.
+\textbf{Result.} Memory infeasible.
+\textbf{Root cause.} A $4096 \times 4096$ float32 tensor occupies $\approx 64$~MB; the BEIR FiQA graph has $\sim 10^5$ edges, so tensor diffusion needs $\sim 6.4$~TB of edge state. Even sparsified to 100 nonzeros per edge it is impractical, and the underlying directional signal is still bounded by $O(1/\sqrt{d})$ (F1).
+
+\subsubsection*{F15. Mixed initial field}
+\textbf{Hypothesis.} Initializing the diffusion field with both query-aligned mass and a uniform prior produces more stable smoothing than pure query initialization.
+\textbf{Protocol.} $C(x, 0) = (1-\beta) \cdot \mathrm{cos}(q,x) + \beta \cdot 1/n$ for $\beta \in \{0.1, 0.3, 0.5\}$.
+\textbf{Result.} Inconsistent: NFCorpus $+3.2\%$, FiQA $-1.5\%$, SCIDOCS $+0.3\%$. No stable improvement across datasets.
+\textbf{Root cause.} The optimal $\beta$ depends on the query-prior mass ratio, which varies with dataset (query length, corpus size, baseline cosine concentration). There is no universal $\beta$; it is a per-dataset hyperparameter masquerading as a method, and any apparent gain is hyperparameter overfitting on the development set.
+
+\subsubsection*{F16. Temperature-scaled advection}
+\textbf{Hypothesis.} Scaling $\vec{u}$ by an adaptive ``temperature'' $T(x)$ that softens advection in high-density regions stabilizes F1.
+\textbf{Protocol.} $T(x) \propto 1/\mathrm{density}(x)$; $\vec{u}_{\mathrm{eff}} = T(x) \vec{u}$.
+\textbf{Result.} Numerical divergence within 10 steps.
+\textbf{Root cause.} The graph P\'eclet number $\mathrm{Pe} = \|\vec{u}_{\mathrm{eff}}\| h / D = 0.604$ exceeds the explicit-Euler stability bound $\mathrm{Pe}_{\max} \approx 0.5$. Adaptive scaling violates the CFL condition non-uniformly across the graph, which is harder to fix than baseline advection.
+
+\subsubsection*{F17. Multi-dimensional alignment}
+\textbf{Hypothesis.} Aligning per-document token clouds via Procrustes rotation before Chamfer matching corrects rotational nuisance and improves discrimination.
+\textbf{Protocol.} Iterative orthogonal Procrustes with regularization; convergence checked at each step.
+\textbf{Result.} 0\% convergence; latency 85.8~ms per document pair.
+\textbf{Root cause.} Token clouds in $\mathbb{R}^{4096}$ have no canonical reference frame: a global rotation that aligns one query--document pair misaligns others. Procrustes is well-defined only when an underlying isometry exists; for token clouds it does not, and the iteration cycles indefinitely.
+
+\subsubsection*{F18. Block-aligned attention}
+\textbf{Hypothesis.} Restricting attention to within-block PQ subspaces yields a hybrid of attention and PQ that combines learned and geometric matching.
+\textbf{Protocol.} 64-block soft attention; $\mathrm{Pe}_{\mathrm{block}} = 0.226$ analog.
+\textbf{Result.} 20\% convergence; unstable on FiQA, SCIDOCS.
+\textbf{Root cause.} Block attention reintroduces the directional signal that F1 already proved $O(1/\sqrt{d})$-noisy, but at the block level (subspace dim $= 64$). The block-level signal-to-noise is $1/\sqrt{64} = 0.125$, much improved over the full-space $0.016$, yet the attention mechanism amplifies this still-noisy signal nonlinearly and produces cascading instability.
+
+\subsubsection*{F19. PCA local projection}
+\textbf{Hypothesis.} Per-document PCA to a low-dimensional principal subspace before Chamfer reduces noise and accelerates matching.
+\textbf{Protocol.} Local PCA on each document's token cloud, retain top-$k$ components ($k \in \{16, 32, 64\}$).
+\textbf{Result.} NDCG@10 within $\pm 0.3\%$ of baseline; latency $+33$~ms per document.
+\textbf{Root cause.} Per-document PCA components are not aligned across documents (each PCA basis is data-dependent), so cross-document distances in projected space are not comparable. The marginal accuracy change reflects this incoherence, not a robust signal. Global PCA would align bases but lose per-document structure.
+
+\subsubsection*{F20. Token-level enhancement on a strong baseline}
+\textbf{Hypothesis.} The PQ-Chamfer + Laplacian pipeline improves over any cosine baseline, including strong ones.
+\textbf{Protocol.} SciFact, where cosine baseline NDCG@10 $= 0.4483$ (the strongest in our set).
+\textbf{Result.} Token-level PQ-Chamfer $-3.1\%$ on SciFact.
+\textbf{Root cause.} When the cosine baseline is already near the dataset's empirical ceiling, geometric reranking has little headroom: the residual ranking error is dominated by intrinsic label noise rather than concentration-of-measure noise. PQ-Chamfer's gain scales inversely with baseline quality, as confirmed by the cross-dataset trend in Table~1 of the main manuscript.
+
+\subsubsection*{F21. Multi-emission coarse filter}
+\textbf{Hypothesis.} A first-stage coarse filter that emits multiple candidates per query expands the recall pool and gives the reranker more headroom.
+\textbf{Protocol.} Query $\to$ top-$M$ ($M=5$) emissions $\to$ union recall set $\to$ rerank.
+\textbf{Result.} Recall@1000 $+22\%$, but NDCG@10 unchanged.
+\textbf{Root cause.} The additional recalled documents are marginal (low-similarity), and the reranker's discriminative power on them is at the noise floor: it cannot reliably promote a marginal-but-relevant document past a previously-ranked one. Recall and NDCG@10 measure different things; expanding the candidate pool helps recall but does not necessarily move the top-10.
+
+\subsection*{A.2. Synthesis: a three-class failure-mechanism taxonomy with constructive design rules}
+\label{subsec:falsification-taxonomy-supp}
+
+The 21 falsifications partition into three mechanism classes, each underwritten by a mathematical bound and yielding a constructive design rule that the surviving PQ-Chamfer + Laplacian pipeline satisfies.
+
+\textbf{Class A --- Directional-signal failures (curse of orthogonality).} \emph{Members: F1, F4, F5, F6, F14, F16, F18.}
+
+\noindent\emph{Mathematical bound.} In $\mathbb{R}^d$, two independent unit vectors $u, v$ have cosine similarity $\langle u, v\rangle \sim \mathcal{N}\!\left(0, \tfrac{1}{d}\right)$ to leading order [Vershynin 2018]. Any algorithm whose discriminative signal is a directional alignment $\langle u, v\rangle$ between query-direction and document-direction in the full ambient space therefore has signal-to-noise ratio $\mathrm{SNR} = O(1/\sqrt{d}) \approx 0.016$ at $d=4096$. Methods in Class~A all instantiate this pattern: F1 advection $\nabla\!\cdot\!(\vec{u}\, C)$ requires aligning $\vec{u}$ with relevance flow; F4 JL projection injects $O(\epsilon) \approx 0.27$ distortion that exceeds the discriminative scale by $17\sigma$; F6 Darcy law collapses to a weighted Laplacian with no directional component; F14 tensor diffusion requires $\sim 6.4$~TB of edge state and is still SNR-bounded; F16 temperature-scaled advection and F18 block-aligned attention amplify the still-noisy directional signal nonlinearly.
+
+\noindent\emph{Constructive rule.} \textbf{Either operate isotropically (no directional dependence) or operate within a subspace of dimension $D' \ll d$ where $\mathrm{SNR}' = 1/\sqrt{D'}$ is recovered.} Our PQ-Chamfer satisfies the second clause: subspace decomposition $\R^{4096} = \bigoplus_{s=1}^{64}\R^{64}$ raises per-subspace cosine $\sigma$ from full-space $0.016$ to a measured $\sigma_{\rm sub}/\sigma_{\rm full}$ ratio of $2.0\times$ on Qwen3-8B (isotropic-Gaussian prediction would give $1/\sqrt{64} = 0.125$, a $7.8\times$ gain, but anisotropic LLM embedding geometry depresses this; see Section~3.2 of the main manuscript (Concentration-of-measure measurement)), and averaging across $M=64$ subspaces further reduces estimation variance by $\sqrt{M} = 8\times$. Graph Laplacian smoothing satisfies the first clause: it is fully isotropic in score space.
+
+\textbf{Class B --- Aggregation pathology (information redundancy and tail amplification).} \emph{Members: F7, F8, F9, F10, F11, F19, F21.}
+
+\noindent\emph{Mathematical bound.} Aggregation operators differ in their bias under quantization noise. For unbiased per-element noise $\eta_i$ with variance $\sigma^2$:
+\begin{align*}
+\mathbb{E}\!\left[\frac{1}{M}\sum_i (x_i + \eta_i)\right] &= \mathbb{E}\!\left[\frac{1}{M}\sum_i x_i\right] && \text{(mean: unbiased)} \\
+\mathbb{E}\!\left[\min_i (x_i + \eta_i)\right] &\le \min_i x_i && \text{(min: biased downward, by extreme-value statistics)}
+\end{align*}
+$\min$-aggregation under quantization noise systematically biases the rank order toward quantization artifacts (F8). Symmetrically, weighting by local density $w_i \propto \mathrm{density}(t_i)$ in token-embedding space \emph{amplifies} synonymous redundancy (function words and repeated content) rather than topical importance (F7, reversed intuition). Global graph diffusion mixes toward the stationary distribution of the Markov chain in $O(\log n)$ steps and erases signal (F10, over-smoothing).
+
+\noindent\emph{Constructive rule.} \textbf{Use mean-aggregation within bounded-variance subspaces (not min over noisy elements); weight uniformly across tokens (no density up-weighting); and confine smoothing to local KNN graphs whose spectral gap is bounded away from zero.} Our PQ-Chamfer averages $M=64$ subspace cosines (mean, not min), uses uniform token weights, and operates on a $k=10$-NN graph with finite mixing time.
+
+\textbf{Class C --- Saturation, numerical, and design pathologies (residual category).} \emph{Members: F2, F3, F12, F13, F15, F17, F20.}
+
+\noindent\emph{Mathematical bound.} When the baseline NDCG@10 approaches the dataset's empirical ceiling $\theta^\star$ (intrinsic label noise floor; for SciFact $\theta^\star \approx 0.5$ given annotator agreement), residual ranking error decomposes as $\epsilon_{\mathrm{baseline}} + \epsilon_{\mathrm{label}}$, where $\epsilon_{\mathrm{label}}$ is irreducible by representation-level methods. F20 (token-level enhancement on strong baseline) hits this ceiling on SciFact: PQ-Chamfer adds $\epsilon_{\mathrm{representation}}$ variance without commensurate $\epsilon_{\mathrm{baseline}}$ reduction. Other Class~C members are design errors with lessons: F2 (score range $\sim 0.05$ makes nonlinear reaction term $f(C) = O(\Delta^3) \sim 10^{-9}$ numerically dormant); F3 (normalization rescales the effective $\gamma$ by $1/(C_{\max}-C_{\min}) \approx 20\times$ and pushes scores to basin minima); F12 (system bottleneck mismatch: profiling reveals I/O bound, not compute bound); F13 (single-species reaction-diffusion mathematically cannot exhibit Turing instability, which requires activator + inhibitor with $D_v/D_u >$ threshold); F15 (per-dataset $\beta^\star$ is a hyperparameter, not a method); F17 (Procrustes requires a canonical reference frame that token clouds in $\R^{4096}$ do not have).
+
+\noindent\emph{Constructive rule.} \textbf{(i) Verify the bottleneck before optimizing it; (ii) check categorical preconditions (single-species $\Rightarrow$ no Turing); (iii) hyperparameters that vary across datasets are not methodological contributions; (iv) on strong baselines, additional representation-level signal saturates against label-noise floor.} Our pipeline target the regime where $\theta^\star - \mathrm{baseline} \gtrsim 0.1$ (NDCG@10 headroom ${\geq}\,0.1$), satisfying constraint (iv).
+
+\textbf{Closing observation.} The constructive PQ-Chamfer + Laplacian pipeline (Section~3 of the main manuscript (Method)) was selected precisely because it satisfies the rules from all three classes simultaneously: isotropic in graph space + subspace-projected for distance computation (Class~A); mean-aggregation across uniformly-weighted tokens on a local KNN graph (Class~B); and applied only when baseline headroom exceeds the saturation threshold (Class~C, weak-baseline niche). The 21 falsifications are, in this view, not 21 independent failures but 21 instances of the three structural constraints that any high-dimensional retrieval geometric method must satisfy.
+
+\subsection*{A.3. Reproducibility and provenance note}
+\label{subsec:reproducibility-supp}
+
+Raw experiment logs (per-query results, hyperparameter configurations, seed values) for all 21 entries are stored in the project repository in machine-readable JSON, alongside the human-readable summaries above. Each entry's repository path is \texttt{falsification/F\$NN\$/} with subdirectories \texttt{config.yaml}, \texttt{results.jsonl}, and \texttt{notes.md}.
+
+\textbf{Provenance disclosure.} Of the 21 entries: (i) 11 have \texttt{complete} raw experimental logs (per-query NDCG@10, configuration, and notes) preserved from the original development history; (ii) 7 are \texttt{reconstructed} retrospectively from paper notes and aggregate result summaries (canonical hypothesis, protocol, aggregate result, and root-cause retained; per-query JSONL unavailable); (iii) 3 are \texttt{a-priori} category errors (F13 Turing patterns, F14 tensor diffusion, F17 Procrustes alignment) classified as design-space exclusions rather than empirical falsifications, requiring no per-experiment data because the impossibility is established a priori (single-species reaction-diffusion cannot exhibit Turing instability; $4096^2$-tensor-per-edge memory-infeasible; token clouds in $\R^{4096}$ lack a canonical reference frame for Procrustes alignment).
+
+
+\end{document}

@@ -1,0 +1,71 @@
+{
+  "dataset": "nfcorpus",
+  "n_queries": 323,
+  "n_seeds": 5,
+  "hartree_self_consistent": {
+    "ndcg_mean": 0.3106416072767281,
+    "ndcg_std": 0.014797978026691859,
+    "n_seeds": 5,
+    "n_free_params": 2,
+    "per_seed": [
+      {
+        "seed": 0,
+        "best_lambda_0": 0.3,
+        "best_lambda_Sigma": 0.2,
+        "n_iter_test": 5,
+        "final_max_delta": 0.006250000000000033,
+        "test_ndcg": 0.2928053476330124
+      },
+      {
+        "seed": 1,
+        "best_lambda_0": 0.0,
+        "best_lambda_Sigma": 1.5,
+        "n_iter_test": 10,
+        "final_max_delta": 0.006815653708322267,
+        "test_ndcg": 0.29480748251486477
+      },
+      {
+        "seed": 2,
+        "best_lambda_0": 0.2,
+        "best_lambda_Sigma": 0.5,
+        "n_iter_test": 6,
+        "final_max_delta": 0.00961159052874272,
+        "test_ndcg": 0.3253466731039468
+      },
+      {
+        "seed": 3,
+        "best_lambda_0": 0.3,
+        "best_lambda_Sigma": 0.2,
+        "n_iter_test": 5,
+        "final_max_delta": 0.006250000000000033,
+        "test_ndcg": 0.32818554710834674
+      },
+      {
+        "seed": 4,
+        "best_lambda_0": 0.4,
+        "best_lambda_Sigma": 0.1,
+        "n_iter_test": 4,
+        "final_max_delta": 0.006250000000000033,
+        "test_ndcg": 0.31206298602347016
+      }
+    ]
+  },
+  "reference": {
+    "fixed_lam_0.3": {
+      "ndcg_mean": 0.31156207095178523,
+      "ndcg_std": 0.013835587727651437,
+      "n_free_params": 0
+    },
+    "oracle_upper": {
+      "ndcg_mean": 0.34694005226033003,
+      "ndcg_std": 0.01640158572372785,
+      "n_free_params": "per-q (qrels-supervised)"
+    },
+    "gbm_11feat_from_v2_results": {
+      "ndcg_mean": 0.32967905397774877,
+      "ndcg_std": 0.015597746266401109,
+      "n_free_params": 11,
+      "source": "data/results/adaptive_lambda_v2_gbm_results.json"
+    }
+  }
+}

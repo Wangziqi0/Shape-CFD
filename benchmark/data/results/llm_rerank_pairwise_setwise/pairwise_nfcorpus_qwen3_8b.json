@@ -1,0 +1,5839 @@
+{
+  "config": {
+    "mode": "pairwise",
+    "corpus": "nfcorpus",
+    "top_k": 20,
+    "pair_budget": 200,
+    "set_size": 4,
+    "first_stage": "benchmark/data/results/first_stage_bge_m3_v2/nfcorpus_top20.json",
+    "qrels": "/home/amd/HEZIMENG/legal-assistant/beir_data/nfcorpus/qrels/test.tsv",
+    "llama_url": "http://192.168.31.22:8082",
+    "seed": 42,
+    "max_queries": null,
+    "out": "benchmark/data/results/llm_rerank_pairwise_setwise/pairwise_nfcorpus_qwen3_8b.json"
+  },
+  "per_query": [
+    {
+      "qid": "PLAIN-2",
+      "rerank_topk": [
+        "MED-2429",
+        "MED-2431",
+        "MED-10",
+        "MED-14",
+        "MED-2439",
+        "MED-2440",
+        "MED-1193",
+        "MED-4827",
+        "MED-1829",
+        "MED-2122"
+      ],
+      "ndcg10": 0.717,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-12",
+      "rerank_topk": [
+        "MED-2325",
+        "MED-2498",
+        "MED-2510",
+        "MED-2514",
+        "MED-1724",
+        "MED-4699",
+        "MED-2512",
+        "MED-4545",
+        "MED-2513",
+        "MED-1378"
+      ],
+      "ndcg10": 0.1262,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-23",
+      "rerank_topk": [
+        "MED-2658",
+        "MED-118",
+        "MED-2651",
+        "MED-2661",
+        "MED-1961",
+        "MED-3553",
+        "MED-1673",
+        "MED-4266",
+        "MED-3100",
+        "MED-1258"
+      ],
+      "ndcg10": 0.4537,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-33",
+      "rerank_topk": [
+        "MED-2721",
+        "MED-5006",
+        "MED-2723",
+        "MED-4100",
+        "MED-2722",
+        "MED-4101",
+        "MED-2717",
+        "MED-1328",
+        "MED-1056",
+        "MED-2716"
+      ],
+      "ndcg10": 0.5264,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-44",
+      "rerank_topk": [
+        "MED-2809",
+        "MED-2791",
+        "MED-1939",
+        "MED-2313",
+        "MED-2810",
+        "MED-2826",
+        "MED-2811",
+        "MED-2246",
+        "MED-2831",
+        "MED-2818"
+      ],
+      "ndcg10": 0.179,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-56",
+      "rerank_topk": [
+        "MED-2900",
+        "MED-4384",
+        "MED-2896",
+        "MED-2894",
+        "MED-2901",
+        "MED-2888",
+        "MED-5032",
+        "MED-2886",
+        "MED-2070",
+        "MED-4455"
+      ],
+      "ndcg10": 0.7751,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-68",
+      "rerank_topk": [
+        "MED-2991",
+        "MED-1956",
+        "MED-4746",
+        "MED-5110",
+        "MED-4626",
+        "MED-957",
+        "MED-3089",
+        "MED-3092",
+        "MED-1801",
+        "MED-3499"
+      ],
+      "ndcg10": 0.6457,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-78",
+      "rerank_topk": [
+        "MED-4318",
+        "MED-1610",
+        "MED-3585",
+        "MED-3891",
+        "MED-1977",
+        "MED-3788",
+        "MED-4834",
+        "MED-5110",
+        "MED-3469",
+        "MED-5205"
+      ],
+      "ndcg10": 0.1274,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-91",
+      "rerank_topk": [
+        "MED-3288",
+        "MED-3175",
+        "MED-3169",
+        "MED-3319",
+        "MED-3316",
+        "MED-3177",
+        "MED-4356",
+        "MED-3307",
+        "MED-1977",
+        "MED-4138"
+      ],
+      "ndcg10": 0.5477,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-102",
+      "rerank_topk": [
+        "MED-3255",
+        "MED-3954",
+        "MED-3253",
+        "MED-4560",
+        "MED-4255",
+        "MED-1790",
+        "MED-2111",
+        "MED-1679",
+        "MED-4613",
+        "MED-1190"
+      ],
+      "ndcg10": 0.3239,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-112",
+      "rerank_topk": [
+        "MED-3380",
+        "MED-3382",
+        "MED-5062",
+        "MED-3381",
+        "MED-5063",
+        "MED-2618",
+        "MED-1153",
+        "MED-4604",
+        "MED-4655",
+        "MED-5209"
+      ],
+      "ndcg10": 0.7149,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-123",
+      "rerank_topk": [
+        "MED-2271",
+        "MED-3483",
+        "MED-1841",
+        "MED-4419",
+        "MED-2713",
+        "MED-4392",
+        "MED-840",
+        "MED-4804",
+        "MED-3477",
+        "MED-5165"
+      ],
+      "ndcg10": 0.1571,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-133",
+      "rerank_topk": [
+        "MED-3554",
+        "MED-2357",
+        "MED-2808",
+        "MED-2923",
+        "MED-4116",
+        "MED-4224",
+        "MED-3282",
+        "MED-851",
+        "MED-2513",
+        "MED-1712"
+      ],
+      "ndcg10": 0.267,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-143",
+      "rerank_topk": [
+        "MED-3621",
+        "MED-3618",
+        "MED-3619",
+        "MED-872",
+        "MED-2093",
+        "MED-4036",
+        "MED-3625",
+        "MED-4013",
+        "MED-4035",
+        "MED-2092"
+      ],
+      "ndcg10": 0.6632,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-153",
+      "rerank_topk": [
+        "MED-3679",
+        "MED-3680",
+        "MED-3688",
+        "MED-3695",
+        "MED-3692",
+        "MED-3690",
+        "MED-4762",
+        "MED-3691",
+        "MED-3683",
+        "MED-4266"
+      ],
+      "ndcg10": 0.8877,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-165",
+      "rerank_topk": [
+        "MED-3696",
+        "MED-3766",
+        "MED-3762",
+        "MED-4445",
+        "MED-3767",
+        "MED-3768",
+        "MED-1564",
+        "MED-2437",
+        "MED-5197",
+        "MED-3853"
+      ],
+      "ndcg10": 0.5055,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-175",
+      "rerank_topk": [
+        "MED-1669",
+        "MED-2529",
+        "MED-4758",
+        "MED-5262",
+        "MED-3822",
+        "MED-1389",
+        "MED-5230",
+        "MED-1411",
+        "MED-3423",
+        "MED-5341"
+      ],
+      "ndcg10": 0.0902,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-186",
+      "rerank_topk": [
+        "MED-3904",
+        "MED-949",
+        "MED-2053",
+        "MED-1016",
+        "MED-2057",
+        "MED-2054",
+        "MED-2203",
+        "MED-3510",
+        "MED-2061",
+        "MED-2055"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-196",
+      "rerank_topk": [
+        "MED-3969",
+        "MED-855",
+        "MED-4666",
+        "MED-2249",
+        "MED-1782",
+        "MED-3444",
+        "MED-2702",
+        "MED-4165",
+        "MED-957",
+        "MED-2703"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-207",
+      "rerank_topk": [
+        "MED-5197",
+        "MED-4482",
+        "MED-4451",
+        "MED-5326",
+        "MED-4493",
+        "MED-4060",
+        "MED-847",
+        "MED-3000",
+        "MED-4053",
+        "MED-4487"
+      ],
+      "ndcg10": 0.4595,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-217",
+      "rerank_topk": [
+        "MED-2441",
+        "MED-4831",
+        "MED-4349",
+        "MED-5231",
+        "MED-4114",
+        "MED-3931",
+        "MED-1723",
+        "MED-4255",
+        "MED-4515",
+        "MED-1991"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-227",
+      "rerank_topk": [
+        "MED-3534",
+        "MED-1520",
+        "MED-3151",
+        "MED-3456",
+        "MED-3466",
+        "MED-5176",
+        "MED-1491",
+        "MED-3161",
+        "MED-4705",
+        "MED-5260"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-238",
+      "rerank_topk": [
+        "MED-2391",
+        "MED-2494",
+        "MED-1774",
+        "MED-2493",
+        "MED-2407",
+        "MED-956",
+        "MED-3022",
+        "MED-1099",
+        "MED-2650",
+        "MED-2405"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-248",
+      "rerank_topk": [
+        "MED-4234",
+        "MED-3877",
+        "MED-5176",
+        "MED-4233",
+        "MED-3243",
+        "MED-3874",
+        "MED-4885",
+        "MED-3432",
+        "MED-4890",
+        "MED-4239"
+      ],
+      "ndcg10": 0.4885,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-259",
+      "rerank_topk": [
+        "MED-4296",
+        "MED-4295",
+        "MED-3854",
+        "MED-5176",
+        "MED-4233",
+        "MED-3877",
+        "MED-3874",
+        "MED-2985",
+        "MED-4885",
+        "MED-1428"
+      ],
+      "ndcg10": 0.359,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-270",
+      "rerank_topk": [
+        "MED-4331",
+        "MED-5245",
+        "MED-1648",
+        "MED-1642",
+        "MED-1627",
+        "MED-878",
+        "MED-3772",
+        "MED-5241",
+        "MED-1640",
+        "MED-3773"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-280",
+      "rerank_topk": [
+        "MED-3023",
+        "MED-3020",
+        "MED-3026",
+        "MED-2904",
+        "MED-5097",
+        "MED-4948",
+        "MED-4949",
+        "MED-4376",
+        "MED-4733",
+        "MED-3035"
+      ],
+      "ndcg10": 0.1546,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-291",
+      "rerank_topk": [
+        "MED-2258",
+        "MED-3762",
+        "MED-1721",
+        "MED-4223",
+        "MED-4517",
+        "MED-3696",
+        "MED-4639",
+        "MED-4785",
+        "MED-1717",
+        "MED-2429"
+      ],
+      "ndcg10": 0.1585,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-307",
+      "rerank_topk": [
+        "MED-3990",
+        "MED-716",
+        "MED-919",
+        "MED-714",
+        "MED-3986",
+        "MED-4575",
+        "MED-4573",
+        "MED-3987",
+        "MED-961",
+        "MED-962"
+      ],
+      "ndcg10": 0.7328,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-320",
+      "rerank_topk": [
+        "MED-2437",
+        "MED-2417",
+        "MED-5066",
+        "MED-4450",
+        "MED-2423",
+        "MED-3862",
+        "MED-2251",
+        "MED-4643",
+        "MED-5341",
+        "MED-3241"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-332",
+      "rerank_topk": [
+        "MED-760",
+        "MED-5265",
+        "MED-5084",
+        "MED-5153",
+        "MED-2830",
+        "MED-4522",
+        "MED-5263",
+        "MED-2951",
+        "MED-4411",
+        "MED-4689"
+      ],
+      "ndcg10": 0.6131,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-344",
+      "rerank_topk": [
+        "MED-2405",
+        "MED-2394",
+        "MED-2388",
+        "MED-3027",
+        "MED-2396",
+        "MED-5105",
+        "MED-1961",
+        "MED-4333",
+        "MED-1063",
+        "MED-1062"
+      ],
+      "ndcg10": 0.2868,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-358",
+      "rerank_topk": [
+        "MED-1554",
+        "MED-2591",
+        "MED-5265",
+        "MED-4514",
+        "MED-2754",
+        "MED-2753",
+        "MED-1395",
+        "MED-2587",
+        "MED-2758",
+        "MED-2590"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-371",
+      "rerank_topk": [
+        "MED-4618",
+        "MED-4619",
+        "MED-4620",
+        "MED-5010",
+        "MED-5086",
+        "MED-2311",
+        "MED-957",
+        "MED-3475",
+        "MED-4249",
+        "MED-5066"
+      ],
+      "ndcg10": 0.3801,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-383",
+      "rerank_topk": [
+        "MED-4469",
+        "MED-1479",
+        "MED-1478",
+        "MED-4299",
+        "MED-1655",
+        "MED-4156",
+        "MED-2432",
+        "MED-1874",
+        "MED-2117",
+        "MED-1319"
+      ],
+      "ndcg10": 0.1461,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-395",
+      "rerank_topk": [
+        "MED-2830",
+        "MED-2608",
+        "MED-2783",
+        "MED-953",
+        "MED-2816",
+        "MED-2926",
+        "MED-760",
+        "MED-2271",
+        "MED-2786",
+        "MED-2098"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-407",
+      "rerank_topk": [
+        "MED-906",
+        "MED-4604",
+        "MED-2618",
+        "MED-957",
+        "MED-3497",
+        "MED-4869",
+        "MED-4870",
+        "MED-3381",
+        "MED-3382",
+        "MED-2994"
+      ],
+      "ndcg10": 0.6388,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-418",
+      "rerank_topk": [
+        "MED-3714",
+        "MED-917",
+        "MED-2453",
+        "MED-4029",
+        "MED-3738",
+        "MED-3900",
+        "MED-1790",
+        "MED-1846",
+        "MED-3734",
+        "MED-3208"
+      ],
+      "ndcg10": 0.8671,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-430",
+      "rerank_topk": [
+        "MED-1620",
+        "MED-927",
+        "MED-928",
+        "MED-2412",
+        "MED-4731",
+        "MED-4631",
+        "MED-4943",
+        "MED-1831",
+        "MED-4936",
+        "MED-2754"
+      ],
+      "ndcg10": 0.4149,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-441",
+      "rerank_topk": [
+        "MED-942",
+        "MED-4701",
+        "MED-4703",
+        "MED-4702",
+        "MED-1792",
+        "MED-4580",
+        "MED-4590",
+        "MED-2448",
+        "MED-3908",
+        "MED-1846"
+      ],
+      "ndcg10": 0.7777,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-457",
+      "rerank_topk": [
+        "MED-2716",
+        "MED-1751",
+        "MED-2112",
+        "MED-1754",
+        "MED-1345",
+        "MED-5123",
+        "MED-2305",
+        "MED-3490",
+        "MED-3757",
+        "MED-745"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-468",
+      "rerank_topk": [
+        "MED-961",
+        "MED-3988",
+        "MED-3987",
+        "MED-3991",
+        "MED-962",
+        "MED-3990",
+        "MED-4573",
+        "MED-3986",
+        "MED-716",
+        "MED-3989"
+      ],
+      "ndcg10": 0.4492,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-478",
+      "rerank_topk": [
+        "MED-3567",
+        "MED-3939",
+        "MED-4151",
+        "MED-863",
+        "MED-2400",
+        "MED-3180",
+        "MED-3314",
+        "MED-4960",
+        "MED-3937",
+        "MED-2350"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-488",
+      "rerank_topk": [
+        "MED-1808",
+        "MED-1800",
+        "MED-1804",
+        "MED-1799",
+        "MED-1796",
+        "MED-1798",
+        "MED-1810",
+        "MED-1806",
+        "MED-4767",
+        "MED-4769"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-499",
+      "rerank_topk": [
+        "MED-1747",
+        "MED-2900",
+        "MED-2213",
+        "MED-5198",
+        "MED-1417",
+        "MED-4095",
+        "MED-5328",
+        "MED-4821",
+        "MED-4555",
+        "MED-4346"
+      ],
+      "ndcg10": 0.3273,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-510",
+      "rerank_topk": [
+        "MED-3278",
+        "MED-3627",
+        "MED-4142",
+        "MED-1603",
+        "MED-4976",
+        "MED-2947",
+        "MED-1020",
+        "MED-2069",
+        "MED-3527",
+        "MED-4742"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-520",
+      "rerank_topk": [
+        "MED-4047",
+        "MED-1953",
+        "MED-3087",
+        "MED-1377",
+        "MED-2217",
+        "MED-4007",
+        "MED-3319",
+        "MED-2359",
+        "MED-910",
+        "MED-1841"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-531",
+      "rerank_topk": [
+        "MED-1017",
+        "MED-2322",
+        "MED-4156",
+        "MED-3554",
+        "MED-4536",
+        "MED-4372",
+        "MED-3113",
+        "MED-3661",
+        "MED-4114",
+        "MED-3759"
+      ],
+      "ndcg10": 0.5455,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-541",
+      "rerank_topk": [
+        "MED-872",
+        "MED-4033",
+        "MED-4035",
+        "MED-3618",
+        "MED-4034",
+        "MED-3621",
+        "MED-4019",
+        "MED-4780",
+        "MED-3639",
+        "MED-4013"
+      ],
+      "ndcg10": 0.2381,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-551",
+      "rerank_topk": [
+        "MED-4381",
+        "MED-4789",
+        "MED-3179",
+        "MED-2217",
+        "MED-2215",
+        "MED-4860",
+        "MED-4876",
+        "MED-1282",
+        "MED-3176",
+        "MED-991"
+      ],
+      "ndcg10": 0.6131,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-561",
+      "rerank_topk": [
+        "MED-4555",
+        "MED-3180",
+        "MED-4093",
+        "MED-2421",
+        "MED-3253",
+        "MED-2350",
+        "MED-1663",
+        "MED-5086",
+        "MED-1512",
+        "MED-907"
+      ],
+      "ndcg10": 0.359,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-571",
+      "rerank_topk": [
+        "MED-2345",
+        "MED-4742",
+        "MED-2338",
+        "MED-2346",
+        "MED-2339",
+        "MED-4963",
+        "MED-2350",
+        "MED-3180",
+        "MED-2492",
+        "MED-3177"
+      ],
+      "ndcg10": 0.3109,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-583",
+      "rerank_topk": [
+        "MED-4149",
+        "MED-2693",
+        "MED-2966",
+        "MED-5265",
+        "MED-4393",
+        "MED-3485",
+        "MED-1788",
+        "MED-1682",
+        "MED-4194",
+        "MED-3852"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-593",
+      "rerank_topk": [
+        "MED-4402",
+        "MED-1243",
+        "MED-911",
+        "MED-1246",
+        "MED-4789",
+        "MED-4975",
+        "MED-1241",
+        "MED-1282",
+        "MED-3927",
+        "MED-4876"
+      ],
+      "ndcg10": 0.4693,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-603",
+      "rerank_topk": [
+        "MED-1957",
+        "MED-3769",
+        "MED-4555",
+        "MED-3718",
+        "MED-1273",
+        "MED-5009",
+        "MED-2492",
+        "MED-2722",
+        "MED-4821",
+        "MED-1978"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-613",
+      "rerank_topk": [
+        "MED-1198",
+        "MED-909",
+        "MED-2983",
+        "MED-1846",
+        "MED-3476",
+        "MED-860",
+        "MED-4468",
+        "MED-859",
+        "MED-1941",
+        "MED-4608"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-623",
+      "rerank_topk": [
+        "MED-1674",
+        "MED-4880",
+        "MED-4515",
+        "MED-1617",
+        "MED-3820",
+        "MED-2148",
+        "MED-4104",
+        "MED-5265",
+        "MED-5262",
+        "MED-4313"
+      ],
+      "ndcg10": 0.3437,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-634",
+      "rerank_topk": [
+        "MED-5010",
+        "MED-4620",
+        "MED-4619",
+        "MED-4618",
+        "MED-5011",
+        "MED-5009",
+        "MED-4303",
+        "MED-2900",
+        "MED-2966",
+        "MED-4249"
+      ],
+      "ndcg10": 0.3437,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-645",
+      "rerank_topk": [
+        "MED-4976",
+        "MED-5105",
+        "MED-2098",
+        "MED-4746",
+        "MED-3385",
+        "MED-1298",
+        "MED-3387",
+        "MED-3582",
+        "MED-3895",
+        "MED-4869"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-660",
+      "rerank_topk": [
+        "MED-4991",
+        "MED-3138",
+        "MED-2140",
+        "MED-3136",
+        "MED-2570",
+        "MED-2144",
+        "MED-3132",
+        "MED-4186",
+        "MED-1880",
+        "MED-3584"
+      ],
+      "ndcg10": 0.9306,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-671",
+      "rerank_topk": [
+        "MED-4857",
+        "MED-5105",
+        "MED-2652",
+        "MED-4975",
+        "MED-4184",
+        "MED-2496",
+        "MED-2391",
+        "MED-1774",
+        "MED-2650",
+        "MED-1098"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-681",
+      "rerank_topk": [
+        "MED-5017",
+        "MED-3806",
+        "MED-4289",
+        "MED-2597",
+        "MED-1387",
+        "MED-4291",
+        "MED-1388",
+        "MED-3923",
+        "MED-3025",
+        "MED-4501"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-691",
+      "rerank_topk": [
+        "MED-885",
+        "MED-4909",
+        "MED-2265",
+        "MED-4658",
+        "MED-2830",
+        "MED-2791",
+        "MED-3922",
+        "MED-5131",
+        "MED-4454",
+        "MED-2235"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-701",
+      "rerank_topk": [
+        "MED-3720",
+        "MED-3721",
+        "MED-2280",
+        "MED-3716",
+        "MED-917",
+        "MED-1671",
+        "MED-5070",
+        "MED-3730",
+        "MED-1676",
+        "MED-2922"
+      ],
+      "ndcg10": 0.5215,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-711",
+      "rerank_topk": [
+        "MED-2077",
+        "MED-1205",
+        "MED-2080",
+        "MED-1192",
+        "MED-1207",
+        "MED-2523",
+        "MED-1204",
+        "MED-4560",
+        "MED-1105",
+        "MED-1129"
+      ],
+      "ndcg10": 0.3301,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-721",
+      "rerank_topk": [
+        "MED-4876",
+        "MED-1278",
+        "MED-1274",
+        "MED-1289",
+        "MED-1267",
+        "MED-1284",
+        "MED-1282",
+        "MED-1271",
+        "MED-1287",
+        "MED-1268"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-731",
+      "rerank_topk": [
+        "MED-5145",
+        "MED-1338",
+        "MED-5243",
+        "MED-5253",
+        "MED-1341",
+        "MED-1337",
+        "MED-5241",
+        "MED-2987",
+        "MED-4722",
+        "MED-1340"
+      ],
+      "ndcg10": 0.7218,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-741",
+      "rerank_topk": [
+        "MED-4236",
+        "MED-4237",
+        "MED-4232",
+        "MED-4234",
+        "MED-4230",
+        "MED-1002",
+        "MED-4182",
+        "MED-3955",
+        "MED-4184",
+        "MED-998"
+      ],
+      "ndcg10": 0.6489,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-751",
+      "rerank_topk": [
+        "MED-3129",
+        "MED-3130",
+        "MED-3135",
+        "MED-2570",
+        "MED-4142",
+        "MED-3719",
+        "MED-1282",
+        "MED-4451",
+        "MED-1101",
+        "MED-4072"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-761",
+      "rerank_topk": [
+        "MED-3800",
+        "MED-3797",
+        "MED-666",
+        "MED-3795",
+        "MED-14",
+        "MED-2138",
+        "MED-3791",
+        "MED-4117",
+        "MED-4785",
+        "MED-3139"
+      ],
+      "ndcg10": 0.1513,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-771",
+      "rerank_topk": [
+        "MED-3386",
+        "MED-3387",
+        "MED-3385",
+        "MED-4962",
+        "MED-3704",
+        "MED-1039",
+        "MED-4431",
+        "MED-4819",
+        "MED-2229",
+        "MED-1028"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-782",
+      "rerank_topk": [
+        "MED-1055",
+        "MED-2722",
+        "MED-2725",
+        "MED-2184",
+        "MED-3939",
+        "MED-3880",
+        "MED-3379",
+        "MED-2738",
+        "MED-3599",
+        "MED-2001"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-792",
+      "rerank_topk": [
+        "MED-4546",
+        "MED-4958",
+        "MED-2250",
+        "MED-2239",
+        "MED-957",
+        "MED-1156",
+        "MED-2168",
+        "MED-3852",
+        "MED-4075",
+        "MED-1101"
+      ],
+      "ndcg10": 0.4935,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-806",
+      "rerank_topk": [
+        "MED-2138",
+        "MED-2519",
+        "MED-4996",
+        "MED-2513",
+        "MED-1715",
+        "MED-2506",
+        "MED-2325",
+        "MED-3201",
+        "MED-4347",
+        "MED-5310"
+      ],
+      "ndcg10": 0.8007,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-817",
+      "rerank_topk": [
+        "MED-4433",
+        "MED-4118",
+        "MED-3311",
+        "MED-1108",
+        "MED-3717",
+        "MED-3729",
+        "MED-1813",
+        "MED-3318",
+        "MED-2605",
+        "MED-4156"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-827",
+      "rerank_topk": [
+        "MED-4049",
+        "MED-4451",
+        "MED-1605",
+        "MED-4194",
+        "MED-2106",
+        "MED-4475",
+        "MED-4383",
+        "MED-2070",
+        "MED-3765",
+        "MED-4826"
+      ],
+      "ndcg10": 0.7273,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-838",
+      "rerank_topk": [
+        "MED-3495",
+        "MED-3501",
+        "MED-3502",
+        "MED-3499",
+        "MED-3500",
+        "MED-3496",
+        "MED-2460",
+        "MED-957",
+        "MED-5105",
+        "MED-3745"
+      ],
+      "ndcg10": 0.7767,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-850",
+      "rerank_topk": [
+        "MED-2070",
+        "MED-2064",
+        "MED-4455",
+        "MED-2075",
+        "MED-2098",
+        "MED-713",
+        "MED-4198",
+        "MED-5161",
+        "MED-2073",
+        "MED-2816"
+      ],
+      "ndcg10": 0.7152,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-872",
+      "rerank_topk": [
+        "MED-3989",
+        "MED-4098",
+        "MED-3712",
+        "MED-3986",
+        "MED-5171",
+        "MED-3707",
+        "MED-1291",
+        "MED-1292",
+        "MED-1160",
+        "MED-2049"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-882",
+      "rerank_topk": [
+        "MED-3622",
+        "MED-3636",
+        "MED-3630",
+        "MED-3635",
+        "MED-3632",
+        "MED-1848",
+        "MED-1886",
+        "MED-3802",
+        "MED-3631",
+        "MED-1774"
+      ],
+      "ndcg10": 0.7152,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-892",
+      "rerank_topk": [
+        "MED-2009",
+        "MED-3583",
+        "MED-2145",
+        "MED-2148",
+        "MED-2010",
+        "MED-3132",
+        "MED-3138",
+        "MED-5079",
+        "MED-759",
+        "MED-957"
+      ],
+      "ndcg10": 0.8007,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-902",
+      "rerank_topk": [
+        "MED-4195",
+        "MED-3802",
+        "MED-1160",
+        "MED-2070",
+        "MED-930",
+        "MED-4523",
+        "MED-903",
+        "MED-3991",
+        "MED-4462",
+        "MED-5024"
+      ],
+      "ndcg10": 0.3904,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-913",
+      "rerank_topk": [
+        "MED-4417",
+        "MED-4415",
+        "MED-3812",
+        "MED-4416",
+        "MED-3811",
+        "MED-894",
+        "MED-3813",
+        "MED-5000",
+        "MED-1442",
+        "MED-3810"
+      ],
+      "ndcg10": 0.7917,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-924",
+      "rerank_topk": [
+        "MED-3044",
+        "MED-2219",
+        "MED-2225",
+        "MED-3585",
+        "MED-4049",
+        "MED-3144",
+        "MED-5105",
+        "MED-4439",
+        "MED-5255",
+        "MED-1622"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-934",
+      "rerank_topk": [
+        "MED-1621",
+        "MED-1622",
+        "MED-5258",
+        "MED-1628",
+        "MED-2155",
+        "MED-5244",
+        "MED-5259",
+        "MED-1641",
+        "MED-5251",
+        "MED-5249"
+      ],
+      "ndcg10": 0.7184,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-946",
+      "rerank_topk": [
+        "MED-926",
+        "MED-3469",
+        "MED-986",
+        "MED-3893",
+        "MED-5130",
+        "MED-987",
+        "MED-990",
+        "MED-3179",
+        "MED-4513",
+        "MED-3546"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-956",
+      "rerank_topk": [
+        "MED-5076",
+        "MED-884",
+        "MED-5191",
+        "MED-4482",
+        "MED-2209",
+        "MED-2098",
+        "MED-2418",
+        "MED-5074",
+        "MED-2183",
+        "MED-2182"
+      ],
+      "ndcg10": 0.6563,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-966",
+      "rerank_topk": [
+        "MED-3671",
+        "MED-3919",
+        "MED-957",
+        "MED-923",
+        "MED-5276",
+        "MED-1195",
+        "MED-2460",
+        "MED-3802",
+        "MED-5319",
+        "MED-4007"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-977",
+      "rerank_topk": [
+        "MED-4402",
+        "MED-4814",
+        "MED-974",
+        "MED-2598",
+        "MED-732",
+        "MED-2588",
+        "MED-2913",
+        "MED-729",
+        "MED-2421",
+        "MED-3311"
+      ],
+      "ndcg10": 0.4693,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-987",
+      "rerank_topk": [
+        "MED-2810",
+        "MED-2811",
+        "MED-2817",
+        "MED-2809",
+        "MED-2813",
+        "MED-2818",
+        "MED-2819",
+        "MED-2782",
+        "MED-2608",
+        "MED-1942"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-997",
+      "rerank_topk": [
+        "MED-1114",
+        "MED-1219",
+        "MED-3876",
+        "MED-3622",
+        "MED-4913",
+        "MED-2582",
+        "MED-4920",
+        "MED-2211",
+        "MED-2045",
+        "MED-907"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1008",
+      "rerank_topk": [
+        "MED-4668",
+        "MED-2217",
+        "MED-2213",
+        "MED-2215",
+        "MED-4161",
+        "MED-1498",
+        "MED-991",
+        "MED-2214",
+        "MED-5210",
+        "MED-3179"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1018",
+      "rerank_topk": [
+        "MED-838",
+        "MED-5091",
+        "MED-5364",
+        "MED-2411",
+        "MED-5095",
+        "MED-5361",
+        "MED-5092",
+        "MED-928",
+        "MED-1832",
+        "MED-839"
+      ],
+      "ndcg10": 0.2785,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1028",
+      "rerank_topk": [
+        "MED-1617",
+        "MED-5327",
+        "MED-4104",
+        "MED-1966",
+        "MED-1377",
+        "MED-3423",
+        "MED-4019",
+        "MED-4313",
+        "MED-754",
+        "MED-3900"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1039",
+      "rerank_topk": [
+        "MED-4380",
+        "MED-4381",
+        "MED-861",
+        "MED-845",
+        "MED-4006",
+        "MED-1841",
+        "MED-4075",
+        "MED-5095",
+        "MED-4995",
+        "MED-2544"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1050",
+      "rerank_topk": [
+        "MED-1245",
+        "MED-4288",
+        "MED-4437",
+        "MED-2990",
+        "MED-1021",
+        "MED-2000",
+        "MED-4462",
+        "MED-851",
+        "MED-2799",
+        "MED-3288"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1066",
+      "rerank_topk": [
+        "MED-2032",
+        "MED-3459",
+        "MED-1386",
+        "MED-2379",
+        "MED-3479",
+        "MED-1247",
+        "MED-2036",
+        "MED-1240",
+        "MED-4433",
+        "MED-1785"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1088",
+      "rerank_topk": [
+        "MED-2110",
+        "MED-2109",
+        "MED-1315",
+        "MED-3882",
+        "MED-1314",
+        "MED-3732",
+        "MED-4899",
+        "MED-1311",
+        "MED-3889",
+        "MED-2174"
+      ],
+      "ndcg10": 0.5531,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1098",
+      "rerank_topk": [
+        "MED-2371",
+        "MED-2372",
+        "MED-4676",
+        "MED-5319",
+        "MED-1889",
+        "MED-4741",
+        "MED-2475",
+        "MED-2374",
+        "MED-2991",
+        "MED-4626"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1109",
+      "rerank_topk": [
+        "MED-2643",
+        "MED-2650",
+        "MED-2627",
+        "MED-4728",
+        "MED-2654",
+        "MED-5323",
+        "MED-2087",
+        "MED-2648",
+        "MED-5167",
+        "MED-2658"
+      ],
+      "ndcg10": 0.6872,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1119",
+      "rerank_topk": [
+        "MED-877",
+        "MED-1710",
+        "MED-2271",
+        "MED-1627",
+        "MED-4587",
+        "MED-1646",
+        "MED-3895",
+        "MED-3201",
+        "MED-3371",
+        "MED-4504"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1130",
+      "rerank_topk": [
+        "MED-4165",
+        "MED-2619",
+        "MED-3991",
+        "MED-4114",
+        "MED-3661",
+        "MED-3852",
+        "MED-3919",
+        "MED-4329",
+        "MED-2648",
+        "MED-3920"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1141",
+      "rerank_topk": [
+        "MED-2112",
+        "MED-1343",
+        "MED-2347",
+        "MED-3113",
+        "MED-1586",
+        "MED-4840",
+        "MED-762",
+        "MED-4255",
+        "MED-4613",
+        "MED-3626"
+      ],
+      "ndcg10": 0.2895,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1151",
+      "rerank_topk": [
+        "MED-3306",
+        "MED-1978",
+        "MED-2742",
+        "MED-3890",
+        "MED-1144",
+        "MED-4932",
+        "MED-1182",
+        "MED-3307",
+        "MED-1600",
+        "MED-4140"
+      ],
+      "ndcg10": 0.4857,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1161",
+      "rerank_topk": [
+        "MED-2570",
+        "MED-3138",
+        "MED-3136",
+        "MED-1131",
+        "MED-4511",
+        "MED-5042",
+        "MED-1412",
+        "MED-1846",
+        "MED-1880",
+        "MED-5133"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1172",
+      "rerank_topk": [
+        "MED-4150",
+        "MED-4863",
+        "MED-3850",
+        "MED-4585",
+        "MED-3548",
+        "MED-4869",
+        "MED-5002",
+        "MED-3475",
+        "MED-744",
+        "MED-2438"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1183",
+      "rerank_topk": [
+        "MED-1276",
+        "MED-10",
+        "MED-4070",
+        "MED-4727",
+        "MED-5369",
+        "MED-1660",
+        "MED-5358",
+        "MED-5351",
+        "MED-5331",
+        "MED-2582"
+      ],
+      "ndcg10": 0.3301,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1193",
+      "rerank_topk": [
+        "MED-3868",
+        "MED-4443",
+        "MED-2378",
+        "MED-4885",
+        "MED-3874",
+        "MED-1825",
+        "MED-4233",
+        "MED-3864",
+        "MED-3869",
+        "MED-5179"
+      ],
+      "ndcg10": 0.0636,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1203",
+      "rerank_topk": [
+        "MED-1203",
+        "MED-4771",
+        "MED-993",
+        "MED-922",
+        "MED-986",
+        "MED-4683",
+        "MED-2544",
+        "MED-2693",
+        "MED-2578",
+        "MED-4523"
+      ],
+      "ndcg10": 0.359,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1214",
+      "rerank_topk": [
+        "MED-1288",
+        "MED-1471",
+        "MED-4233",
+        "MED-3868",
+        "MED-4885",
+        "MED-3874",
+        "MED-2287",
+        "MED-3836",
+        "MED-1285",
+        "MED-1825"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1225",
+      "rerank_topk": [
+        "MED-1675",
+        "MED-717",
+        "MED-1669",
+        "MED-1674",
+        "MED-918",
+        "MED-1261",
+        "MED-2969",
+        "MED-3059",
+        "MED-5057",
+        "MED-1710"
+      ],
+      "ndcg10": 0.6332,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1236",
+      "rerank_topk": [
+        "MED-2348",
+        "MED-1341",
+        "MED-2355",
+        "MED-2369",
+        "MED-720",
+        "MED-5189",
+        "MED-2352",
+        "MED-4920",
+        "MED-5276",
+        "MED-5228"
+      ],
+      "ndcg10": 0.214,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1249",
+      "rerank_topk": [
+        "MED-1744",
+        "MED-1749",
+        "MED-913",
+        "MED-3609",
+        "MED-4888",
+        "MED-1101",
+        "MED-4747",
+        "MED-2086",
+        "MED-4073",
+        "MED-5062"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1262",
+      "rerank_topk": [
+        "MED-5293",
+        "MED-983",
+        "MED-2082",
+        "MED-1328",
+        "MED-5303",
+        "MED-1054",
+        "MED-2723",
+        "MED-2853",
+        "MED-2214",
+        "MED-4096"
+      ],
+      "ndcg10": 0.4153,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1275",
+      "rerank_topk": [
+        "MED-4712",
+        "MED-2886",
+        "MED-2925",
+        "MED-1676",
+        "MED-2076",
+        "MED-2280",
+        "MED-2665",
+        "MED-2966",
+        "MED-1671",
+        "MED-2922"
+      ],
+      "ndcg10": 0.5326,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1288",
+      "rerank_topk": [
+        "MED-2083",
+        "MED-398",
+        "MED-3207",
+        "MED-5065",
+        "MED-2669",
+        "MED-2668",
+        "MED-3952",
+        "MED-1538",
+        "MED-3210",
+        "MED-3206"
+      ],
+      "ndcg10": 0.3278,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1299",
+      "rerank_topk": [
+        "MED-4747",
+        "MED-3691",
+        "MED-1712",
+        "MED-4224",
+        "MED-5164",
+        "MED-2579",
+        "MED-4938",
+        "MED-2123",
+        "MED-1229",
+        "MED-2498"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1309",
+      "rerank_topk": [
+        "MED-3676",
+        "MED-5158",
+        "MED-1864",
+        "MED-2168",
+        "MED-4815",
+        "MED-1736",
+        "MED-976",
+        "MED-709",
+        "MED-5319",
+        "MED-4817"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1320",
+      "rerank_topk": [
+        "MED-2760",
+        "MED-1488",
+        "MED-2758",
+        "MED-3759",
+        "MED-1483",
+        "MED-2853",
+        "MED-1348",
+        "MED-1987",
+        "MED-2389",
+        "MED-1484"
+      ],
+      "ndcg10": 0.4539,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1331",
+      "rerank_topk": [
+        "MED-3972",
+        "MED-990",
+        "MED-3975",
+        "MED-4975",
+        "MED-1519",
+        "MED-3669",
+        "MED-4789",
+        "MED-1487",
+        "MED-4376",
+        "MED-1501"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1342",
+      "rerank_topk": [
+        "MED-1403",
+        "MED-2845",
+        "MED-2851",
+        "MED-4317",
+        "MED-2844",
+        "MED-1401",
+        "MED-4316",
+        "MED-4772",
+        "MED-2984",
+        "MED-4318"
+      ],
+      "ndcg10": 0.5303,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1353",
+      "rerank_topk": [
+        "MED-1665",
+        "MED-976",
+        "MED-2157",
+        "MED-4424",
+        "MED-3558",
+        "MED-1582",
+        "MED-3504",
+        "MED-1133",
+        "MED-987",
+        "MED-4952"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1363",
+      "rerank_topk": [
+        "MED-3620",
+        "MED-3632",
+        "MED-3630",
+        "MED-5364",
+        "MED-3629",
+        "MED-2218",
+        "MED-2770",
+        "MED-3635",
+        "MED-2773",
+        "MED-2385"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1374",
+      "rerank_topk": [
+        "MED-557",
+        "MED-1010",
+        "MED-3429",
+        "MED-2643",
+        "MED-4425",
+        "MED-3794",
+        "MED-4322",
+        "MED-1595",
+        "MED-3503",
+        "MED-835"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1387",
+      "rerank_topk": [
+        "MED-5062",
+        "MED-5063",
+        "MED-3383",
+        "MED-3380",
+        "MED-4655",
+        "MED-1153",
+        "MED-3381",
+        "MED-4789",
+        "MED-2265",
+        "MED-2722"
+      ],
+      "ndcg10": 0.6372,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1398",
+      "rerank_topk": [
+        "MED-4228",
+        "MED-4223",
+        "MED-1720",
+        "MED-1722",
+        "MED-1719",
+        "MED-1712",
+        "MED-1715",
+        "MED-1724",
+        "MED-4216",
+        "MED-1723"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1409",
+      "rerank_topk": [
+        "MED-2173",
+        "MED-3634",
+        "MED-1774",
+        "MED-3590",
+        "MED-855",
+        "MED-2493",
+        "MED-2650",
+        "MED-1598",
+        "MED-2391",
+        "MED-4142"
+      ],
+      "ndcg10": 0.4229,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1419",
+      "rerank_topk": [
+        "MED-3279",
+        "MED-4198",
+        "MED-4142",
+        "MED-3972",
+        "MED-2748",
+        "MED-4976",
+        "MED-957",
+        "MED-2356",
+        "MED-4179",
+        "MED-3975"
+      ],
+      "ndcg10": 0.4284,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1429",
+      "rerank_topk": [
+        "MED-1559",
+        "MED-3139",
+        "MED-5125",
+        "MED-4925",
+        "MED-1564",
+        "MED-3444",
+        "MED-2853",
+        "MED-5183",
+        "MED-3696",
+        "MED-4223"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1441",
+      "rerank_topk": [
+        "MED-2773",
+        "MED-2216",
+        "MED-3659",
+        "MED-2385",
+        "MED-2770",
+        "MED-2649",
+        "MED-2657",
+        "MED-4963",
+        "MED-1332",
+        "MED-1425"
+      ],
+      "ndcg10": 0.5869,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1453",
+      "rerank_topk": [
+        "MED-5105",
+        "MED-2991",
+        "MED-4976",
+        "MED-3091",
+        "MED-1760",
+        "MED-1208",
+        "MED-4746",
+        "MED-5032",
+        "MED-3351",
+        "MED-3376"
+      ],
+      "ndcg10": 0.3832,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1463",
+      "rerank_topk": [
+        "MED-5017",
+        "MED-3136",
+        "MED-3132",
+        "MED-1133",
+        "MED-3138",
+        "MED-2140",
+        "MED-4502",
+        "MED-1137",
+        "MED-4991",
+        "MED-1138"
+      ],
+      "ndcg10": 0.3024,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1473",
+      "rerank_topk": [
+        "MED-4455",
+        "MED-3501",
+        "MED-4454",
+        "MED-2073",
+        "MED-4336",
+        "MED-2313",
+        "MED-2169",
+        "MED-3496",
+        "MED-4325",
+        "MED-2886"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1485",
+      "rerank_topk": [
+        "MED-2099",
+        "MED-3475",
+        "MED-2178",
+        "MED-1616",
+        "MED-4529",
+        "MED-3379",
+        "MED-3890",
+        "MED-4437",
+        "MED-4956",
+        "MED-4146"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1496",
+      "rerank_topk": [
+        "MED-1177",
+        "MED-1175",
+        "MED-830",
+        "MED-1774",
+        "MED-1098",
+        "MED-3168",
+        "MED-1844",
+        "MED-3681",
+        "MED-3852",
+        "MED-3847"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1506",
+      "rerank_topk": [
+        "MED-5239",
+        "MED-2126",
+        "MED-2121",
+        "MED-3482",
+        "MED-3475",
+        "MED-957",
+        "MED-5176",
+        "MED-3852",
+        "MED-4447",
+        "MED-3681"
+      ],
+      "ndcg10": 0.2201,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1516",
+      "rerank_topk": [
+        "MED-3660",
+        "MED-3670",
+        "MED-4184",
+        "MED-702",
+        "MED-2168",
+        "MED-2178",
+        "MED-3852",
+        "MED-1298",
+        "MED-3955",
+        "MED-1016"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1527",
+      "rerank_topk": [
+        "MED-1304",
+        "MED-1302",
+        "MED-4814",
+        "MED-2154",
+        "MED-4962",
+        "MED-1301",
+        "MED-2157",
+        "MED-1307",
+        "MED-4101",
+        "MED-1675"
+      ],
+      "ndcg10": 0.9149,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1537",
+      "rerank_topk": [
+        "MED-4515",
+        "MED-4514",
+        "MED-2588",
+        "MED-2591",
+        "MED-4880",
+        "MED-2586",
+        "MED-1323",
+        "MED-4347",
+        "MED-1616",
+        "MED-837"
+      ],
+      "ndcg10": 0.7084,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1547",
+      "rerank_topk": [
+        "MED-2361",
+        "MED-2360",
+        "MED-3310",
+        "MED-5072",
+        "MED-1577",
+        "MED-4119",
+        "MED-1272",
+        "MED-1177",
+        "MED-1108",
+        "MED-1103"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1557",
+      "rerank_topk": [
+        "MED-1406",
+        "MED-4315",
+        "MED-3918",
+        "MED-1838",
+        "MED-1836",
+        "MED-1840",
+        "MED-1848",
+        "MED-1844",
+        "MED-4871",
+        "MED-5097"
+      ],
+      "ndcg10": 0.2489,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1568",
+      "rerank_topk": [
+        "MED-4150",
+        "MED-3908",
+        "MED-2895",
+        "MED-3476",
+        "MED-830",
+        "MED-4090",
+        "MED-3477",
+        "MED-3945",
+        "MED-5366",
+        "MED-1792"
+      ],
+      "ndcg10": 0.6131,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1579",
+      "rerank_topk": [
+        "MED-3801",
+        "MED-2063",
+        "MED-3800",
+        "MED-1028",
+        "MED-1569",
+        "MED-4871",
+        "MED-4758",
+        "MED-5090",
+        "MED-2649",
+        "MED-3358"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1590",
+      "rerank_topk": [
+        "MED-748",
+        "MED-3757",
+        "MED-5343",
+        "MED-3604",
+        "MED-3755",
+        "MED-1351",
+        "MED-2112",
+        "MED-3626",
+        "MED-1053",
+        "MED-5345"
+      ],
+      "ndcg10": 0.0948,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1601",
+      "rerank_topk": [
+        "MED-4860",
+        "MED-4996",
+        "MED-2669",
+        "MED-5002",
+        "MED-3537",
+        "MED-1942",
+        "MED-3772",
+        "MED-4789",
+        "MED-1503",
+        "MED-990"
+      ],
+      "ndcg10": 0.7184,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1611",
+      "rerank_topk": [
+        "MED-3305",
+        "MED-5171",
+        "MED-4181",
+        "MED-301",
+        "MED-4807",
+        "MED-1247",
+        "MED-1977",
+        "MED-3022",
+        "MED-1574",
+        "MED-1978"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1621",
+      "rerank_topk": [
+        "MED-3751",
+        "MED-3808",
+        "MED-970",
+        "MED-3247",
+        "MED-4540",
+        "MED-2906",
+        "MED-3024",
+        "MED-2807",
+        "MED-4726",
+        "MED-4001"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1635",
+      "rerank_topk": [
+        "MED-1226",
+        "MED-3087",
+        "MED-1229",
+        "MED-2123",
+        "MED-899",
+        "MED-1338",
+        "MED-1337",
+        "MED-4071",
+        "MED-2917",
+        "MED-1224"
+      ],
+      "ndcg10": 0.6403,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1645",
+      "rerank_topk": [
+        "MED-2071",
+        "MED-1271",
+        "MED-1977",
+        "MED-4871",
+        "MED-3581",
+        "MED-1844",
+        "MED-830",
+        "MED-3087",
+        "MED-718",
+        "MED-4477"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1656",
+      "rerank_topk": [
+        "MED-3717",
+        "MED-4030",
+        "MED-4024",
+        "MED-3767",
+        "MED-3715",
+        "MED-3764",
+        "MED-4433",
+        "MED-3311",
+        "MED-4819",
+        "MED-2092"
+      ],
+      "ndcg10": 0.1396,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1667",
+      "rerank_topk": [
+        "MED-3235",
+        "MED-3220",
+        "MED-3460",
+        "MED-3534",
+        "MED-2271",
+        "MED-3161",
+        "MED-4722",
+        "MED-2148",
+        "MED-1714",
+        "MED-3151"
+      ],
+      "ndcg10": 0.4955,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1679",
+      "rerank_topk": [
+        "MED-1111",
+        "MED-1105",
+        "MED-1104",
+        "MED-1115",
+        "MED-1113",
+        "MED-1107",
+        "MED-4821",
+        "MED-4828",
+        "MED-1109",
+        "MED-1577"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1690",
+      "rerank_topk": [
+        "MED-1878",
+        "MED-1599",
+        "MED-4876",
+        "MED-3295",
+        "MED-4106",
+        "MED-4483",
+        "MED-3381",
+        "MED-2257",
+        "MED-1730",
+        "MED-5032"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1700",
+      "rerank_topk": [
+        "MED-5042",
+        "MED-5198",
+        "MED-2382",
+        "MED-4934",
+        "MED-5294",
+        "MED-2722",
+        "MED-3865",
+        "MED-1133",
+        "MED-1985",
+        "MED-5292"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1710",
+      "rerank_topk": [
+        "MED-3178",
+        "MED-3177",
+        "MED-3179",
+        "MED-3170",
+        "MED-3172",
+        "MED-3169",
+        "MED-3180",
+        "MED-3176",
+        "MED-3181",
+        "MED-3174"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1721",
+      "rerank_topk": [
+        "MED-4821",
+        "MED-1602",
+        "MED-4485",
+        "MED-1377",
+        "MED-1606",
+        "MED-4983",
+        "MED-4058",
+        "MED-4973",
+        "MED-2464",
+        "MED-3379"
+      ],
+      "ndcg10": 0.5225,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1731",
+      "rerank_topk": [
+        "MED-2749",
+        "MED-2748",
+        "MED-3509",
+        "MED-4962",
+        "MED-4492",
+        "MED-3316",
+        "MED-4967",
+        "MED-4565",
+        "MED-3974",
+        "MED-4476"
+      ],
+      "ndcg10": 0.7654,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1741",
+      "rerank_topk": [
+        "MED-2597",
+        "MED-1387",
+        "MED-3806",
+        "MED-2596",
+        "MED-4289",
+        "MED-1388",
+        "MED-4706",
+        "MED-1381",
+        "MED-4314",
+        "MED-2153"
+      ],
+      "ndcg10": 0.89,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1752",
+      "rerank_topk": [
+        "MED-4726",
+        "MED-1977",
+        "MED-2807",
+        "MED-1759",
+        "MED-4811",
+        "MED-928",
+        "MED-2073",
+        "MED-2804",
+        "MED-4383",
+        "MED-4523"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1762",
+      "rerank_topk": [
+        "MED-3721",
+        "MED-3716",
+        "MED-759",
+        "MED-4619",
+        "MED-3730",
+        "MED-2990",
+        "MED-3970",
+        "MED-3558",
+        "MED-851",
+        "MED-3621"
+      ],
+      "ndcg10": 0.4125,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1772",
+      "rerank_topk": [
+        "MED-4728",
+        "MED-4727",
+        "MED-1156",
+        "MED-4937",
+        "MED-3852",
+        "MED-1434",
+        "MED-2460",
+        "MED-4197",
+        "MED-1436",
+        "MED-4114"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1784",
+      "rerank_topk": [
+        "MED-1114",
+        "MED-2704",
+        "MED-1593",
+        "MED-2492",
+        "MED-2088",
+        "MED-3723",
+        "MED-4437",
+        "MED-5110",
+        "MED-2168",
+        "MED-4626"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1794",
+      "rerank_topk": [
+        "MED-5041",
+        "MED-5042",
+        "MED-1820",
+        "MED-3743",
+        "MED-818",
+        "MED-3570",
+        "MED-5296",
+        "MED-1284",
+        "MED-1274",
+        "MED-3556"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1805",
+      "rerank_topk": [
+        "MED-3938",
+        "MED-5196",
+        "MED-3931",
+        "MED-3932",
+        "MED-3927",
+        "MED-3935",
+        "MED-2177",
+        "MED-3930",
+        "MED-3936",
+        "MED-3940"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1817",
+      "rerank_topk": [
+        "MED-4284",
+        "MED-4709",
+        "MED-2382",
+        "MED-4287",
+        "MED-4706",
+        "MED-2150",
+        "MED-4249",
+        "MED-3387",
+        "MED-5016",
+        "MED-1008"
+      ],
+      "ndcg10": 0.5225,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1827",
+      "rerank_topk": [
+        "MED-3316",
+        "MED-4618",
+        "MED-2391",
+        "MED-1950",
+        "MED-1853",
+        "MED-3319",
+        "MED-976",
+        "MED-4175",
+        "MED-4621",
+        "MED-1522"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1837",
+      "rerank_topk": [
+        "MED-1161",
+        "MED-4179",
+        "MED-1157",
+        "MED-1167",
+        "MED-2391",
+        "MED-1725",
+        "MED-1177",
+        "MED-1726",
+        "MED-1158",
+        "MED-4178"
+      ],
+      "ndcg10": 0.9149,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1847",
+      "rerank_topk": [
+        "MED-3603",
+        "MED-4000",
+        "MED-4049",
+        "MED-4978",
+        "MED-4055",
+        "MED-3876",
+        "MED-3945",
+        "MED-4972",
+        "MED-4073",
+        "MED-3855"
+      ],
+      "ndcg10": 0.1389,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1857",
+      "rerank_topk": [
+        "MED-2988",
+        "MED-2544",
+        "MED-2578",
+        "MED-4319",
+        "MED-2986",
+        "MED-2979",
+        "MED-2983",
+        "MED-4863",
+        "MED-4393",
+        "MED-3485"
+      ],
+      "ndcg10": 0.5638,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1867",
+      "rerank_topk": [
+        "MED-5160",
+        "MED-4710",
+        "MED-3945",
+        "MED-5082",
+        "MED-3744",
+        "MED-5079",
+        "MED-3908",
+        "MED-1670",
+        "MED-1792",
+        "MED-3530"
+      ],
+      "ndcg10": 0.1063,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1877",
+      "rerank_topk": [
+        "MED-4515",
+        "MED-4831",
+        "MED-4613",
+        "MED-4255",
+        "MED-1991",
+        "MED-1445",
+        "MED-1723",
+        "MED-1997",
+        "MED-1375",
+        "MED-3931"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1887",
+      "rerank_topk": [
+        "MED-2748",
+        "MED-4535",
+        "MED-902",
+        "MED-4934",
+        "MED-2070",
+        "MED-957",
+        "MED-1731",
+        "MED-2391",
+        "MED-1741",
+        "MED-1726"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1897",
+      "rerank_topk": [
+        "MED-2644",
+        "MED-4935",
+        "MED-3938",
+        "MED-4186",
+        "MED-2391",
+        "MED-4184",
+        "MED-2496",
+        "MED-4037",
+        "MED-4934",
+        "MED-4975"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1909",
+      "rerank_topk": [
+        "MED-4818",
+        "MED-1977",
+        "MED-3288",
+        "MED-3307",
+        "MED-1979",
+        "MED-1610",
+        "MED-1491",
+        "MED-2352",
+        "MED-3319",
+        "MED-3790"
+      ],
+      "ndcg10": 0.5919,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1919",
+      "rerank_topk": [
+        "MED-4433",
+        "MED-4431",
+        "MED-3315",
+        "MED-4819",
+        "MED-3321",
+        "MED-3320",
+        "MED-3307",
+        "MED-3311",
+        "MED-3319",
+        "MED-1977"
+      ],
+      "ndcg10": 0.9364,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1929",
+      "rerank_topk": [
+        "MED-4685",
+        "MED-4369",
+        "MED-5093",
+        "MED-4772",
+        "MED-716",
+        "MED-2421",
+        "MED-3691",
+        "MED-1950",
+        "MED-5091",
+        "MED-1955"
+      ],
+      "ndcg10": 0.3149,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1940",
+      "rerank_topk": [
+        "MED-3792",
+        "MED-3797",
+        "MED-3688",
+        "MED-3853",
+        "MED-3876",
+        "MED-2136",
+        "MED-1827",
+        "MED-4513",
+        "MED-3852",
+        "MED-4690"
+      ],
+      "ndcg10": 0.359,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1950",
+      "rerank_topk": [
+        "MED-912",
+        "MED-4250",
+        "MED-3904",
+        "MED-1950",
+        "MED-4474",
+        "MED-887",
+        "MED-4291",
+        "MED-3945",
+        "MED-4289",
+        "MED-1955"
+      ],
+      "ndcg10": 0.3152,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1962",
+      "rerank_topk": [
+        "MED-957",
+        "MED-3945",
+        "MED-2239",
+        "MED-2815",
+        "MED-2743",
+        "MED-3530",
+        "MED-1978",
+        "MED-1520",
+        "MED-3375",
+        "MED-4429"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1972",
+      "rerank_topk": [
+        "MED-4051",
+        "MED-4589",
+        "MED-1442",
+        "MED-3543",
+        "MED-4075",
+        "MED-4546",
+        "MED-3821",
+        "MED-4049",
+        "MED-5165",
+        "MED-5160"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1983",
+      "rerank_topk": [
+        "MED-2521",
+        "MED-2134",
+        "MED-2137",
+        "MED-2517",
+        "MED-5237",
+        "MED-2139",
+        "MED-2132",
+        "MED-2127",
+        "MED-4148",
+        "MED-957"
+      ],
+      "ndcg10": 0.8701,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-1995",
+      "rerank_topk": [
+        "MED-4713",
+        "MED-4332",
+        "MED-1853",
+        "MED-2617",
+        "MED-3511",
+        "MED-4779",
+        "MED-4468",
+        "MED-3351",
+        "MED-3700",
+        "MED-4050"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2009",
+      "rerank_topk": [
+        "MED-5173",
+        "MED-3951",
+        "MED-1733",
+        "MED-4961",
+        "MED-1028",
+        "MED-3919",
+        "MED-4084",
+        "MED-5013",
+        "MED-3681",
+        "MED-1129"
+      ],
+      "ndcg10": 0.1089,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2019",
+      "rerank_topk": [
+        "MED-4146",
+        "MED-976",
+        "MED-2649",
+        "MED-4403",
+        "MED-2365",
+        "MED-4805",
+        "MED-3923",
+        "MED-3972",
+        "MED-2991",
+        "MED-1859"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2030",
+      "rerank_topk": [
+        "MED-3525",
+        "MED-3972",
+        "MED-4504",
+        "MED-3895",
+        "MED-5254",
+        "MED-2148",
+        "MED-1512",
+        "MED-2050",
+        "MED-2208",
+        "MED-2273"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2040",
+      "rerank_topk": [
+        "MED-4961",
+        "MED-4936",
+        "MED-4933",
+        "MED-4960",
+        "MED-2745",
+        "MED-3882",
+        "MED-2678",
+        "MED-4354",
+        "MED-4426",
+        "MED-3024"
+      ],
+      "ndcg10": 0.7008,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2051",
+      "rerank_topk": [
+        "MED-1556",
+        "MED-1454",
+        "MED-1873",
+        "MED-1061",
+        "MED-1781",
+        "MED-1072",
+        "MED-1455",
+        "MED-1071",
+        "MED-4033",
+        "MED-1068"
+      ],
+      "ndcg10": 0.5837,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2061",
+      "rerank_topk": [
+        "MED-3031",
+        "MED-3295",
+        "MED-4960",
+        "MED-2411",
+        "MED-5101",
+        "MED-4736",
+        "MED-4660",
+        "MED-2262",
+        "MED-1570",
+        "MED-4735"
+      ],
+      "ndcg10": 0.7878,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2071",
+      "rerank_topk": [
+        "MED-4309",
+        "MED-4306",
+        "MED-1349",
+        "MED-3658",
+        "MED-3532",
+        "MED-3530",
+        "MED-3661",
+        "MED-1352",
+        "MED-1342",
+        "MED-1195"
+      ],
+      "ndcg10": 0.3024,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2081",
+      "rerank_topk": [
+        "MED-4303",
+        "MED-2700",
+        "MED-887",
+        "MED-5109",
+        "MED-4859",
+        "MED-4715",
+        "MED-4408",
+        "MED-4716",
+        "MED-3087",
+        "MED-4288"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2092",
+      "rerank_topk": [
+        "MED-1434",
+        "MED-1436",
+        "MED-1432",
+        "MED-1437",
+        "MED-1440",
+        "MED-3661",
+        "MED-1525",
+        "MED-3526",
+        "MED-4309",
+        "MED-3279"
+      ],
+      "ndcg10": 0.6489,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2102",
+      "rerank_topk": [
+        "MED-1603",
+        "MED-2237",
+        "MED-3318",
+        "MED-5159",
+        "MED-3634",
+        "MED-1545",
+        "MED-3033",
+        "MED-2259",
+        "MED-952",
+        "MED-1598"
+      ],
+      "ndcg10": 0.7656,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2113",
+      "rerank_topk": [
+        "MED-1182",
+        "MED-3890",
+        "MED-2099",
+        "MED-2098",
+        "MED-1178",
+        "MED-1978",
+        "MED-1757",
+        "MED-2010",
+        "MED-1181",
+        "MED-4563"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2124",
+      "rerank_topk": [
+        "MED-1525",
+        "MED-1522",
+        "MED-1008",
+        "MED-1520",
+        "MED-1012",
+        "MED-1519",
+        "MED-1005",
+        "MED-1521",
+        "MED-4546",
+        "MED-1526"
+      ],
+      "ndcg10": 0.6652,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2134",
+      "rerank_topk": [
+        "MED-3882",
+        "MED-760",
+        "MED-4868",
+        "MED-3153",
+        "MED-3958",
+        "MED-5176",
+        "MED-3670",
+        "MED-1525",
+        "MED-3437",
+        "MED-2888"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2145",
+      "rerank_topk": [
+        "MED-743",
+        "MED-2891",
+        "MED-3643",
+        "MED-3639",
+        "MED-3637",
+        "MED-3894",
+        "MED-3528",
+        "MED-1785",
+        "MED-5108",
+        "MED-3519"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2156",
+      "rerank_topk": [
+        "MED-4868",
+        "MED-5055",
+        "MED-4867",
+        "MED-4807",
+        "MED-2079",
+        "MED-2807",
+        "MED-2972",
+        "MED-1860",
+        "MED-2098",
+        "MED-835"
+      ],
+      "ndcg10": 0.6448,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2167",
+      "rerank_topk": [
+        "MED-2488",
+        "MED-1230",
+        "MED-4366",
+        "MED-2145",
+        "MED-4504",
+        "MED-4506",
+        "MED-2148",
+        "MED-3869",
+        "MED-946",
+        "MED-3730"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2177",
+      "rerank_topk": [
+        "MED-1185",
+        "MED-3282",
+        "MED-1421",
+        "MED-4499",
+        "MED-1184",
+        "MED-1418",
+        "MED-4454",
+        "MED-4462",
+        "MED-4458",
+        "MED-895"
+      ],
+      "ndcg10": 0.4937,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2187",
+      "rerank_topk": [
+        "MED-946",
+        "MED-1498",
+        "MED-3775",
+        "MED-3677",
+        "MED-1751",
+        "MED-4869",
+        "MED-4504",
+        "MED-3487",
+        "MED-1120",
+        "MED-3056"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2197",
+      "rerank_topk": [
+        "MED-5054",
+        "MED-4822",
+        "MED-1625",
+        "MED-4120",
+        "MED-3733",
+        "MED-1710",
+        "MED-5056",
+        "MED-1627",
+        "MED-5053",
+        "MED-4868"
+      ],
+      "ndcg10": 0.6976,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2209",
+      "rerank_topk": [
+        "MED-4200",
+        "MED-820",
+        "MED-3972",
+        "MED-5276",
+        "MED-3808",
+        "MED-2449",
+        "MED-1853",
+        "MED-5002",
+        "MED-3890",
+        "MED-4091"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2220",
+      "rerank_topk": [
+        "MED-4976",
+        "MED-5002",
+        "MED-1098",
+        "MED-1165",
+        "MED-3955",
+        "MED-4816",
+        "MED-5105",
+        "MED-2449",
+        "MED-2170",
+        "MED-5276"
+      ],
+      "ndcg10": 0.3833,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2230",
+      "rerank_topk": [
+        "MED-5120",
+        "MED-4309",
+        "MED-4546",
+        "MED-1888",
+        "MED-4114",
+        "MED-5050",
+        "MED-3821",
+        "MED-2831",
+        "MED-2168",
+        "MED-4075"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2240",
+      "rerank_topk": [
+        "MED-3969",
+        "MED-3970",
+        "MED-1956",
+        "MED-4666",
+        "MED-855",
+        "MED-4937",
+        "MED-3282",
+        "MED-5105",
+        "MED-2261",
+        "MED-895"
+      ],
+      "ndcg10": 0.359,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2250",
+      "rerank_topk": [
+        "MED-2210",
+        "MED-5094",
+        "MED-2346",
+        "MED-1977",
+        "MED-2092",
+        "MED-2089",
+        "MED-1759",
+        "MED-3175",
+        "MED-3890",
+        "MED-872"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2261",
+      "rerank_topk": [
+        "MED-3599",
+        "MED-1455",
+        "MED-4556",
+        "MED-3597",
+        "MED-3598",
+        "MED-4333",
+        "MED-3355",
+        "MED-1454",
+        "MED-4709",
+        "MED-1238"
+      ],
+      "ndcg10": 0.7184,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2271",
+      "rerank_topk": [
+        "MED-1747",
+        "MED-3598",
+        "MED-5317",
+        "MED-1497",
+        "MED-2409",
+        "MED-2820",
+        "MED-1700",
+        "MED-4628",
+        "MED-1498",
+        "MED-2162"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2281",
+      "rerank_topk": [
+        "MED-3156",
+        "MED-4337",
+        "MED-4073",
+        "MED-3646",
+        "MED-4235",
+        "MED-3970",
+        "MED-3645",
+        "MED-5007",
+        "MED-4855",
+        "MED-1393"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2291",
+      "rerank_topk": [
+        "MED-5105",
+        "MED-4493",
+        "MED-4976",
+        "MED-3970",
+        "MED-5063",
+        "MED-2391",
+        "MED-5032",
+        "MED-4554",
+        "MED-3091",
+        "MED-2978"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2301",
+      "rerank_topk": [
+        "MED-5254",
+        "MED-3644",
+        "MED-1593",
+        "MED-4665",
+        "MED-834",
+        "MED-1582",
+        "MED-4160",
+        "MED-4691",
+        "MED-2047",
+        "MED-2272"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2311",
+      "rerank_topk": [
+        "MED-4249",
+        "MED-874",
+        "MED-4962",
+        "MED-953",
+        "MED-3320",
+        "MED-3655",
+        "MED-873",
+        "MED-5325",
+        "MED-4001",
+        "MED-1456"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2321",
+      "rerank_topk": [
+        "MED-1456",
+        "MED-4988",
+        "MED-4990",
+        "MED-4085",
+        "MED-5328",
+        "MED-4612",
+        "MED-4666",
+        "MED-3653",
+        "MED-1863",
+        "MED-821"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2332",
+      "rerank_topk": [
+        "MED-4962",
+        "MED-4766",
+        "MED-3974",
+        "MED-4968",
+        "MED-4136",
+        "MED-3649",
+        "MED-3154",
+        "MED-3972",
+        "MED-1803",
+        "MED-3509"
+      ],
+      "ndcg10": 0.2051,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2343",
+      "rerank_topk": [
+        "MED-3986",
+        "MED-3990",
+        "MED-922",
+        "MED-4929",
+        "MED-994",
+        "MED-3991",
+        "MED-2762",
+        "MED-716",
+        "MED-4566",
+        "MED-3985"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2354",
+      "rerank_topk": [
+        "MED-4303",
+        "MED-4249",
+        "MED-5153",
+        "MED-4709",
+        "MED-2378",
+        "MED-2152",
+        "MED-1785",
+        "MED-4705",
+        "MED-4708",
+        "MED-2379"
+      ],
+      "ndcg10": 0.46,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2364",
+      "rerank_topk": [
+        "MED-5004",
+        "MED-2721",
+        "MED-3896",
+        "MED-4261",
+        "MED-5230",
+        "MED-3201",
+        "MED-4291",
+        "MED-1807",
+        "MED-4152",
+        "MED-4707"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2375",
+      "rerank_topk": [
+        "MED-2700",
+        "MED-2032",
+        "MED-3923",
+        "MED-990",
+        "MED-4668",
+        "MED-3972",
+        "MED-4075",
+        "MED-3975",
+        "MED-3971",
+        "MED-2450"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2386",
+      "rerank_topk": [
+        "MED-2346",
+        "MED-1977",
+        "MED-1757",
+        "MED-1759",
+        "MED-1218",
+        "MED-4198",
+        "MED-1978",
+        "MED-4957",
+        "MED-1755",
+        "MED-2748"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2396",
+      "rerank_topk": [
+        "MED-5303",
+        "MED-4133",
+        "MED-4007",
+        "MED-5049",
+        "MED-4876",
+        "MED-1266",
+        "MED-1267",
+        "MED-4137",
+        "MED-3530",
+        "MED-1282"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2408",
+      "rerank_topk": [
+        "MED-2041",
+        "MED-4595",
+        "MED-4705",
+        "MED-2384",
+        "MED-2089",
+        "MED-1616",
+        "MED-2270",
+        "MED-2888",
+        "MED-2404",
+        "MED-953"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2430",
+      "rerank_topk": [
+        "MED-994",
+        "MED-980",
+        "MED-986",
+        "MED-5128",
+        "MED-2946",
+        "MED-5129",
+        "MED-4860",
+        "MED-3990",
+        "MED-2670",
+        "MED-5136"
+      ],
+      "ndcg10": 0.5814,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2440",
+      "rerank_topk": [
+        "MED-1792",
+        "MED-5069",
+        "MED-2900",
+        "MED-4255",
+        "MED-3001",
+        "MED-4613",
+        "MED-3908",
+        "MED-2747",
+        "MED-4920",
+        "MED-4136"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2450",
+      "rerank_topk": [
+        "MED-1178",
+        "MED-1140",
+        "MED-1179",
+        "MED-1143",
+        "MED-1151",
+        "MED-1181",
+        "MED-1169",
+        "MED-1174",
+        "MED-1144",
+        "MED-1173"
+      ],
+      "ndcg10": 0.4265,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2460",
+      "rerank_topk": [
+        "MED-1062",
+        "MED-1063",
+        "MED-1455",
+        "MED-1716",
+        "MED-1672",
+        "MED-4758",
+        "MED-4333",
+        "MED-5233",
+        "MED-1238",
+        "MED-1304"
+      ],
+      "ndcg10": 0.1953,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2470",
+      "rerank_topk": [
+        "MED-1337",
+        "MED-4894",
+        "MED-1340",
+        "MED-4722",
+        "MED-1338",
+        "MED-1229",
+        "MED-2123",
+        "MED-3228",
+        "MED-3215",
+        "MED-904"
+      ],
+      "ndcg10": 0.6033,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2480",
+      "rerank_topk": [
+        "MED-3964",
+        "MED-1582",
+        "MED-2811",
+        "MED-1187",
+        "MED-4628",
+        "MED-1576",
+        "MED-2782",
+        "MED-1389",
+        "MED-2584",
+        "MED-2581"
+      ],
+      "ndcg10": 0.3395,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2490",
+      "rerank_topk": [
+        "MED-2510",
+        "MED-3055",
+        "MED-1617",
+        "MED-2305",
+        "MED-1389",
+        "MED-1378",
+        "MED-5225",
+        "MED-3815",
+        "MED-2301",
+        "MED-1669"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2500",
+      "rerank_topk": [
+        "MED-2763",
+        "MED-1072",
+        "MED-1781",
+        "MED-1454",
+        "MED-3355",
+        "MED-1873",
+        "MED-1557",
+        "MED-1238",
+        "MED-1553",
+        "MED-1256"
+      ],
+      "ndcg10": 0.1265,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2510",
+      "rerank_topk": [
+        "MED-1641",
+        "MED-1648",
+        "MED-1639",
+        "MED-1642",
+        "MED-1640",
+        "MED-880",
+        "MED-878",
+        "MED-5255",
+        "MED-1638",
+        "MED-2222"
+      ],
+      "ndcg10": 0.747,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2520",
+      "rerank_topk": [
+        "MED-4515",
+        "MED-4347",
+        "MED-4831",
+        "MED-2943",
+        "MED-1445",
+        "MED-4985",
+        "MED-4613",
+        "MED-4255",
+        "MED-1723",
+        "MED-1319"
+      ],
+      "ndcg10": 0.1136,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2530",
+      "rerank_topk": [
+        "MED-1804",
+        "MED-1798",
+        "MED-1808",
+        "MED-1796",
+        "MED-1800",
+        "MED-1806",
+        "MED-1803",
+        "MED-4768",
+        "MED-4766",
+        "MED-1799"
+      ],
+      "ndcg10": 0.9322,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2540",
+      "rerank_topk": [
+        "MED-4676",
+        "MED-1968",
+        "MED-1884",
+        "MED-1885",
+        "MED-3398",
+        "MED-3198",
+        "MED-2440",
+        "MED-1886",
+        "MED-1193",
+        "MED-1205"
+      ],
+      "ndcg10": 0.3238,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2550",
+      "rerank_topk": [
+        "MED-728",
+        "MED-1679",
+        "MED-4560",
+        "MED-3253",
+        "MED-1546",
+        "MED-2007",
+        "MED-1680",
+        "MED-851",
+        "MED-5299",
+        "MED-1192"
+      ],
+      "ndcg10": 0.0637,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2560",
+      "rerank_topk": [
+        "MED-2055",
+        "MED-2053",
+        "MED-2060",
+        "MED-2057",
+        "MED-2061",
+        "MED-2058",
+        "MED-2063",
+        "MED-2059",
+        "MED-2054",
+        "MED-5005"
+      ],
+      "ndcg10": 0.9364,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2570",
+      "rerank_topk": [
+        "MED-2145",
+        "MED-2148",
+        "MED-3583",
+        "MED-2405",
+        "MED-1262",
+        "MED-4417",
+        "MED-3733",
+        "MED-1707",
+        "MED-2001",
+        "MED-2395"
+      ],
+      "ndcg10": 0.3324,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2580",
+      "rerank_topk": [
+        "MED-3487",
+        "MED-2725",
+        "MED-1351",
+        "MED-1230",
+        "MED-2220",
+        "MED-4823",
+        "MED-3054",
+        "MED-4483",
+        "MED-5101",
+        "MED-3723"
+      ],
+      "ndcg10": 0.2104,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2590",
+      "rerank_topk": [
+        "MED-4163",
+        "MED-4313",
+        "MED-4894",
+        "MED-5325",
+        "MED-5342",
+        "MED-4633",
+        "MED-1430",
+        "MED-2290",
+        "MED-970",
+        "MED-4952"
+      ],
+      "ndcg10": 0.1434,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2600",
+      "rerank_topk": [
+        "MED-2372",
+        "MED-2371",
+        "MED-1889",
+        "MED-4324",
+        "MED-5124",
+        "MED-4676",
+        "MED-4893",
+        "MED-2884",
+        "MED-1884",
+        "MED-2939"
+      ],
+      "ndcg10": 0.6304,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2610",
+      "rerank_topk": [
+        "MED-2464",
+        "MED-2460",
+        "MED-5072",
+        "MED-2458",
+        "MED-2452",
+        "MED-2482",
+        "MED-2472",
+        "MED-2455",
+        "MED-2450",
+        "MED-2655"
+      ],
+      "ndcg10": 0.3514,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2620",
+      "rerank_topk": [
+        "MED-2585",
+        "MED-4536",
+        "MED-1825",
+        "MED-2435",
+        "MED-4051",
+        "MED-4534",
+        "MED-3548",
+        "MED-4049",
+        "MED-1819",
+        "MED-4543"
+      ],
+      "ndcg10": 0.2519,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2630",
+      "rerank_topk": [
+        "MED-2658",
+        "MED-2643",
+        "MED-2654",
+        "MED-2661",
+        "MED-2644",
+        "MED-2445",
+        "MED-3100",
+        "MED-5323",
+        "MED-2650",
+        "MED-2648"
+      ],
+      "ndcg10": 0.7788,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2640",
+      "rerank_topk": [
+        "MED-2743",
+        "MED-2745",
+        "MED-3882",
+        "MED-4354",
+        "MED-3888",
+        "MED-2741",
+        "MED-3880",
+        "MED-4426",
+        "MED-3892",
+        "MED-2740"
+      ],
+      "ndcg10": 0.6615,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2650",
+      "rerank_topk": [
+        "MED-2800",
+        "MED-2819",
+        "MED-2807",
+        "MED-2803",
+        "MED-2820",
+        "MED-2831",
+        "MED-1507",
+        "MED-2822",
+        "MED-2801",
+        "MED-2817"
+      ],
+      "ndcg10": 0.63,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2660",
+      "rerank_topk": [
+        "MED-3012",
+        "MED-2905",
+        "MED-3032",
+        "MED-5097",
+        "MED-4376",
+        "MED-4735",
+        "MED-1961",
+        "MED-3034",
+        "MED-1620",
+        "MED-1169"
+      ],
+      "ndcg10": 0.4284,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2670",
+      "rerank_topk": [
+        "MED-2994",
+        "MED-2618",
+        "MED-2992",
+        "MED-4418",
+        "MED-957",
+        "MED-5086",
+        "MED-4604",
+        "MED-5326",
+        "MED-3312",
+        "MED-2494"
+      ],
+      "ndcg10": 0.4495,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2680",
+      "rerank_topk": [
+        "MED-1961",
+        "MED-3100",
+        "MED-1958",
+        "MED-2394",
+        "MED-5105",
+        "MED-5265",
+        "MED-1389",
+        "MED-3173",
+        "MED-2494",
+        "MED-2249"
+      ],
+      "ndcg10": 0.1608,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2690",
+      "rerank_topk": [
+        "MED-3175",
+        "MED-3169",
+        "MED-3288",
+        "MED-3319",
+        "MED-3316",
+        "MED-1028",
+        "MED-3177",
+        "MED-4818",
+        "MED-2416",
+        "MED-3307"
+      ],
+      "ndcg10": 0.5617,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2700",
+      "rerank_topk": [
+        "MED-3253",
+        "MED-3954",
+        "MED-1949",
+        "MED-1366",
+        "MED-1996",
+        "MED-1190",
+        "MED-4560",
+        "MED-1994",
+        "MED-4613",
+        "MED-3255"
+      ],
+      "ndcg10": 0.4813,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2710",
+      "rerank_topk": [
+        "MED-3380",
+        "MED-3382",
+        "MED-5062",
+        "MED-3381",
+        "MED-4604",
+        "MED-5063",
+        "MED-1153",
+        "MED-4655",
+        "MED-2618",
+        "MED-5209"
+      ],
+      "ndcg10": 0.6646,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2720",
+      "rerank_topk": [
+        "MED-2271",
+        "MED-840",
+        "MED-1841",
+        "MED-4419",
+        "MED-4392",
+        "MED-2713",
+        "MED-3483",
+        "MED-5165",
+        "MED-1846",
+        "MED-3477"
+      ],
+      "ndcg10": 0.1796,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2730",
+      "rerank_topk": [
+        "MED-3550",
+        "MED-3554",
+        "MED-3551",
+        "MED-3553",
+        "MED-2573",
+        "MED-3549",
+        "MED-3281",
+        "MED-2923",
+        "MED-3280",
+        "MED-4049"
+      ],
+      "ndcg10": 0.6868,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2740",
+      "rerank_topk": [
+        "MED-3627",
+        "MED-3624",
+        "MED-2940",
+        "MED-2947",
+        "MED-3623",
+        "MED-3621",
+        "MED-3625",
+        "MED-4487",
+        "MED-2440",
+        "MED-4483"
+      ],
+      "ndcg10": 0.6752,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2750",
+      "rerank_topk": [
+        "MED-3683",
+        "MED-3680",
+        "MED-4762",
+        "MED-1300",
+        "MED-3695",
+        "MED-3688",
+        "MED-3690",
+        "MED-3686",
+        "MED-3681",
+        "MED-3675"
+      ],
+      "ndcg10": 0.6557,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2760",
+      "rerank_topk": [
+        "MED-3769",
+        "MED-2201",
+        "MED-3770",
+        "MED-4600",
+        "MED-3371",
+        "MED-2148",
+        "MED-3369",
+        "MED-4266",
+        "MED-4313",
+        "MED-3376"
+      ],
+      "ndcg10": 0.5372,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2770",
+      "rerank_topk": [
+        "MED-3836",
+        "MED-1825",
+        "MED-1826",
+        "MED-5116",
+        "MED-3840",
+        "MED-4785",
+        "MED-1829",
+        "MED-3127",
+        "MED-3139",
+        "MED-3874"
+      ],
+      "ndcg10": 0.3886,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2780",
+      "rerank_topk": [
+        "MED-3896",
+        "MED-4291",
+        "MED-4292",
+        "MED-4286",
+        "MED-4287",
+        "MED-4707",
+        "MED-2595",
+        "MED-1710",
+        "MED-4289",
+        "MED-1669"
+      ],
+      "ndcg10": 0.5355,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2790",
+      "rerank_topk": [
+        "MED-3970",
+        "MED-3964",
+        "MED-1576",
+        "MED-3969",
+        "MED-3966",
+        "MED-1008",
+        "MED-2811",
+        "MED-4516",
+        "MED-1888",
+        "MED-4666"
+      ],
+      "ndcg10": 0.5389,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2800",
+      "rerank_topk": [
+        "MED-2070",
+        "MED-2231",
+        "MED-2071",
+        "MED-2229",
+        "MED-2068",
+        "MED-2234",
+        "MED-5075",
+        "MED-4454",
+        "MED-2235",
+        "MED-4456"
+      ],
+      "ndcg10": 0.0473,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2810",
+      "rerank_topk": [
+        "MED-2491",
+        "MED-4590",
+        "MED-1710",
+        "MED-1792",
+        "MED-1790",
+        "MED-4580",
+        "MED-1846",
+        "MED-4029",
+        "MED-2083",
+        "MED-4909"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2820",
+      "rerank_topk": [
+        "MED-1677",
+        "MED-1232",
+        "MED-1408",
+        "MED-1691",
+        "MED-3474",
+        "MED-1233",
+        "MED-2305",
+        "MED-5299",
+        "MED-1329",
+        "MED-4560"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2830",
+      "rerank_topk": [
+        "MED-1623",
+        "MED-1630",
+        "MED-4120",
+        "MED-1624",
+        "MED-5054",
+        "MED-5053",
+        "MED-3382",
+        "MED-1431",
+        "MED-1625",
+        "MED-1626"
+      ],
+      "ndcg10": 0.3194,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2840",
+      "rerank_topk": [
+        "MED-4150",
+        "MED-4443",
+        "MED-1493",
+        "MED-3136",
+        "MED-2010",
+        "MED-4612",
+        "MED-5160",
+        "MED-4705",
+        "MED-3867",
+        "MED-4716"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2850",
+      "rerank_topk": [
+        "MED-3891",
+        "MED-4166",
+        "MED-3788",
+        "MED-3887",
+        "MED-3197",
+        "MED-4808",
+        "MED-2369",
+        "MED-335",
+        "MED-5188",
+        "MED-5207"
+      ],
+      "ndcg10": 0.2401,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2860",
+      "rerank_topk": [
+        "MED-4185",
+        "MED-4186",
+        "MED-3590",
+        "MED-4951",
+        "MED-4656",
+        "MED-4230",
+        "MED-1766",
+        "MED-1100",
+        "MED-2645",
+        "MED-3591"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2870",
+      "rerank_topk": [
+        "MED-4533",
+        "MED-3593",
+        "MED-2491",
+        "MED-3595",
+        "MED-4529",
+        "MED-3379",
+        "MED-4908",
+        "MED-2178",
+        "MED-2253",
+        "MED-3378"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2880",
+      "rerank_topk": [
+        "MED-2514",
+        "MED-1429",
+        "MED-4266",
+        "MED-1342",
+        "MED-3055",
+        "MED-2208",
+        "MED-3044",
+        "MED-2889",
+        "MED-4051",
+        "MED-2818"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2890",
+      "rerank_topk": [
+        "MED-4287",
+        "MED-3896",
+        "MED-4250",
+        "MED-1534",
+        "MED-939",
+        "MED-3351",
+        "MED-3376",
+        "MED-2597",
+        "MED-3143",
+        "MED-5287"
+      ],
+      "ndcg10": 0.1804,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2900",
+      "rerank_topk": [
+        "MED-1426",
+        "MED-4271",
+        "MED-4266",
+        "MED-1420",
+        "MED-4125",
+        "MED-5207",
+        "MED-3691",
+        "MED-1415",
+        "MED-1574",
+        "MED-3581"
+      ],
+      "ndcg10": 0.1776,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2910",
+      "rerank_topk": [
+        "MED-4296",
+        "MED-4295",
+        "MED-1428",
+        "MED-3854",
+        "MED-5176",
+        "MED-4233",
+        "MED-3877",
+        "MED-835",
+        "MED-3874",
+        "MED-834"
+      ],
+      "ndcg10": 0.2044,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2920",
+      "rerank_topk": [
+        "MED-4309",
+        "MED-3532",
+        "MED-3522",
+        "MED-5231",
+        "MED-2748",
+        "MED-2830",
+        "MED-2331",
+        "MED-1499",
+        "MED-903",
+        "MED-2327"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2930",
+      "rerank_topk": [
+        "MED-4325",
+        "MED-1005",
+        "MED-1012",
+        "MED-1009",
+        "MED-1014",
+        "MED-1008",
+        "MED-3512",
+        "MED-1016",
+        "MED-1017",
+        "MED-1682"
+      ],
+      "ndcg10": 0.3608,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2940",
+      "rerank_topk": [
+        "MED-1578",
+        "MED-3961",
+        "MED-3965",
+        "MED-1425",
+        "MED-3967",
+        "MED-3966",
+        "MED-3963",
+        "MED-1580",
+        "MED-1579",
+        "MED-1574"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2950",
+      "rerank_topk": [
+        "MED-4377",
+        "MED-2270",
+        "MED-2742",
+        "MED-2654",
+        "MED-2618",
+        "MED-4976",
+        "MED-2494",
+        "MED-4893",
+        "MED-5105",
+        "MED-3090"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2960",
+      "rerank_topk": [
+        "MED-4372",
+        "MED-4371",
+        "MED-4374",
+        "MED-4673",
+        "MED-4370",
+        "MED-4598",
+        "MED-2180",
+        "MED-1543",
+        "MED-2112",
+        "MED-1053"
+      ],
+      "ndcg10": 0.2941,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2970",
+      "rerank_topk": [
+        "MED-4382",
+        "MED-1691",
+        "MED-4030",
+        "MED-2249",
+        "MED-2900",
+        "MED-4036",
+        "MED-5265",
+        "MED-1389",
+        "MED-3791",
+        "MED-2212"
+      ],
+      "ndcg10": 0.3806,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2981",
+      "rerank_topk": [
+        "MED-4403",
+        "MED-5109",
+        "MED-3198",
+        "MED-5171",
+        "MED-4807",
+        "MED-4976",
+        "MED-2356",
+        "MED-1217",
+        "MED-4808",
+        "MED-1220"
+      ],
+      "ndcg10": 0.4312,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-2991",
+      "rerank_topk": [
+        "MED-1663",
+        "MED-4424",
+        "MED-4827",
+        "MED-1193",
+        "MED-1258",
+        "MED-3198",
+        "MED-4301",
+        "MED-3197",
+        "MED-1657",
+        "MED-3398"
+      ],
+      "ndcg10": 0.3869,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3001",
+      "rerank_topk": [
+        "MED-3314",
+        "MED-4543",
+        "MED-3875",
+        "MED-4278",
+        "MED-903",
+        "MED-4049",
+        "MED-2583",
+        "MED-4536",
+        "MED-4073",
+        "MED-1315"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3014",
+      "rerank_topk": [
+        "MED-4489",
+        "MED-1378",
+        "MED-3207",
+        "MED-2315",
+        "MED-4366",
+        "MED-398",
+        "MED-4266",
+        "MED-1389",
+        "MED-1655",
+        "MED-1349"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3026",
+      "rerank_topk": [
+        "MED-4976",
+        "MED-3453",
+        "MED-1601",
+        "MED-4057",
+        "MED-4053",
+        "MED-3151",
+        "MED-4928",
+        "MED-3197",
+        "MED-5034",
+        "MED-4146"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3037",
+      "rerank_topk": [
+        "MED-4789",
+        "MED-3895",
+        "MED-3894",
+        "MED-3893",
+        "MED-1518",
+        "MED-1517",
+        "MED-2050",
+        "MED-4506",
+        "MED-2145",
+        "MED-3154"
+      ],
+      "ndcg10": 0.1232,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3053",
+      "rerank_topk": [
+        "MED-4525",
+        "MED-4526",
+        "MED-2700",
+        "MED-1810",
+        "MED-3809",
+        "MED-4536",
+        "MED-4956",
+        "MED-3482",
+        "MED-3808",
+        "MED-3802"
+      ],
+      "ndcg10": 0.7654,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3063",
+      "rerank_topk": [
+        "MED-4712",
+        "MED-2886",
+        "MED-2076",
+        "MED-2925",
+        "MED-4860",
+        "MED-3894",
+        "MED-1676",
+        "MED-5069",
+        "MED-4544",
+        "MED-2070"
+      ],
+      "ndcg10": 0.2566,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3074",
+      "rerank_topk": [
+        "MED-4555",
+        "MED-3253",
+        "MED-1512",
+        "MED-4560",
+        "MED-4421",
+        "MED-2249",
+        "MED-4424",
+        "MED-3695",
+        "MED-1663",
+        "MED-2203"
+      ],
+      "ndcg10": 1.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3085",
+      "rerank_topk": [
+        "MED-4575",
+        "MED-716",
+        "MED-4573",
+        "MED-919",
+        "MED-3990",
+        "MED-4574",
+        "MED-714",
+        "MED-3986",
+        "MED-962",
+        "MED-961"
+      ],
+      "ndcg10": 0.3066,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3097",
+      "rerank_topk": [
+        "MED-4590",
+        "MED-4580",
+        "MED-1792",
+        "MED-5019",
+        "MED-2491",
+        "MED-4587",
+        "MED-3476",
+        "MED-1846",
+        "MED-5082",
+        "MED-3482"
+      ],
+      "ndcg10": 0.477,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3116",
+      "rerank_topk": [
+        "MED-2150",
+        "MED-2076",
+        "MED-2917",
+        "MED-4600",
+        "MED-5328",
+        "MED-2665",
+        "MED-1863",
+        "MED-4104",
+        "MED-4313",
+        "MED-2924"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3131",
+      "rerank_topk": [
+        "MED-4620",
+        "MED-5010",
+        "MED-5342",
+        "MED-4633",
+        "MED-4249",
+        "MED-4303",
+        "MED-3348",
+        "MED-2900",
+        "MED-4350",
+        "MED-2384"
+      ],
+      "ndcg10": 0.3679,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3141",
+      "rerank_topk": [
+        "MED-4644",
+        "MED-5226",
+        "MED-1594",
+        "MED-835",
+        "MED-1593",
+        "MED-3446",
+        "MED-1597",
+        "MED-2648",
+        "MED-3794",
+        "MED-3852"
+      ],
+      "ndcg10": 0.2996,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3151",
+      "rerank_topk": [
+        "MED-4662",
+        "MED-4664",
+        "MED-4665",
+        "MED-3971",
+        "MED-4666",
+        "MED-4668",
+        "MED-3444",
+        "MED-4660",
+        "MED-4595",
+        "MED-3445"
+      ],
+      "ndcg10": 0.7634,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3161",
+      "rerank_topk": [
+        "MED-4677",
+        "MED-4897",
+        "MED-899",
+        "MED-1226",
+        "MED-4394",
+        "MED-4396",
+        "MED-4841",
+        "MED-2123",
+        "MED-4871",
+        "MED-1229"
+      ],
+      "ndcg10": 0.5549,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3171",
+      "rerank_topk": [
+        "MED-1777",
+        "MED-3587",
+        "MED-1754",
+        "MED-1501",
+        "MED-1429",
+        "MED-1362",
+        "MED-1498",
+        "MED-1230",
+        "MED-1400",
+        "MED-1509"
+      ],
+      "ndcg10": 0.1378,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3181",
+      "rerank_topk": [
+        "MED-1150",
+        "MED-3906",
+        "MED-3900",
+        "MED-957",
+        "MED-1846",
+        "MED-4716",
+        "MED-3207",
+        "MED-1262",
+        "MED-398",
+        "MED-4545"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3191",
+      "rerank_topk": [
+        "MED-4943",
+        "MED-1831",
+        "MED-4730",
+        "MED-2756",
+        "MED-838",
+        "MED-4735",
+        "MED-2412",
+        "MED-5102",
+        "MED-4379",
+        "MED-2406"
+      ],
+      "ndcg10": 0.2902,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3201",
+      "rerank_topk": [
+        "MED-4752",
+        "MED-2120",
+        "MED-2124",
+        "MED-4396",
+        "MED-3703",
+        "MED-1717",
+        "MED-3856",
+        "MED-4823",
+        "MED-2117",
+        "MED-3699"
+      ],
+      "ndcg10": 0.3608,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3211",
+      "rerank_topk": [
+        "MED-4365",
+        "MED-4595",
+        "MED-5023",
+        "MED-4468",
+        "MED-4266",
+        "MED-3371",
+        "MED-5062",
+        "MED-4775",
+        "MED-4663",
+        "MED-945"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3221",
+      "rerank_topk": [
+        "MED-2212",
+        "MED-1506",
+        "MED-1702",
+        "MED-1699",
+        "MED-2216",
+        "MED-4582",
+        "MED-726",
+        "MED-1502",
+        "MED-1849",
+        "MED-1504"
+      ],
+      "ndcg10": 0.0601,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3231",
+      "rerank_topk": [
+        "MED-1109",
+        "MED-1105",
+        "MED-1104",
+        "MED-4436",
+        "MED-3787",
+        "MED-3193",
+        "MED-1114",
+        "MED-4821",
+        "MED-847",
+        "MED-4486"
+      ],
+      "ndcg10": 0.1901,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3241",
+      "rerank_topk": [
+        "MED-4841",
+        "MED-1028",
+        "MED-2348",
+        "MED-1655",
+        "MED-735",
+        "MED-957",
+        "MED-4628",
+        "MED-1122",
+        "MED-2062",
+        "MED-5317"
+      ],
+      "ndcg10": 0.4151,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3251",
+      "rerank_topk": [
+        "MED-4278",
+        "MED-4261",
+        "MED-5236",
+        "MED-1380",
+        "MED-5361",
+        "MED-5145",
+        "MED-4480",
+        "MED-2304",
+        "MED-5175",
+        "MED-762"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3261",
+      "rerank_topk": [
+        "MED-5158",
+        "MED-5157",
+        "MED-1617",
+        "MED-3197",
+        "MED-4371",
+        "MED-1868",
+        "MED-4985",
+        "MED-4104",
+        "MED-1582",
+        "MED-711"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3271",
+      "rerank_topk": [
+        "MED-4823",
+        "MED-1455",
+        "MED-4233",
+        "MED-1068",
+        "MED-1924",
+        "MED-4487",
+        "MED-4826",
+        "MED-3282",
+        "MED-851",
+        "MED-1712"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3281",
+      "rerank_topk": [
+        "MED-3087",
+        "MED-4909",
+        "MED-1843",
+        "MED-1841",
+        "MED-1848",
+        "MED-1851",
+        "MED-2494",
+        "MED-2420",
+        "MED-1839",
+        "MED-4523"
+      ],
+      "ndcg10": 0.2044,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3292",
+      "rerank_topk": [
+        "MED-2758",
+        "MED-4925",
+        "MED-4647",
+        "MED-2760",
+        "MED-2757",
+        "MED-2759",
+        "MED-2762",
+        "MED-2761",
+        "MED-4872",
+        "MED-950"
+      ],
+      "ndcg10": 0.6176,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3302",
+      "rerank_topk": [
+        "MED-4359",
+        "MED-4839",
+        "MED-4964",
+        "MED-4944",
+        "MED-4960",
+        "MED-4114",
+        "MED-4735",
+        "MED-4379",
+        "MED-2756",
+        "MED-3910"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3312",
+      "rerank_topk": [
+        "MED-4360",
+        "MED-1570",
+        "MED-1274",
+        "MED-4959",
+        "MED-1573",
+        "MED-4934",
+        "MED-1956",
+        "MED-4735",
+        "MED-5102",
+        "MED-4943"
+      ],
+      "ndcg10": 0.1244,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3322",
+      "rerank_topk": [
+        "MED-3557",
+        "MED-4861",
+        "MED-1106",
+        "MED-4714",
+        "MED-4612",
+        "MED-1146",
+        "MED-4820",
+        "MED-5066",
+        "MED-3238",
+        "MED-1530"
+      ],
+      "ndcg10": 0.2837,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3332",
+      "rerank_topk": [
+        "MED-3768",
+        "MED-3696",
+        "MED-4994",
+        "MED-3312",
+        "MED-2304",
+        "MED-3762",
+        "MED-3766",
+        "MED-4377",
+        "MED-3765",
+        "MED-5098"
+      ],
+      "ndcg10": 0.6533,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3342",
+      "rerank_topk": [
+        "MED-5012",
+        "MED-4000",
+        "MED-5016",
+        "MED-4001",
+        "MED-4002",
+        "MED-5014",
+        "MED-4004",
+        "MED-4335",
+        "MED-5285",
+        "MED-2228"
+      ],
+      "ndcg10": 0.6364,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3352",
+      "rerank_topk": [
+        "MED-1872",
+        "MED-2384",
+        "MED-2224",
+        "MED-4243",
+        "MED-2145",
+        "MED-1862",
+        "MED-1512",
+        "MED-4504",
+        "MED-1198",
+        "MED-4789"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3362",
+      "rerank_topk": [
+        "MED-5042",
+        "MED-2208",
+        "MED-4713",
+        "MED-3970",
+        "MED-4529",
+        "MED-2048",
+        "MED-4534",
+        "MED-1923",
+        "MED-4512",
+        "MED-2811"
+      ],
+      "ndcg10": 0.3239,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3372",
+      "rerank_topk": [
+        "MED-4868",
+        "MED-1625",
+        "MED-5054",
+        "MED-1710",
+        "MED-5056",
+        "MED-4822",
+        "MED-3535",
+        "MED-1627",
+        "MED-5287",
+        "MED-1707"
+      ],
+      "ndcg10": 0.1396,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3382",
+      "rerank_topk": [
+        "MED-2618",
+        "MED-3381",
+        "MED-4604",
+        "MED-3380",
+        "MED-3382",
+        "MED-2994",
+        "MED-5062",
+        "MED-1625",
+        "MED-5054",
+        "MED-2616"
+      ],
+      "ndcg10": 0.609,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3392",
+      "rerank_topk": [
+        "MED-1627",
+        "MED-2271",
+        "MED-1299",
+        "MED-1646",
+        "MED-2461",
+        "MED-2460",
+        "MED-5122",
+        "MED-1710",
+        "MED-3473",
+        "MED-3527"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3402",
+      "rerank_topk": [
+        "MED-2951",
+        "MED-4689",
+        "MED-4149",
+        "MED-4413",
+        "MED-4523",
+        "MED-2693",
+        "MED-3946",
+        "MED-1181",
+        "MED-5084",
+        "MED-2696"
+      ],
+      "ndcg10": 0.0,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3412",
+      "rerank_topk": [
+        "MED-2264",
+        "MED-2263",
+        "MED-4682",
+        "MED-4515",
+        "MED-1250",
+        "MED-2260",
+        "MED-1134",
+        "MED-1181",
+        "MED-4894",
+        "MED-1147"
+      ],
+      "ndcg10": 0.081,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3422",
+      "rerank_topk": [
+        "MED-2762",
+        "MED-3452",
+        "MED-4872",
+        "MED-2946",
+        "MED-2079",
+        "MED-3990",
+        "MED-4930",
+        "MED-716",
+        "MED-2888",
+        "MED-4575"
+      ],
+      "ndcg10": 0.1266,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3432",
+      "rerank_topk": [
+        "MED-5040",
+        "MED-2224",
+        "MED-5284",
+        "MED-5148",
+        "MED-2228",
+        "MED-5283",
+        "MED-4336",
+        "MED-5151",
+        "MED-5038",
+        "MED-2227"
+      ],
+      "ndcg10": 0.2876,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3442",
+      "rerank_topk": [
+        "MED-2201",
+        "MED-2900",
+        "MED-3480",
+        "MED-1528",
+        "MED-2010",
+        "MED-5026",
+        "MED-5342",
+        "MED-4633",
+        "MED-2098",
+        "MED-2150"
+      ],
+      "ndcg10": 0.0424,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3452",
+      "rerank_topk": [
+        "MED-5175",
+        "MED-4810",
+        "MED-1048",
+        "MED-4638",
+        "MED-4517",
+        "MED-4639",
+        "MED-1034",
+        "MED-1040",
+        "MED-4637",
+        "MED-1049"
+      ],
+      "ndcg10": 0.5001,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3462",
+      "rerank_topk": [
+        "MED-5274",
+        "MED-5263",
+        "MED-1390",
+        "MED-1373",
+        "MED-5260",
+        "MED-5153",
+        "MED-5268",
+        "MED-4249",
+        "MED-5269",
+        "MED-5271"
+      ],
+      "ndcg10": 0.6821,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    },
+    {
+      "qid": "PLAIN-3472",
+      "rerank_topk": [
+        "MED-2525",
+        "MED-5343",
+        "MED-3636",
+        "MED-3759",
+        "MED-1248",
+        "MED-1345",
+        "MED-1350",
+        "MED-3603",
+        "MED-3749",
+        "MED-2315"
+      ],
+      "ndcg10": 0.1684,
+      "n_llm_calls": 190,
+      "n_parse_failures": 0
+    }
+  ],
+  "macro": {
+    "n_queries": 323,
+    "ndcg_mean": 0.334238080495356,
+    "ndcg_std": 0.31499596872905966,
+    "n_llm_calls_total": 61370,
+    "parse_failure_rate": 0.0,
+    "wall_time_sec": 8604.907750844955
+  }
+}

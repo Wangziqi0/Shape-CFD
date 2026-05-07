@@ -1,0 +1,62 @@
+{
+  "method": "GBM-11 leave-one-corpus-out cross-corpus transfer",
+  "splits": {
+    "nfcorpus": {
+      "in_corpus_gbm_50_50": 0.32967905397774877,
+      "cross_corpus_gbm_loco_mean": 0.3439807871185468,
+      "cross_corpus_gbm_loco_std": 2.6963341790256636e-05,
+      "fixed_lambda_0.3": 0.3264479853938022,
+      "oracle_upper": 0.3629853458421769,
+      "transfer_pct_vs_in_corpus": 4.338077584317292,
+      "n_test": 323,
+      "n_train_union_4corpora": 3346
+    },
+    "scifact": {
+      "in_corpus_gbm_50_50": 0.541751052219418,
+      "cross_corpus_gbm_loco_mean": 0.5470900248683961,
+      "cross_corpus_gbm_loco_std": 0.0,
+      "fixed_lambda_0.3": 0.47604045386551547,
+      "oracle_upper": 0.5671540534746903,
+      "transfer_pct_vs_in_corpus": 0.9855029588047242,
+      "n_test": 300,
+      "n_train_union_4corpora": 3369
+    },
+    "arguana": {
+      "in_corpus_gbm_50_50": 0.4862037882814477,
+      "cross_corpus_gbm_loco_mean": 0.4854037124613056,
+      "cross_corpus_gbm_loco_std": 5.551115123125783e-17,
+      "fixed_lambda_0.3": 0.41540108034951523,
+      "oracle_upper": 0.5065801645109234,
+      "transfer_pct_vs_in_corpus": -0.16455565329305782,
+      "n_test": 1398,
+      "n_train_union_4corpora": 2271
+    },
+    "scidocs": {
+      "in_corpus_gbm_50_50": 0.24514627970317787,
+      "cross_corpus_gbm_loco_mean": 0.2391462917845998,
+      "cross_corpus_gbm_loco_std": 9.404701117632362e-06,
+      "fixed_lambda_0.3": 0.21521218064517939,
+      "oracle_upper": 0.25732847947732523,
+      "transfer_pct_vs_in_corpus": -2.447513348292628,
+      "n_test": 1000,
+      "n_train_union_4corpora": 2669
+    },
+    "fiqa": {
+      "in_corpus_gbm_50_50": 0.4331016405590743,
+      "cross_corpus_gbm_loco_mean": 0.42989965363143695,
+      "cross_corpus_gbm_loco_std": 0.0,
+      "fixed_lambda_0.3": 0.3976358510122238,
+      "oracle_upper": 0.4468579944612715,
+      "transfer_pct_vs_in_corpus": -0.7393153541288885,
+      "n_test": 648,
+      "n_train_union_4corpora": 3021
+    }
+  },
+  "macro": {
+    "in_corpus_gbm_50_50": 0.40717636294817333,
+    "cross_corpus_gbm_loco": 0.409104093972857,
+    "fixed_lambda_0.3": 0.3661475102532472,
+    "oracle_upper": 0.42818120755327743,
+    "transfer_pct_vs_in_corpus": 0.473438833906244
+  }
+}

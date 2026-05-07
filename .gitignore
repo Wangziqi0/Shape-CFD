@@ -31,3 +31,48 @@ outputs/
 .DS_Store
 __pycache__/
 *.pyc
+
+# Paper backups and intermediate files (revision history kept locally)
+paper/*.bak
+paper/*.bak.*
+paper/*.bak_*
+paper/*_v_backup_*
+paper/*.before_*
+paper/*.preB2
+paper/*.spl
+paper/*.txt
+paper/*.tex.backup_*
+paper/*.bib.backup_*
+
+# Internal audit / handoff docs (not for public release)
+*_HANDOFF_*.md
+HANDOFF_*.md
+HANDOVER_*.md
+BLIND_REVIEW_*.md
+BLIND_AUDIT_*.md
+IS_BLIND_AUDIT_*.md
+MENTOR_GUIDANCE_*.md
+MENTOR_*PLAN*.md
+REVIEWER_STATUS_*.md
+REVIEWER_LETTER_*.md
+EXPERIMENT_AUDIT_*.md
+EXPERIMENT_VERIFY_*.md
+LINUX_CROSS_POLLINATION_*.md
+ROOT_CAUSE_INVESTIGATION_*.md
+AGENT_*_REPORT.md
+AGENT_*_RESULTS.md
+AUTO_SESSION_*.md
+STRATEGIC_PLAN_*.md
+STORAGE_ADAPTIVE_*.md
+REFRAMING_*.md
+COMMIT_MSG*.txt
+
+# Personal session / memory files
+docs/
+
+# Embeddings (large)
+embeddings/
+
+# Logs subdirs
+logs_9070xt/
+logs_agent_b/

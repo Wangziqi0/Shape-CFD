@@ -1,0 +1,132 @@
+{
+  "config": {
+    "num_subspaces": 64,
+    "sub_dim": 64,
+    "num_centroids": 256,
+    "sample_size": 10000,
+    "n_pairs": 10000,
+    "compression_ratio": 256.0
+  },
+  "per_corpus": {
+    "nfcorpus": {
+      "corpus": "nfcorpus",
+      "n_sampled_tokens": 10000,
+      "reconstruction_error": {
+        "l2_mean": 88.25019073486328,
+        "l2_std": 13.55549430847168,
+        "l2_p50": 89.31732177734375,
+        "l2_p90": 105.16094970703125,
+        "rel_l2_mean": 0.6304948925971985,
+        "rel_l2_std": 0.14521260559558868,
+        "cos_sim_mean": 0.7536813020706177,
+        "cos_sim_std": 0.12056991457939148,
+        "cos_sim_p10": 0.5863112807273865
+      },
+      "distance_preservation": {
+        "n_pairs": 10000,
+        "orig_cos_dist_mean": 0.7035622596740723,
+        "rec_cos_dist_mean": 0.5109342932701111,
+        "abs_diff_mean": 0.19369927048683167,
+        "pearson_r": 0.9542060451172418
+      },
+      "storage": {
+        "raw_bytes_per_token": 16384,
+        "pq_bytes_per_token": 64,
+        "compression_ratio": 256.0,
+        "raw_corpus_GB_estimate": null,
+        "pq_corpus_MB_estimate": null
+      },
+      "wall_time_sec": 15.818099975585938
+    },
+    "scifact": {
+      "corpus": "scifact",
+      "n_sampled_tokens": 10000,
+      "reconstruction_error": {
+        "l2_mean": 91.42891693115234,
+        "l2_std": 12.25336742401123,
+        "l2_p50": 92.68902587890625,
+        "l2_p90": 106.19784545898438,
+        "rel_l2_mean": 0.6555522680282593,
+        "rel_l2_std": 0.13762854039669037,
+        "cos_sim_mean": 0.7334998250007629,
+        "cos_sim_std": 0.11972048133611679,
+        "cos_sim_p10": 0.5696103572845459
+      },
+      "distance_preservation": {
+        "n_pairs": 10000,
+        "orig_cos_dist_mean": 0.7235642671585083,
+        "rec_cos_dist_mean": 0.5191056728363037,
+        "abs_diff_mean": 0.2054496556520462,
+        "pearson_r": 0.9491298142528147
+      },
+      "storage": {
+        "raw_bytes_per_token": 16384,
+        "pq_bytes_per_token": 64,
+        "compression_ratio": 256.0,
+        "raw_corpus_GB_estimate": null,
+        "pq_corpus_MB_estimate": null
+      },
+      "wall_time_sec": 24.958820581436157
+    },
+    "arguana": {
+      "corpus": "arguana",
+      "n_sampled_tokens": 10000,
+      "reconstruction_error": {
+        "l2_mean": 85.46881866455078,
+        "l2_std": 13.8450927734375,
+        "l2_p50": 85.09034729003906,
+        "l2_p90": 104.2291030883789,
+        "rel_l2_mean": 0.5884179472923279,
+        "rel_l2_std": 0.15503573417663574,
+        "cos_sim_mean": 0.7847987413406372,
+        "cos_sim_std": 0.1213449165225029,
+        "cos_sim_p10": 0.6133279800415039
+      },
+      "distance_preservation": {
+        "n_pairs": 10000,
+        "orig_cos_dist_mean": 0.655532717704773,
+        "rec_cos_dist_mean": 0.4786016643047333,
+        "abs_diff_mean": 0.1781274974346161,
+        "pearson_r": 0.959877469560763
+      },
+      "storage": {
+        "raw_bytes_per_token": 16384,
+        "pq_bytes_per_token": 64,
+        "compression_ratio": 256.0,
+        "raw_corpus_GB_estimate": null,
+        "pq_corpus_MB_estimate": null
+      },
+      "wall_time_sec": 23.51846480369568
+    },
+    "scidocs": {
+      "corpus": "scidocs",
+      "n_sampled_tokens": 10000,
+      "reconstruction_error": {
+        "l2_mean": 87.07205963134766,
+        "l2_std": 13.519560813903809,
+        "l2_p50": 87.14666748046875,
+        "l2_p90": 104.67644500732422,
+        "rel_l2_mean": 0.6185654997825623,
+        "rel_l2_std": 0.1462477743625641,
+        "cos_sim_mean": 0.7629146575927734,
+        "cos_sim_std": 0.12149620801210403,
+        "cos_sim_p10": 0.5937513709068298
+      },
+      "distance_preservation": {
+        "n_pairs": 10000,
+        "orig_cos_dist_mean": 0.6697452068328857,
+        "rec_cos_dist_mean": 0.4702451229095459,
+        "abs_diff_mean": 0.20039503276348114,
+        "pearson_r": 0.9532133786636009
+      },
+      "storage": {
+        "raw_bytes_per_token": 16384,
+        "pq_bytes_per_token": 64,
+        "compression_ratio": 256.0,
+        "raw_corpus_GB_estimate": null,
+        "pq_corpus_MB_estimate": null
+      },
+      "wall_time_sec": 47.73680639266968
+    }
+  }
+}

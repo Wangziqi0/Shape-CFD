@@ -1,0 +1,19 @@
+[package]
+name = "train_pq_codebook"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+rayon = "1"
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+strip = true
+
+[[bin]]
+name = "train_pq_codebook"
+path = "src/main.rs"
